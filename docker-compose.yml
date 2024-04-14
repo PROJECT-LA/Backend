@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      # Nombre de la base de datos
+      POSTGRES_DB: ${DB_DATABASE}
+      # Nombre de usuario de la base de datos
+      POSTGRES_USER: ${POSTGRES_USER}
+      # Contraseña para el usuario de la base de datos
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      # <Puerto Expuesto> : <PostgreSQL Puerto dentro del container>
+      - '${DB_PORT}:5432'
+    expose:
+      # Expone el puerto 5432 del container
+      - '5432'
+    volumes:
+      # El volumen my-db se crea en el sistema de archivos del host
+      - my-db:/var/lib/postgresql/data
+volumes:
+  my-db:
