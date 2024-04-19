@@ -1,23 +1,22 @@
 version: '3.9'
 services:
   db:
-    image: postgres:latest
-    restart: always
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       # Nombre de la base de datos
-      POSTGRES_DB: ${DB_DATABASE}
+      MYSQL_DATABASE: ${DB_DATABASE}
       # Nombre de usuario de la base de datos
-      POSTGRES_USER: ${POSTGRES_USER}
+      MYSQL_USER: ${DB_USERNAME}
       # Contraseña para el usuario de la base de datos
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      # Puerto expuesto por el container
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
     ports:
       # <Puerto Expuesto> : <PostgreSQL Puerto dentro del container>
-      - '${DB_PORT}:5432'
-    expose:
-      # Expone el puerto 5432 del container
-      - '5432'
+      - '${DB_PORT}:3306'
     volumes:
       # El volumen my-db se crea en el sistema de archivos del host
-      - my-db:/var/lib/postgresql/data
+      - my-db:/var/lib/mysql_db/data
 volumes:
   my-db:
