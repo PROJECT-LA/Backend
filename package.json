@@ -27,7 +27,8 @@
     "seeds:create": "npm run typeorm -- migration:create",
     "seeds:run": "npm run typeorm -- migration:run -d ormconfig-seed.ts",
     "schema:drop": "npm run typeorm -- schema:drop -d ./src/common/config/data.source.ts",
-    "rimraf": "./node_modules/rimraf/bin.js"
+    "rimraf": "./node_modules/rimraf/bin.js",
+    "setup": "npm run migrations:clean && npm run schema:drop && npm run migrations:generate database/migrations/init && npm run migrations:run && npm run seeds:run"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
