@@ -1,0 +1,4 @@
+export enum ROLES {
+  ADMINITRADOR = 'ADMINITRADOR',
+  AUDITOR = 'AUDITOR',
+}
