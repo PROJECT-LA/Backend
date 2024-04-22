@@ -1,4 +1,4 @@
-import { BeforeInsert, Check, Column, Entity } from 'typeorm'
+/* import { BeforeInsert, Check, Column, Entity } from 'typeorm'
 import { BaseEntity } from 'src/common/config/base.entity'
 import { IRol } from 'src/common/interfaces/rol.interface'
 import { STATUS } from 'src/common/constants'
@@ -16,6 +16,7 @@ export class Rol extends BaseEntity implements IRol {
 
   @BeforeInsert()
   insertarEstado() {
-    this.estado = this.estado || STATUS.ACTIVE
+    this.estado = this. || STATUS.ACTIVE
   }
 }
+ */

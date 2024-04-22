@@ -13,7 +13,7 @@ const SeedDataSource = new DataSource({
   database: configService.getOrThrow('DB_NAME'),
   synchronize: false,
   logging: false,
-  entities: [__dirname + 'src/**/*.entity.ts'],
+  entities: ['src/**/*.entity.ts'],
   migrations: ['database/seeds/*.ts'],
 })
 

@@ -1,25 +1,35 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-
-export abstract class BaseEntity {
+import { BaseEntity as TypeOrmBaseEntity } from 'typeorm'
+import { STATUS } from '../constants'
+export abstract class BaseEntity extends TypeOrmBaseEntity {
   @PrimaryGeneratedColumn()
-  id: string
-
+  id: number
   @Column({
-    name: 'estado',
+    name: 'state',
     length: 30,
     type: 'varchar',
     nullable: false,
   })
-  estado: string
+  state: string
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date
+
+  @BeforeInsert()
+  insertarEstado() {
+    this.state = this.state || STATUS.ACTIVE
+  }
+  protected constructor(data?: Partial<BaseEntity>) {
+    super()
+    if (data) Object.assign(this, data)
+  }
 }

@@ -3,9 +3,8 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ConfigModule } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { UsersModule } from './auth/users/users.module'
 import { DataSourceConfig } from './common/config/data.source'
-import { RolsModule } from './auth/rols/rols.module'
+import { CoreModule } from './core/core.module'
 
 @Module({
   imports: [
@@ -13,8 +12,7 @@ import { RolsModule } from './auth/rols/rols.module'
       isGlobal: true,
     }),
     TypeOrmModule.forRoot(DataSourceConfig),
-    UsersModule,
-    RolsModule,
+    CoreModule,
   ],
   controllers: [AppController],
   providers: [AppService],
