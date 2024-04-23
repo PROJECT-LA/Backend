@@ -25,23 +25,26 @@ export function createSwagger(
   app: INestApplication,
   configService: ConfigService
 ) {
+  const getConfigValue = (key: string, defaultValue: any) =>
+    configService.get(key) || defaultValue
+
   const options = new DocumentBuilder()
     .setTitle(
-      configService.get('SWAGER_API_TITLE') || SWAGGER_DEFAULT_CONFIG.API_TITLE
+      getConfigValue('SWAGER_API_TITLE', SWAGGER_DEFAULT_CONFIG.API_TITLE)
     )
     .setDescription(
-      configService.get('SWAGER_DESCRIPTION') ||
-        SWAGGER_DEFAULT_CONFIG.DESCRIPTION
+      getConfigValue('SWAGER_DESCRIPTION', SWAGGER_DEFAULT_CONFIG.DESCRIPTION)
     )
     .setVersion(
-      configService.get('SWAGER_VERSION') ||
-        SWAGGER_DEFAULT_CONFIG.CURRENT_VERSION
+      getConfigValue('SWAGER_VERSION', SWAGGER_DEFAULT_CONFIG.CURRENT_VERSION)
     )
     .addBearerAuth()
     .build()
+
   const document = SwaggerModule.createDocument(app, options)
+
   SwaggerModule.setup(
-    configService.get('SWAGER_API_ROOT') || SWAGGER_DEFAULT_CONFIG.API_ROOT,
+    getConfigValue('SWAGER_API_ROOT', SWAGGER_DEFAULT_CONFIG.API_ROOT),
     app,
     document
   )

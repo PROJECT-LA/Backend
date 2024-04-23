@@ -1,5 +1,6 @@
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { DataSource } from 'typeorm'
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies'
 
 ConfigModule.forRoot()
 const configService = new ConfigService()
@@ -15,6 +16,7 @@ const SeedDataSource = new DataSource({
   logging: false,
   entities: ['src/**/*.entity.ts'],
   migrations: ['database/seeds/*.ts'],
+  namingStrategy: new SnakeNamingStrategy(),
 })
 
 export default SeedDataSource

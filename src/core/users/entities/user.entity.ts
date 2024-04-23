@@ -5,12 +5,16 @@ import { Column, Entity } from 'typeorm'
 export class User extends BaseEntity implements IUser {
   @Column()
   names: string
+
   @Column()
   lastNames: string
+
   @Column()
   email: string
+
   @Column()
   password: string
+
   @Column({ nullable: true })
   phone: string
 

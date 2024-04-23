@@ -16,7 +16,7 @@ export abstract class BaseEntity extends TypeOrmBaseEntity {
     type: 'varchar',
     nullable: false,
   })
-  state: string
+  status: string
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
   createdAt: Date
@@ -26,7 +26,7 @@ export abstract class BaseEntity extends TypeOrmBaseEntity {
 
   @BeforeInsert()
   insertarEstado() {
-    this.state = this.state || STATUS.ACTIVE
+    this.status = this.status || STATUS.ACTIVE
   }
   protected constructor(data?: Partial<BaseEntity>) {
     super()
