@@ -1,37 +1,48 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 
-import { DataSource } from 'typeorm'
 import { User } from '../entities/user.entity'
-import { CreateUserDto } from '../dto/create-user.dto'
-import { UpdateUserDto } from '../dto/update-user.dto'
-
+import { UsersRepository } from '../repository'
+import * as bcrypt from 'bcrypt'
+import { CreateUserDto } from '../dto'
 @Injectable()
 export class UserService {
-  constructor(private dataSource: DataSource) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
+
+  async validateUser(username: string, password: string) {
+    const user = await this.usersRepository.findOne({ where: { username } })
+    if (!user) {
+      throw new UnauthorizedException('Credentials are not valid.')
+    }
+    const passwordIsValid = await bcrypt.compare(password, user.password)
+    if (!passwordIsValid) {
+      throw new UnauthorizedException('Credentials are not valid.')
+    }
+    return user
+  }
+
   async create(createUserInput: CreateUserDto) {
-    const newUser = this.dataSource.getRepository(User).create(createUserInput)
-    return await this.dataSource.getRepository(User).save(newUser)
+    const newUser = this.usersRepository.create(createUserInput)
+    return await this.usersRepository.save(newUser)
   }
 
   async findAll(): Promise<User[]> {
-    return await this.dataSource.getRepository(User).find()
+    return await this.usersRepository.findAll()
   }
 
   async findOne(id: number) {
-    return await this.dataSource.getRepository(User).findOne({ where: { id } })
+    return await this.usersRepository.findOneById(id)
   }
 
   async findOneByUsername(username: string) {
-    return await this.dataSource
-      .getRepository(User)
-      .findOne({ where: { username: username } })
+    return await this.usersRepository.findOne({ where: { username } })
   }
 
-  async update(id: number, updateUserInput: UpdateUserDto) {
+  /*   async update(id: number, updateUserInput: UpdateUserDto) {
     await this.dataSource.getRepository(User).update(id, updateUserInput)
     return await this.dataSource.getRepository(User).findOne({ where: { id } })
   }
   remove(id: number) {
     return `This action removes a #${id} user`
   }
+ */
 }

@@ -1,4 +1,4 @@
-import { IUser } from 'src/common/interfaces/user.interface'
+import { IUser } from 'src/core/users/interface/user.interface'
 import { IsNotEmpty, MaxLength } from 'src/common/validation'
 
 export class CreateUserDto implements IUser {

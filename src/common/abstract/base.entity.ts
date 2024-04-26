@@ -8,8 +8,9 @@ import {
 import { BaseEntity as TypeOrmBaseEntity } from 'typeorm'
 import { STATUS } from '../constants'
 export abstract class BaseEntity extends TypeOrmBaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number
+  @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
+  id: string
+
   @Column({
     name: 'state',
     length: 30,
