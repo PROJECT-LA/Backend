@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, Res } from '@nestjs/common'
+import { Response, response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { Response } from 'express'
 import { User } from '../../users/entities/user.entity'
 
 export interface TokenPayload {
@@ -33,10 +33,8 @@ export class AuthService {
     })
   }
 
-  public logout() {
-    return (response: Response) => {
-      response.clearCookie('Authentication')
-      response.sendStatus(200)
-    }
+  async logout(response: Response) {
+    response.clearCookie('token')
+    response.sendStatus(200)
   }
 }

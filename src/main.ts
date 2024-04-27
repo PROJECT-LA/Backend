@@ -13,7 +13,6 @@ async function bootstrap() {
   app.setGlobalPrefix(configService.get('API_PREFIX'))
   app.enableCors(CORS)
   app.useGlobalPipes(new ValidationPipe())
-
   if (configService.get('NODE_ENV') !== 'production') {
     createSwagger(app, configService)
   }
@@ -49,5 +48,5 @@ export function createSwagger(
     document
   )
 }
-
+//eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap()

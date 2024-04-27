@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common'
+import { Controller, Get, Post, Res, UseGuards } from '@nestjs/common'
 import { LocalAuthGuard } from '../guards/local-auth.guard'
 import { AuthService } from '../service'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
@@ -6,7 +6,7 @@ import { AuthDto } from '../dto'
 import { CurrentUser } from '../decorators/current-user.decorator'
 import { User } from 'src/core/users'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
-import { Request, Response } from 'express'
+import { Response } from 'express'
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
@@ -23,13 +23,6 @@ export class AuthController {
     return await this.authService.login(user, response)
   }
 
-  /*     @CurrentUser() user: User,
-    @Res({ passthrough: true }) response: Response
-  ) {
-    await this.authService.login(user, response)
-    response.send(user)
-  }
- */
   /*   @UseGuards(JwtAuthGuard)
   @MessagePattern('validate_user')
   async validateUser(@CurrentUser() user: User) {
@@ -39,8 +32,7 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('logout')
-  async logout(@Req() req: Request, @Res() res: Response) {
-    res.clearCookie('token')
-    return res.status(200).json()
+  async logout(@Res({ passthrough: true }) response: Response) {
+    return this.authService.logout(response)
   }
 }
