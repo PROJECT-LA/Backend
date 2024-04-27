@@ -1,9 +1,11 @@
 import {
   DeepPartial,
+  DeleteResult,
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
   Repository,
+  UpdateResult,
 } from 'typeorm'
 import { BaseInterfaceRepository } from '../interfaces/base.interface'
 import { PaginationOptions } from '../interfaces'
@@ -73,5 +75,15 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
 
   public async findOne(options: FindOneOptions<T>): Promise<T> {
     return this.entity.findOne(options)
+  }
+
+  public async update(
+    id: string,
+    partialEntity: QueryDeepPartialEntity<T>
+  ): Promise<UpdateResult> {
+    return await this.entity.update(id, partialEntity)
+  }
+  public async delete(id: string): Promise<DeleteResult> {
+    return await this.entity.delete(id)
   }
 }

@@ -4,11 +4,14 @@ import {
   FindManyOptions,
   DeepPartial,
   FindOneOptions,
+  UpdateResult,
+  DeleteResult,
 } from 'typeorm'
 import { BaseAbstractRepostitory } from 'src/common/abstract/base.repository'
 import { PaginationOptions } from 'src/common/interfaces'
 import { UsersRepositoryInterface } from '../interface'
 import { User } from '../entities'
+import { QueryPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
 export class UsersRepository
   extends BaseAbstractRepostitory<User>
@@ -65,5 +68,14 @@ export class UsersRepository
   }
   public saveMany(data: DeepPartial<User>[]): Promise<User[]> {
     return super.saveMany(data)
+  }
+  public async update(
+    id: string,
+    data: QueryPartialEntity<User>
+  ): Promise<UpdateResult> {
+    return await super.update(id, data)
+  }
+  public async delete(id: string): Promise<DeleteResult> {
+    return await super.delete(id)
   }
 }

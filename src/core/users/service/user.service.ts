@@ -80,15 +80,15 @@ export class UserService {
     }
   }
 
-  /*   async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     await this.validateUserInformation(
       { username: updateUserDto.username, email: updateUserDto.email },
       id
     )
     return await this.usersRepository.update(id, updateUserDto)
-  } */
+  }
 
-  remove(id: string) {
-    return `This action removes a #${id} user`
+  async delete(id: string) {
+    return await this.usersRepository.delete(id)
   }
 }
