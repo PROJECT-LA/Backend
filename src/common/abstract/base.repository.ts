@@ -7,6 +7,7 @@ import {
 } from 'typeorm'
 import { BaseInterfaceRepository } from '../interfaces/base.interface'
 import { PaginationOptions } from '../interfaces'
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
 interface HasId {
   id: string
@@ -72,8 +73,5 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
 
   public async findOne(options: FindOneOptions<T>): Promise<T> {
     return this.entity.findOne(options)
-  }
-  public async update(id: string, data: DeepPartial<T>): Promise<T> {
-    return this.update(id, data)
   }
 }

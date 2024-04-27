@@ -13,6 +13,7 @@ import { UserService } from '../service'
 import { UpdateUserDto } from '../dto/update-user.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
 import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard'
+import { Public } from 'src/core/auth/decorators/public.decorator'
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -38,11 +39,11 @@ export class UserController {
 
   /*   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto)
+    return this.usersService.update(id, updateUserDto)
   }
-
+ */
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.usersService.remove(+id)
-  } */
+    return this.usersService.remove(id)
+  }
 }

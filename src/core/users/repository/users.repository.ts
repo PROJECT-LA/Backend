@@ -66,7 +66,4 @@ export class UsersRepository
   public saveMany(data: DeepPartial<User>[]): Promise<User[]> {
     return super.saveMany(data)
   }
-  public update(id: string, data: DeepPartial<User>): Promise<User> {
-    return super.update(id, data)
-  }
 }
