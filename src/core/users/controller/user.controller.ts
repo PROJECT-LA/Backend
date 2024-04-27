@@ -6,15 +6,18 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common'
 import { CreateUserDto } from '../dto/create-user.dto'
 import { UserService } from '../service'
 import { UpdateUserDto } from '../dto/update-user.dto'
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard'
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 export class UserController {
   constructor(private readonly usersService: UserService) {}
 
@@ -30,7 +33,7 @@ export class UserController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id)
+    return this.usersService.findOneById(id)
   }
 
   /*   @Patch(':id')

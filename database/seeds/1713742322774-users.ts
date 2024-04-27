@@ -1,26 +1,27 @@
 import { STATUS } from 'src/common/constants'
 import { User } from 'src/core/users/entities/user.entity'
 import { MigrationInterface, QueryRunner } from 'typeorm'
+import * as bcrypt from 'bcrypt'
 
 export class Users1713742322774 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const users = [
       {
-        names: 'Admin',
-        lastNames: 'Admin',
+        names: 'ADMIN',
+        lastNames: 'ADMIN',
         email: 'index@gmai.com',
-        password: '123',
-        username: 'ADMINISTRADOR',
+        password: bcrypt.hashSync('123', 10),
+        username: 'ADMIN',
         createdAt: new Date(),
         updatedAt: new Date(),
         phone: '71981339',
         status: STATUS.ACTIVE,
       },
       {
-        names: 'User',
-        lastNames: 'User',
+        names: 'USER',
+        lastNames: 'USER',
         email: '',
-        password: '123',
+        password: bcrypt.hashSync('123', 10),
         username: 'USER',
         createdAt: new Date(),
         updatedAt: new Date(),

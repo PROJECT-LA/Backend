@@ -73,4 +73,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
   public async findOne(options: FindOneOptions<T>): Promise<T> {
     return this.entity.findOne(options)
   }
+  public async update(id: string, data: DeepPartial<T>): Promise<T> {
+    return this.update(id, data)
+  }
 }

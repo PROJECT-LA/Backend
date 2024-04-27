@@ -16,4 +16,5 @@ export interface BaseInterfaceRepository<T> {
   findWithRelations(relations: FindManyOptions<T>): Promise<T[]>
   preload(entityLike: DeepPartial<T>): Promise<T>
   findOne(options: FindOneOptions<T>): Promise<T>
+  update(id: string, data: DeepPartial<T>): Promise<T>
 }

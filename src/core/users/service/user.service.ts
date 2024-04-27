@@ -3,7 +3,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { User } from '../entities/user.entity'
 import { UsersRepository } from '../repository'
 import * as bcrypt from 'bcrypt'
-import { CreateUserDto } from '../dto'
+import { CreateUserDto, UpdateUserDto } from '../dto'
 @Injectable()
 export class UserService {
   constructor(private readonly usersRepository: UsersRepository) {}
@@ -29,7 +29,7 @@ export class UserService {
     return await this.usersRepository.findAll()
   }
 
-  async findOne(id: number) {
+  async findOneById(id: string) {
     return await this.usersRepository.findOneById(id)
   }
 
@@ -37,12 +37,11 @@ export class UserService {
     return await this.usersRepository.findOne({ where: { username } })
   }
 
-  /*   async update(id: number, updateUserInput: UpdateUserDto) {
-    await this.dataSource.getRepository(User).update(id, updateUserInput)
-    return await this.dataSource.getRepository(User).findOne({ where: { id } })
+  async update(id: string, updateUserInput: UpdateUserDto) {
+    return await this.usersRepository.update(id, updateUserInput)
   }
-  remove(id: number) {
+
+  remove(id: string) {
     return `This action removes a #${id} user`
   }
- */
 }
