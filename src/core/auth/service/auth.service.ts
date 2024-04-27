@@ -22,7 +22,7 @@ export class AuthService {
 
     const expires = new Date()
     expires.setSeconds(
-      expires.getSeconds() + this.configService.get('JWT_EXPIRES_IN')
+      expires.getSeconds() + this.configService.getOrThrow('JWT_EXPIRES_IN')
     )
 
     const token = this.jwtService.sign(tokenPayload)
@@ -33,10 +33,10 @@ export class AuthService {
     })
   }
 
-  logout(response: Response) {
-    response.cookie('Authentication', '', {
-      httpOnly: true,
-      expires: new Date(),
-    })
+  public logout() {
+    return (response: Response) => {
+      response.clearCookie('Authentication')
+      response.sendStatus(200)
+    }
   }
 }

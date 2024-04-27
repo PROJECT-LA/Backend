@@ -40,7 +40,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('logout')
   async logout(@Req() req: Request, @Res() res: Response) {
-    res.clearCookie('jid')
+    res.clearCookie('Authentication')
     return res.status(200).json()
   }
 }
