@@ -1,4 +1,5 @@
 import {
+  Inject,
   Injectable,
   PreconditionFailedException,
   UnauthorizedException,
@@ -11,6 +12,7 @@ import { TextService } from 'src/common/lib/text.service'
 @Injectable()
 export class UserService {
   constructor(
+    @Inject(UsersRepository)
     private readonly usersRepository: UsersRepository,
     private textService: TextService
   ) {}

@@ -1,11 +1,14 @@
-import { Injectable, PreconditionFailedException } from '@nestjs/common'
+import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 import { Messages } from 'src/common/constants'
 import { RolesRepository } from '../repository'
 import { CreateRoleDto, UpdateRoleDto } from '../dto'
 
 @Injectable()
 export class RolesService {
-  constructor(private readonly roleRepository: RolesRepository) {}
+  constructor(
+    @Inject(RolesRepository)
+    private readonly roleRepository: RolesRepository
+  ) {}
 
   async create(createRoleDto: CreateRoleDto) {
     await this.validateRole(createRoleDto.name)

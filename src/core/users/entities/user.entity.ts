@@ -14,7 +14,7 @@ export class User extends BaseEntity implements IUser {
   @Column({ nullable: false, unique: true })
   email: string
 
-  @Column({ update: false })
+  @Column({ nullable: false })
   password: string
 
   @Column({ nullable: true })
@@ -27,8 +27,9 @@ export class User extends BaseEntity implements IUser {
     super(data)
   }
   @ManyToMany(() => Role, (role) => role.users)
-  @JoinTable()
+  @JoinTable({ name: 'user_roles' })
   roles: Role[]
+
   @BeforeInsert()
   insertState() {
     this.status = this.status || STATUS.ACTIVE
