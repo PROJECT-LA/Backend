@@ -23,20 +23,19 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     this.entity = entity
   }
 
-  public async save(data: DeepPartial<T>): Promise<T> {
-    return await this.entity.save(data)
+  public async findAll(
+    options?: FindManyOptions<T>,
+    paginationOptions?: PaginationOptions
+  ): Promise<T[]> {
+    const queryOptions: FindManyOptions<T> = {
+      ...options,
+      ...paginationOptions,
+    }
+    return await this.entity.find(queryOptions)
   }
 
-  public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
-    return await this.entity.save(data)
-  }
-
-  public create(data: DeepPartial<T>): T {
-    return this.entity.create(data)
-  }
-
-  public createMany(data: DeepPartial<T>[]): T[] {
-    return this.entity.create(data)
+  public async findOne(options: FindOneOptions<T>): Promise<T> {
+    return this.entity.findOne(options)
   }
 
   public async findOneById(id: any): Promise<T> {
@@ -54,15 +53,13 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     return await this.entity.find(relations)
   }
 
-  public async findAll(
-    options?: FindManyOptions<T>,
-    paginationOptions?: PaginationOptions
-  ): Promise<T[]> {
-    const queryOptions: FindManyOptions<T> = {
-      ...options,
-      ...paginationOptions,
-    }
-    return await this.entity.find(queryOptions)
+  //Metodos que dependen de objetos
+  public async save(data: DeepPartial<T>): Promise<T> {
+    return await this.entity.save(data)
+  }
+
+  public create(data: DeepPartial<T>): T {
+    return this.entity.create(data)
   }
 
   public async remove(data: T): Promise<T> {
@@ -73,10 +70,7 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
     return await this.entity.preload(entityLike)
   }
 
-  public async findOne(options: FindOneOptions<T>): Promise<T> {
-    return this.entity.findOne(options)
-  }
-
+  //Metodos que devuelven Resultados
   public async update(
     id: string,
     partialEntity: QueryDeepPartialEntity<T>
@@ -85,5 +79,14 @@ export abstract class BaseAbstractRepostitory<T extends HasId>
   }
   public async delete(id: string): Promise<DeleteResult> {
     return await this.entity.delete(id)
+  }
+
+  //Metodos para creacion multiple
+  public createMany(data: DeepPartial<T>[]): T[] {
+    return this.entity.create(data)
+  }
+
+  public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
+    return await this.entity.save(data)
   }
 }

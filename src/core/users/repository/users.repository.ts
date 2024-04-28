@@ -26,20 +26,28 @@ export class UsersRepository extends BaseAbstractRepostitory<User> {
     return await super.findAll(options, paginationOptions)
   }
 
-  public findOneById(id: any): Promise<User> {
-    return super.findOneById(id)
-  }
-
   public create(data: DeepPartial<User>): User {
     return super.create(data)
   }
 
-  public createMany(data: DeepPartial<User>[]): User[] {
-    return super.createMany(data)
+  public preload(entityLike: DeepPartial<User>): Promise<User> {
+    return super.preload(entityLike)
+  }
+
+  public async remove(data: User): Promise<User> {
+    return super.remove(data)
+  }
+
+  public async save(data: DeepPartial<User>): Promise<User> {
+    return super.save(data)
   }
 
   public findOne(options: FindOneOptions<User>): Promise<User> {
     return super.findOne(options)
+  }
+
+  public findOneById(id: any): Promise<User> {
+    return super.findOneById(id)
   }
 
   public async findByCondition(
@@ -53,18 +61,8 @@ export class UsersRepository extends BaseAbstractRepostitory<User> {
   ): Promise<User[]> {
     return await super.findWithRelations(relations)
   }
-  public preload(entityLike: DeepPartial<User>): Promise<User> {
-    return super.preload(entityLike)
-  }
-  public async remove(data: User): Promise<User> {
-    return super.remove(data)
-  }
-  public async save(data: DeepPartial<User>): Promise<User> {
-    return super.save(data)
-  }
-  public saveMany(data: DeepPartial<User>[]): Promise<User[]> {
-    return super.saveMany(data)
-  }
+
+  //Methods without return value
   public async update(
     id: string,
     data: QueryPartialEntity<User>
@@ -73,5 +71,13 @@ export class UsersRepository extends BaseAbstractRepostitory<User> {
   }
   public async delete(id: string): Promise<DeleteResult> {
     return await super.delete(id)
+  }
+
+  //Methods for bulk operations
+  public saveMany(data: DeepPartial<User>[]): Promise<User[]> {
+    return super.saveMany(data)
+  }
+  public createMany(data: DeepPartial<User>[]): User[] {
+    return super.createMany(data)
   }
 }
