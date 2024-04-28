@@ -12,4 +12,9 @@ export enum Messages {
   EXCEPTION_SAME_USERNAME = 'El nombre de usuario ya está en uso.',
   EXCEPTION_SAME_EMAIL = 'El correo electrónico ya está en uso.',
   EXCEPTION_USER_NOT_FOUND = 'Usuario no encontrado.',
+
+  //AUTHORIZATION
+
+  EXCEPTION_ROLE_NOT_FOUND = 'Rol no encontrado.',
+  EXCEPTION_ROLE_NAME_EXISTS = 'El nombre del rol ya existe.',
 }

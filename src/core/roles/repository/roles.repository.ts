@@ -9,65 +9,65 @@ import {
 } from 'typeorm'
 import { BaseAbstractRepostitory } from 'src/common/abstract/base.repository'
 import { PaginationOptions } from 'src/common/interfaces'
-import { User } from '../entities'
 import { QueryPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
+import { Role } from '../entities'
 
-export class UsersRepository extends BaseAbstractRepostitory<User> {
+export class RolesRepository extends BaseAbstractRepostitory<Role> {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>
   ) {
-    super(userRepository)
+    super(roleRepository)
   }
 
   async findAll(
-    options?: FindManyOptions<User>,
+    options?: FindManyOptions<Role>,
     paginationOptions?: PaginationOptions
-  ): Promise<User[]> {
+  ): Promise<Role[]> {
     return await super.findAll(options, paginationOptions)
   }
 
-  public findOneById(id: any): Promise<User> {
+  public findOneById(id: any): Promise<Role> {
     return super.findOneById(id)
   }
 
-  public create(data: DeepPartial<User>): User {
+  public create(data: DeepPartial<Role>): Role {
     return super.create(data)
   }
 
-  public createMany(data: DeepPartial<User>[]): User[] {
+  public createMany(data: DeepPartial<Role>[]): Role[] {
     return super.createMany(data)
   }
 
-  public findOne(options: FindOneOptions<User>): Promise<User> {
+  public findOne(options: FindOneOptions<Role>): Promise<Role> {
     return super.findOne(options)
   }
 
   public async findByCondition(
-    filterCondition: FindOneOptions<User>
-  ): Promise<User> {
+    filterCondition: FindOneOptions<Role>
+  ): Promise<Role> {
     return await super.findByCondition(filterCondition)
   }
 
   public async findWithRelations(
-    relations: FindManyOptions<User>
-  ): Promise<User[]> {
+    relations: FindManyOptions<Role>
+  ): Promise<Role[]> {
     return await super.findWithRelations(relations)
   }
-  public preload(entityLike: DeepPartial<User>): Promise<User> {
+  public preload(entityLike: DeepPartial<Role>): Promise<Role> {
     return super.preload(entityLike)
   }
-  public async remove(data: User): Promise<User> {
+  public async remove(data: Role): Promise<Role> {
     return super.remove(data)
   }
-  public async save(data: DeepPartial<User>): Promise<User> {
+  public async save(data: DeepPartial<Role>): Promise<Role> {
     return super.save(data)
   }
-  public saveMany(data: DeepPartial<User>[]): Promise<User[]> {
+  public saveMany(data: DeepPartial<Role>[]): Promise<Role[]> {
     return super.saveMany(data)
   }
   public async update(
     id: string,
-    data: QueryPartialEntity<User>
+    data: QueryPartialEntity<Role>
   ): Promise<UpdateResult> {
     return await super.update(id, data)
   }

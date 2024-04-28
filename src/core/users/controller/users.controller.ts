@@ -18,7 +18,7 @@ import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard'
 @ApiBearerAuth()
 @Controller('users')
 @UseGuards(JwtAuthGuard)
-export class UserController {
+export class UsersController {
   constructor(private readonly usersService: UserService) {}
 
   @Post()

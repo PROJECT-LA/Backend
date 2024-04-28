@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  Injectable,
+  PreconditionFailedException,
+  UnauthorizedException,
+} from '@nestjs/common'
 
 import { User } from '../entities/user.entity'
 import { UsersRepository } from '../repository'
@@ -48,7 +52,11 @@ export class UserService {
   }
 
   async findOneById(id: string) {
-    return await this.usersRepository.findOneById(id)
+    const user = await this.usersRepository.findOneById(id)
+    if (!user) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
+    }
+    return user
   }
 
   private async findOneByUsername(username: string) {
@@ -64,19 +72,16 @@ export class UserService {
     id?: string
   ) {
     if (id) {
-      const user = await this.findOneById(id)
-      if (!user) {
-        throw new UnauthorizedException(Messages.EXCEPTION_USER_NOT_FOUND)
-      }
+      await this.findOneById(id)
     }
     const userExists = await this.findOneByUsername(data.username)
     if (userExists && (id === undefined || userExists.id !== id)) {
-      throw new UnauthorizedException(Messages.EXCEPTION_SAME_USERNAME)
+      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
     }
 
     const userExistsEmail = await this.findOneByEmail(data.email)
     if (userExistsEmail && (id === undefined || userExistsEmail.id !== id)) {
-      throw new UnauthorizedException(Messages.EXCEPTION_SAME_EMAIL)
+      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
     }
   }
 
