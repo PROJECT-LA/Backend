@@ -1,22 +1,16 @@
-import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, DeepPartial, UpdateResult, DeleteResult } from 'typeorm'
-import { BaseAbstractRepostitory } from 'src/common/abstract/base.repository'
+import { DeepPartial, UpdateResult, DeleteResult, DataSource } from 'typeorm'
 import { User } from '../entities'
-
-export class UsersRepository extends BaseAbstractRepostitory<User> {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>
-  ) {
-    super(userRepository)
-  }
+import { Injectable } from '@nestjs/common'
+@Injectable()
+export class UsersRepository {
+  constructor(private dataSource: DataSource) {}
 
   create(data: DeepPartial<User>): User {
-    return super.create(data)
+    return this.dataSource.getRepository(User).create(data)
   }
 
   async preload(user: DeepPartial<User>): Promise<User> {
-    return await super.preload(user)
+    return await this.dataSource.getRepository(User).preload(user)
   }
 
   async save(data: {
@@ -26,7 +20,7 @@ export class UsersRepository extends BaseAbstractRepostitory<User> {
     //roles: string[]
     status?: string
   }): Promise<User> {
-    return super.save(data)
+    return this.dataSource.getRepository(User).save(data)
   }
 
   async update(
@@ -40,21 +34,25 @@ export class UsersRepository extends BaseAbstractRepostitory<User> {
       //roles?: string[]
     }
   ): Promise<UpdateResult> {
-    return await super.update(id, data)
+    return await this.dataSource.getRepository(User).update(id, data)
   }
 
   async delete(id: string): Promise<DeleteResult> {
-    return await super.delete(id)
+    return await this.dataSource.getRepository(User).delete(id)
   }
 
   //Methods to Find Data
   async findByUserName(username: string): Promise<User> {
-    return await super.findOne({ where: { username } })
+    return await this.dataSource
+      .getRepository(User)
+      .findOne({ where: { username } })
   }
   async findUserById(id: string): Promise<User> {
-    return await super.findOne({ where: { id } })
+    return await this.dataSource.getRepository(User).findOne({ where: { id } })
   }
   async findUserByEmail(email: string): Promise<User> {
-    return await super.findOne({ where: { email } })
+    return await this.dataSource
+      .getRepository(User)
+      .findOne({ where: { email } })
   }
 }

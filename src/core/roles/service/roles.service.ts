@@ -1,5 +1,4 @@
 import { Injectable, PreconditionFailedException } from '@nestjs/common'
-import { Role } from '../entities'
 import { Messages } from 'src/common/constants'
 import { RolesRepository } from '../repository'
 import { CreateRoleDto, UpdateRoleDto } from '../dto'

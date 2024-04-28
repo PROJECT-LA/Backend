@@ -1,4 +1,4 @@
-import {
+/* import {
   DeepPartial,
   DeleteResult,
   FindManyOptions,
@@ -75,3 +75,4 @@ export abstract class BaseAbstractRepostitory<T> {
     return await this.entity.save(data)
   }
 }
+ */
