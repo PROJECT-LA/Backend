@@ -26,10 +26,10 @@ export class UsersController {
     return this.usersService.create(createUserDto)
   }
 
-  @Get()
+  /*   @Get()
   findAll() {
     return this.usersService.findAll()
-  }
+  } */
 
   @Get(':id')
   findOne(@Param('id') id: string) {

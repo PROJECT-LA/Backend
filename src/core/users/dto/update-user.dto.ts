@@ -24,7 +24,4 @@ export class UpdateUserDto implements Partial<IUser> {
   @IsOptional()
   @MaxLength(30)
   username?: string
-
-  @IsOptional()
-  status?: string
 }

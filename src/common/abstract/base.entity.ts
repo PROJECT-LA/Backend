@@ -25,10 +25,6 @@ export abstract class BaseEntity extends TypeOrmBaseEntity {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date
 
-  @BeforeInsert()
-  insertarEstado() {
-    this.status = this.status || STATUS.ACTIVE
-  }
   protected constructor(data?: Partial<BaseEntity>) {
     super()
     if (data) Object.assign(this, data)

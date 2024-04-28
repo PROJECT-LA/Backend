@@ -8,8 +8,8 @@ export class UpdateRoleDto implements IRol {
   @MaxLength(30)
   name: string
 
-  @ApiProperty({ example: 'Tecnico' })
+  @ApiProperty({ example: 'Tecnico: Rol Administrativo' })
   @IsNotEmpty()
-  @MaxLength(30)
-  rol: string
+  @MaxLength(250)
+  description: string
 }

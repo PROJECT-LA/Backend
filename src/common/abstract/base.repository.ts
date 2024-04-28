@@ -3,90 +3,75 @@ import {
   DeleteResult,
   FindManyOptions,
   FindOneOptions,
-  FindOptionsWhere,
   Repository,
   UpdateResult,
 } from 'typeorm'
-import { BaseInterfaceRepository } from '../interfaces/base.interface'
-import { PaginationOptions } from '../interfaces'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
-interface HasId {
-  id: string
-}
-
-export abstract class BaseAbstractRepostitory<T extends HasId>
-  implements BaseInterfaceRepository<T>
-{
+export abstract class BaseAbstractRepostitory<T> {
   private entity: Repository<T>
   protected constructor(entity: Repository<T>) {
     this.entity = entity
   }
-
-  public async findAll(
-    options?: FindManyOptions<T>,
-    paginationOptions?: PaginationOptions
-  ): Promise<T[]> {
+  //Metodos de busqueda
+  protected async findAll(options?: FindManyOptions<T>): Promise<T[]> {
     const queryOptions: FindManyOptions<T> = {
       ...options,
-      ...paginationOptions,
     }
     return await this.entity.find(queryOptions)
   }
 
-  public async findOne(options: FindOneOptions<T>): Promise<T> {
+  protected async findOne(options: FindOneOptions<T>): Promise<T> {
     return this.entity.findOne(options)
   }
 
-  public async findOneById(id: any): Promise<T> {
-    const options: FindOptionsWhere<T> = {
-      id: id,
-    }
-    return await this.entity.findOneBy(options)
+  protected async findByCondition(
+    filterCondition: FindOneOptions<T>
+  ): Promise<T[]> {
+    return await this.entity.find(filterCondition)
   }
 
-  public async findByCondition(filterCondition: FindOneOptions<T>): Promise<T> {
-    return await this.entity.findOne(filterCondition)
-  }
-
-  public async findWithRelations(relations: FindManyOptions<T>): Promise<T[]> {
+  protected async findWithRelations(
+    relations: FindManyOptions<T>
+  ): Promise<T[]> {
     return await this.entity.find(relations)
   }
 
   //Metodos que dependen de objetos
-  public async save(data: DeepPartial<T>): Promise<T> {
+  protected async save(data: DeepPartial<T>): Promise<T> {
     return await this.entity.save(data)
   }
 
-  public create(data: DeepPartial<T>): T {
+  create(data: DeepPartial<T>): T {
     return this.entity.create(data)
   }
 
-  public async remove(data: T): Promise<T> {
+  protected async remove(data: T): Promise<T> {
     return await this.entity.remove(data)
   }
 
-  public async preload(entityLike: DeepPartial<T>): Promise<T> {
+  protected async preload(entityLike: DeepPartial<T>): Promise<T> {
     return await this.entity.preload(entityLike)
   }
 
   //Metodos que devuelven Resultados
-  public async update(
+  protected async update(
     id: string,
     partialEntity: QueryDeepPartialEntity<T>
   ): Promise<UpdateResult> {
     return await this.entity.update(id, partialEntity)
   }
-  public async delete(id: string): Promise<DeleteResult> {
+
+  protected async delete(id: string): Promise<DeleteResult> {
     return await this.entity.delete(id)
   }
 
   //Metodos para creacion multiple
-  public createMany(data: DeepPartial<T>[]): T[] {
+  createMany(data: DeepPartial<T>[]): T[] {
     return this.entity.create(data)
   }
 
-  public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
+  protected async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
     return await this.entity.save(data)
   }
 }

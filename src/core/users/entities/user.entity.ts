@@ -1,30 +1,26 @@
 import { BaseEntity } from 'src/common/abstract/base.entity'
 import { STATUS } from 'src/common/constants'
-import { UserRole } from 'src/core/roles'
 import { IUser } from 'src/core/users/interface/user.interface'
-import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm'
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 @Entity({ name: 'users' })
 export class User extends BaseEntity implements IUser {
-  @Column()
+  @Column({ nullable: false })
   names: string
 
-  @Column()
+  @Column({ nullable: false })
   lastNames: string
 
-  @Column()
+  @Column({ nullable: false, unique: true })
   email: string
 
-  @Column()
+  @Column({ update: false })
   password: string
 
   @Column({ nullable: true })
   phone: string
 
-  @Column()
+  @Column({ nullable: false, unique: true })
   username: string
-
-  @OneToMany(() => UserRole, (userRole) => userRole.role)
-  userRole: UserRole[]
 
   constructor(data?: Partial<User>) {
     super(data)

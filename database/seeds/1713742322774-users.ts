@@ -9,7 +9,7 @@ export class Users1713742322774 implements MigrationInterface {
       {
         names: 'ADMIN',
         lastNames: 'ADMIN',
-        email: 'index@gmai.com',
+        email: 'admin@gmail.com',
         password: bcrypt.hashSync('123', 10),
         username: 'ADMIN',
         createdAt: new Date(),
@@ -18,14 +18,14 @@ export class Users1713742322774 implements MigrationInterface {
         status: STATUS.ACTIVE,
       },
       {
-        names: 'USER',
-        lastNames: 'USER',
-        email: '',
+        names: 'GERENTE',
+        lastNames: 'GERENTE',
+        email: 'gerente@gmail.com',
         password: bcrypt.hashSync('123', 10),
-        username: 'USER',
+        username: 'GERENTE',
         createdAt: new Date(),
         updatedAt: new Date(),
-        phone: '71981339',
+        phone: '63201339',
         status: STATUS.ACTIVE,
       },
     ]

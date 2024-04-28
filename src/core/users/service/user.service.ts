@@ -4,7 +4,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 
-import { User } from '../entities/user.entity'
 import { UsersRepository } from '../repository'
 import { CreateUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
@@ -17,10 +16,11 @@ export class UserService {
   ) {}
 
   async validateUser(username: string, password: string) {
-    const user = await this.usersRepository.findOne({ where: { username } })
+    const user = await this.usersRepository.findByUserName(username)
     if (!user) {
       throw new UnauthorizedException(Messages.INVALID_CREDENTIALS)
     }
+
     const passwordIsValid = await this.textService.compare(
       password,
       user.password
@@ -31,15 +31,19 @@ export class UserService {
     return user
   }
 
+  async findOneById(id: string) {
+    const user = await this.usersRepository.findUserById(id)
+    if (!user) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
+    }
+    return user
+  }
+
   async create(createUserDto: CreateUserDto) {
-    const userExists = await this.findOneByUsername(createUserDto.username)
-    if (userExists) {
-      throw new UnauthorizedException(Messages.EXCEPTION_SAME_USERNAME)
-    }
-    const userExistsEmail = await this.findOneByEmail(createUserDto.email)
-    if (userExistsEmail) {
-      throw new UnauthorizedException(Messages.EXCEPTION_SAME_EMAIL)
-    }
+    await this.validateUpdateCreateUser({
+      username: createUserDto.username,
+      email: createUserDto.email,
+    })
     createUserDto.password = await this.textService.encrypt(
       createUserDto.password
     )
@@ -47,27 +51,20 @@ export class UserService {
     return await this.usersRepository.save(newUser)
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.usersRepository.findAll()
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    await this.validateUpdateCreateUser(
+      { username: updateUserDto.username, email: updateUserDto.email },
+      id
+    )
+    return await this.usersRepository.update(id, updateUserDto)
   }
 
-  async findOneById(id: string) {
-    const user = await this.usersRepository.findOneById(id)
-    if (!user) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
-    }
-    return user
+  async delete(id: string) {
+    await this.findOneById(id)
+    return await this.usersRepository.delete(id)
   }
 
-  private async findOneByUsername(username: string) {
-    return await this.usersRepository.findOne({ where: { username } })
-  }
-
-  private async findOneByEmail(email: string) {
-    return await this.usersRepository.findOne({ where: { email } })
-  }
-
-  private async validateUserInformation(
+  private async validateUpdateCreateUser(
     data: { username: string; email: string },
     id?: string
   ) {
@@ -85,15 +82,87 @@ export class UserService {
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    await this.validateUserInformation(
-      { username: updateUserDto.username, email: updateUserDto.email },
-      id
-    )
-    return await this.usersRepository.update(id, updateUserDto)
+  private async findOneByUsername(username: string) {
+    return await this.usersRepository.findByUserName(username)
   }
 
-  async delete(id: string) {
-    return await this.usersRepository.delete(id)
+  private async findOneByEmail(email: string) {
+    return await this.usersRepository.findUserByEmail(email)
   }
+
+  /*   async listar(paginacionQueryDto: FiltrosUsuarioDto) {
+    const { limite, saltar, filtro, rol, orden, sentido } = paginacionQueryDto
+
+    const query = this.dataSource
+      .getRepository(Usuario)
+      .createQueryBuilder('usuario')
+      .leftJoinAndSelect('usuario.usuarioRol', 'usuarioRol')
+      .leftJoinAndSelect('usuarioRol.rol', 'rol')
+      .leftJoinAndSelect('usuario.persona', 'persona')
+      .select([
+        'usuario.id',
+        'usuario.usuario',
+        'usuario.correoElectronico',
+        'usuario.estado',
+        'usuario.ciudadaniaDigital',
+        'usuarioRol',
+        'rol.id',
+        'rol.rol',
+        'persona.nroDocumento',
+        'persona.nombres',
+        'persona.primerApellido',
+        'persona.segundoApellido',
+        'persona.fechaNacimiento',
+        'persona.tipoDocumento',
+      ])
+      .where('usuarioRol.estado = :estado', { estado: Status.ACTIVE })
+      .take(limite)
+      .skip(saltar)
+
+    switch (orden) {
+      case 'nroDocumento':
+        query.addOrderBy('persona.nroDocumento', sentido)
+        break
+      case 'nombres':
+        query.addOrderBy('persona.nombres', sentido)
+        break
+      case 'usuario':
+        query.addOrderBy('usuario.usuario', sentido)
+        break
+      case 'rol':
+        query.addOrderBy('rol.rol', sentido)
+        break
+      case 'estado':
+        query.addOrderBy('usuario.estado', sentido)
+        break
+      default:
+        query.addOrderBy('usuario.id', 'ASC')
+    }
+
+    if (rol) {
+      query.andWhere('rol.id IN(:...roles)', {
+        roles: rol,
+      })
+    }
+    if (filtro) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.orWhere('usuario.usuario ilike :filtro', { filtro: `%${filtro}%` })
+          qb.orWhere('persona.nroDocumento ilike :filtro', {
+            filtro: `%${filtro}%`,
+          })
+          qb.orWhere('persona.nombres ilike :filtro', {
+            filtro: `%${filtro}%`,
+          })
+          qb.orWhere('persona.primerApellido ilike :filtro', {
+            filtro: `%${filtro}%`,
+          })
+          qb.orWhere('persona.segundoApellido ilike :filtro', {
+            filtro: `%${filtro}%`,
+          })
+        })
+      )
+    }
+    return await query.getManyAndCount()
+  } */
 }

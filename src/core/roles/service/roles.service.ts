@@ -14,10 +14,6 @@ export class RolesService {
     return await this.roleRepository.save(newRole)
   }
 
-  async findAll(): Promise<Role[]> {
-    return await this.roleRepository.findAll()
-  }
-
   async findOneById(id: string) {
     const role = await this.roleRepository.findOneById(id)
     if (!role)
@@ -39,7 +35,7 @@ export class RolesService {
     if (idRole) {
       await this.findOneById(idRole)
     }
-    const role = await this.roleRepository.findOne({ where: { name } })
+    const role = await this.roleRepository.findOneByRoleName(name)
     if (role && (idRole === undefined || role.id !== idRole)) {
       throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NAME_EXISTS)
     }
