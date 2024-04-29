@@ -9,11 +9,14 @@ import { UsersRepository } from '../repository'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
 import { TextService } from 'src/common/lib/text.service'
+import { RolesRepository } from 'src/core/roles/repository'
 @Injectable()
 export class UserService {
   constructor(
     @Inject(UsersRepository)
     private readonly usersRepository: UsersRepository,
+    @Inject(RolesRepository)
+    private readonly rolesRepository: RolesRepository,
     private textService: TextService
   ) {}
 
@@ -42,23 +45,45 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    await this.validateUpdateCreateUser({
+    const roles = await this.validateUpdateCreateUser({
       username: createUserDto.username,
       email: createUserDto.email,
+      roles: createUserDto.roles,
     })
-    createUserDto.password = await this.textService.encrypt(
-      createUserDto.password
-    )
-    const newUser = this.usersRepository.create(createUserDto)
+
+    const newUser = this.usersRepository.create({
+      email: createUserDto.email,
+      lastNames: createUserDto.lastNames,
+      password: await this.textService.encrypt(createUserDto.password),
+      phone: createUserDto.phone,
+      names: createUserDto.names,
+      username: createUserDto.username,
+      roles: roles,
+    })
     return await this.usersRepository.save(newUser)
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    await this.validateUpdateCreateUser(
-      { username: updateUserDto.username, email: updateUserDto.email },
+    const roles = await this.validateUpdateCreateUser(
+      {
+        username: updateUserDto.username,
+        email: updateUserDto.email,
+        roles: updateUserDto.roles,
+      },
       id
     )
-    return await this.usersRepository.update(id, updateUserDto)
+    const updateUser = this.usersRepository.create({
+      id: id,
+      email: updateUserDto.email,
+      lastNames: updateUserDto.lastNames,
+      phone: updateUserDto.phone,
+      names: updateUserDto.names,
+      username: updateUserDto.username,
+      roles: roles,
+    })
+    //Todo: Evaluar despues
+    //return await this.usersRepository.update(id, updateUserDto)
+    return await this.usersRepository.update(updateUser)
   }
 
   async delete(id: string) {
@@ -67,21 +92,37 @@ export class UserService {
   }
 
   private async validateUpdateCreateUser(
-    data: { username: string; email: string },
+    data: { username: string; email: string; roles: string[] },
     id?: string
   ) {
+    const { username, email, roles } = data
     if (id) {
       await this.findOneById(id)
     }
-    const userExists = await this.findOneByUsername(data.username)
+    const userExists = await this.findOneByUsername(username)
     if (userExists && (id === undefined || userExists.id !== id)) {
       throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
     }
 
-    const userExistsEmail = await this.findOneByEmail(data.email)
+    const userExistsEmail = await this.findOneByEmail(email)
     if (userExistsEmail && (id === undefined || userExistsEmail.id !== id)) {
       throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
     }
+    if (data.roles.length === 0) {
+      throw new PreconditionFailedException('Nose envio ningun rol')
+    }
+    const foundRoles = await Promise.all(
+      roles.map(async (role) => {
+        const roleExists = await this.rolesRepository.findOneById(role)
+        if (!roleExists) {
+          throw new PreconditionFailedException(
+            Messages.EXCEPTION_ROLE_NOT_FOUND
+          )
+        }
+        return roleExists
+      })
+    )
+    return foundRoles
   }
 
   private async findOneByUsername(username: string) {

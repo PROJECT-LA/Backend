@@ -1,6 +1,7 @@
 import { IUser } from 'src/core/users/interface/user.interface'
 import { IsOptional, MaxLength } from 'src/common/validation'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty } from 'class-validator'
 
 export class UpdateUserDto implements Partial<IUser> {
   @ApiProperty({ example: 'Juan' })
@@ -24,4 +25,8 @@ export class UpdateUserDto implements Partial<IUser> {
   @IsOptional()
   @MaxLength(30)
   username?: string
+
+  @IsNotEmpty()
+  @ApiProperty({ example: ['1'] })
+  roles: Array<string>
 }

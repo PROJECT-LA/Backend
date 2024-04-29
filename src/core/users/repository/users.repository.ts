@@ -8,6 +8,7 @@ import {
 import { User } from '../entities'
 import { Injectable } from '@nestjs/common'
 import { FilterUserDto } from '../dto'
+import { Role } from 'src/core/roles'
 @Injectable()
 export class UsersRepository {
   constructor(private dataSource: DataSource) {}
@@ -23,14 +24,16 @@ export class UsersRepository {
   async save(data: {
     username: string
     email: string
+    lastNames: string
+    names: string
+    phone?: string
     password: string
-    //roles: string[]
-    status?: string
+    roles: Role[]
   }): Promise<User> {
     return this.dataSource.getRepository(User).save(data)
   }
 
-  async update(
+  async update2(
     id: string,
     data: {
       username?: string
@@ -42,6 +45,17 @@ export class UsersRepository {
     }
   ): Promise<UpdateResult> {
     return await this.dataSource.getRepository(User).update(id, data)
+  }
+
+  async update(data: {
+    username: string
+    email: string
+    lastNames: string
+    names: string
+    phone: string
+    roles: Role[]
+  }): Promise<User> {
+    return this.dataSource.getRepository(User).save(data)
   }
 
   async delete(id: string): Promise<DeleteResult> {

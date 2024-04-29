@@ -27,5 +27,9 @@ export class CreateUserDto implements IUser {
   @MaxLength(30)
   username: string
 
+  @IsNotEmpty()
+  @ApiProperty({ example: ['1'] })
+  roles: Array<string>
+
   status?: string
 }
