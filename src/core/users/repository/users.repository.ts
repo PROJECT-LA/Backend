@@ -1,6 +1,13 @@
-import { DeepPartial, UpdateResult, DeleteResult, DataSource } from 'typeorm'
+import {
+  DeepPartial,
+  UpdateResult,
+  DeleteResult,
+  DataSource,
+  Brackets,
+} from 'typeorm'
 import { User } from '../entities'
 import { Injectable } from '@nestjs/common'
+import { FilterUserDto } from '../dto'
 @Injectable()
 export class UsersRepository {
   constructor(private dataSource: DataSource) {}
@@ -54,5 +61,54 @@ export class UsersRepository {
     return await this.dataSource
       .getRepository(User)
       .findOne({ where: { email } })
+  }
+
+  async findAll(filterDto: FilterUserDto) {
+    const { limit, order, sense, skip, filter } = filterDto
+    const query = this.dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.names',
+        'user.lastNames',
+        'user.email',
+        'user.phone',
+        'user.status',
+      ])
+      .take(limit)
+      .skip(skip)
+
+    switch (order) {
+      case 'names':
+        query.addOrderBy('user.names', sense)
+        break
+      case 'lastNames':
+        query.addOrderBy('user.lastNames', sense)
+        break
+      case 'email':
+        query.addOrderBy('user.email', sense)
+        break
+      case 'phone':
+        query.addOrderBy('user.phone', sense)
+        break
+      case 'status':
+        query.addOrderBy('user.status', sense)
+        break
+      default:
+        query.orderBy('user.id', 'ASC')
+    }
+
+    if (filter) {
+      query.andWhere(
+        new Brackets((qb) => {
+          qb.orWhere('user.names like :filter', { filter: `%${filter}%` })
+          qb.orWhere('user.lastNames like :filter', {
+            filter: `%${filter}%`,
+          })
+        })
+      )
+    }
+    return await query.getManyAndCount()
   }
 }

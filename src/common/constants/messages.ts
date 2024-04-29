@@ -1,4 +1,5 @@
 export enum Messages {
+  //GENERAL
   EXCEPTION_BAD_REQUEST = 'Existen errores en la solicitud.',
   EXCEPTION_UNAUTHORIZED = 'Usuario no autorizado.',
   EXCEPTION_FORBIDDEN = 'No tiene permisos para acceder a este recurso.',
@@ -17,4 +18,11 @@ export enum Messages {
 
   EXCEPTION_ROLE_NOT_FOUND = 'Rol no encontrado.',
   EXCEPTION_ROLE_NAME_EXISTS = 'El nombre del rol ya existe.',
+
+  //RESPONSES FROM CONTROLLER
+  REPONSE_SUCCESS = 'Se completo con exito',
+  RESPONCE_SUCCESS_LIST = 'Se obtuvieron los registros con éxito.',
+  RESPONSE_SUCCESS_CREATE = 'Registro creado con éxito.',
+  RESPONSE_SUCCESS_UPDATE = 'Registro actualizado con éxito.',
+  RESPONSE_SUCCESS_DELETE = 'Registro eliminado con éxito.',
 }

@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common'
 
 import { UsersRepository } from '../repository'
-import { CreateUserDto, UpdateUserDto } from '../dto'
+import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
 import { TextService } from 'src/common/lib/text.service'
 @Injectable()
@@ -92,79 +92,7 @@ export class UserService {
     return await this.usersRepository.findUserByEmail(email)
   }
 
-  /*   async listar(paginacionQueryDto: FiltrosUsuarioDto) {
-    const { limite, saltar, filtro, rol, orden, sentido } = paginacionQueryDto
-
-    const query = this.dataSource
-      .getRepository(Usuario)
-      .createQueryBuilder('usuario')
-      .leftJoinAndSelect('usuario.usuarioRol', 'usuarioRol')
-      .leftJoinAndSelect('usuarioRol.rol', 'rol')
-      .leftJoinAndSelect('usuario.persona', 'persona')
-      .select([
-        'usuario.id',
-        'usuario.usuario',
-        'usuario.correoElectronico',
-        'usuario.estado',
-        'usuario.ciudadaniaDigital',
-        'usuarioRol',
-        'rol.id',
-        'rol.rol',
-        'persona.nroDocumento',
-        'persona.nombres',
-        'persona.primerApellido',
-        'persona.segundoApellido',
-        'persona.fechaNacimiento',
-        'persona.tipoDocumento',
-      ])
-      .where('usuarioRol.estado = :estado', { estado: Status.ACTIVE })
-      .take(limite)
-      .skip(saltar)
-
-    switch (orden) {
-      case 'nroDocumento':
-        query.addOrderBy('persona.nroDocumento', sentido)
-        break
-      case 'nombres':
-        query.addOrderBy('persona.nombres', sentido)
-        break
-      case 'usuario':
-        query.addOrderBy('usuario.usuario', sentido)
-        break
-      case 'rol':
-        query.addOrderBy('rol.rol', sentido)
-        break
-      case 'estado':
-        query.addOrderBy('usuario.estado', sentido)
-        break
-      default:
-        query.addOrderBy('usuario.id', 'ASC')
-    }
-
-    if (rol) {
-      query.andWhere('rol.id IN(:...roles)', {
-        roles: rol,
-      })
-    }
-    if (filtro) {
-      query.andWhere(
-        new Brackets((qb) => {
-          qb.orWhere('usuario.usuario ilike :filtro', { filtro: `%${filtro}%` })
-          qb.orWhere('persona.nroDocumento ilike :filtro', {
-            filtro: `%${filtro}%`,
-          })
-          qb.orWhere('persona.nombres ilike :filtro', {
-            filtro: `%${filtro}%`,
-          })
-          qb.orWhere('persona.primerApellido ilike :filtro', {
-            filtro: `%${filtro}%`,
-          })
-          qb.orWhere('persona.segundoApellido ilike :filtro', {
-            filtro: `%${filtro}%`,
-          })
-        })
-      )
-    }
-    return await query.getManyAndCount()
-  } */
+  async findAll(paginacionQueryDto: FilterUserDto) {
+    return await this.usersRepository.findAll(paginacionQueryDto)
+  }
 }

@@ -1,7 +1,7 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 import { Messages } from 'src/common/constants'
 import { RolesRepository } from '../repository'
-import { CreateRoleDto, UpdateRoleDto } from '../dto'
+import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
 
 @Injectable()
 export class RolesService {
@@ -41,5 +41,8 @@ export class RolesService {
     if (role && (idRole === undefined || role.id !== idRole)) {
       throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NAME_EXISTS)
     }
+  }
+  async findAll(paginacionQueryDto: FilterRoleDto) {
+    return await this.roleRepository.findAll(paginacionQueryDto)
   }
 }

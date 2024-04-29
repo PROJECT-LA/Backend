@@ -1,12 +1,10 @@
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
 import { BaseEntity as TypeOrmBaseEntity } from 'typeorm'
-import { STATUS } from '../constants'
 export abstract class BaseEntity extends TypeOrmBaseEntity {
   @PrimaryGeneratedColumn({ type: 'bigint', name: 'id' })
   id: string

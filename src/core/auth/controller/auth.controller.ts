@@ -7,10 +7,13 @@ import { CurrentUser } from '../decorators/current-user.decorator'
 import { User } from 'src/core/users'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { Response } from 'express'
+import { BaseController } from 'src/common/abstract/base-controller.dto'
 @ApiTags('Auth')
 @Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+export class AuthController extends BaseController {
+  constructor(private readonly authService: AuthService) {
+    super()
+  }
 
   @ApiOperation({ summary: 'API para autenticación con usuario y contraseña' })
   @ApiBody({ description: 'Autenticación de usuarios', type: AuthDto })

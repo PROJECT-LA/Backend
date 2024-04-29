@@ -1,2 +1,2 @@
-export { PaginacionQueryDto } from './paginacion-query.dto'
-export { ParamIdDto } from './params-id.dto'
+export { PaginationQueryDto } from './pagination.dto'
+export { ParamIdDto } from './param-id.dto'
