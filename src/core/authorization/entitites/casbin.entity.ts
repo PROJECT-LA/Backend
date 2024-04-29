@@ -1,9 +1,7 @@
-/* import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-import dotenv from 'dotenv'
+import { BaseEntity } from 'src/common/abstract/base.entity'
+import { Column, Entity } from 'typeorm'
 
-dotenv.config()
-
-@Entity({ schema: process.env.DB_SCHEMA_USUARIOS })
+@Entity()
 export class CasbinRule extends BaseEntity {
   @Column({
     nullable: true,
@@ -40,10 +38,29 @@ export class CasbinRule extends BaseEntity {
     comment: 'Regla de acceso (Backend, Frontend)',
   })
   public v3: string | null
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Regla de acceso',
+  })
+  public v4: string | null
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Regla de acceso',
+  })
+  public v5: string | null
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+    comment: 'Regla de acceso',
+  })
+  public v6: string | null
 
   constructor(data?: Partial<CasbinRule>) {
     super()
     if (data) Object.assign(this, data)
   }
 }
- */

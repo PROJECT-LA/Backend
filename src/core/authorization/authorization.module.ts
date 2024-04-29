@@ -1,4 +1,4 @@
-/* import TypeORMAdapter from 'typeorm-adapter'
+import TypeORMAdapter from 'typeorm-adapter'
 import { Module } from '@nestjs/common'
 import { AUTHZ_ENFORCER, AuthZModule } from 'nest-authz'
 import { join } from 'path'
@@ -14,17 +14,19 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         provide: AUTHZ_ENFORCER,
         useFactory: async (configService: ConfigService) => {
           const adapter = await TypeORMAdapter.newAdapter({
-            type: 'postgres',
+            type: 'mysql',
             host: configService.get('DB_HOST'),
             port: configService.get('DB_PORT'),
             username: configService.get('DB_USERNAME'),
             password: configService.get('DB_PASSWORD'),
-            database: configService.get('DB_DATABASE'),
-            schema: configService.get('DB_SCHEMA_USUARIOS'),
+            database: configService.get('DB_NAME'),
             logging: false,
             synchronize: false,
           })
-          const enforcer = await newEnforcer(adapter)
+          const enforcer = await newEnforcer(
+            join(__dirname, 'model.conf'),
+            adapter
+          )
           enforcer.enableLog(false)
           await enforcer.loadPolicy()
           return enforcer
@@ -39,4 +41,3 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
   ],
 })
 export class AuthorizationConfigModule {}
- */
