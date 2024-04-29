@@ -17,11 +17,12 @@ import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard'
 import { BaseController } from 'src/common/abstract/base-controller.dto'
 import { ParamIdDto } from 'src/common/dto'
 import { FilterUserDto } from '../dto'
+import { CasbinGuard } from 'src/core/authorization/guards/casbin.guard'
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller('users')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 export class UsersController extends BaseController {
   constructor(private readonly usersService: UserService) {
     super()

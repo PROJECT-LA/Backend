@@ -1,1 +1,1 @@
-export { RolEEnum } from './rol.enum'
+export { RoleEnum } from './rol.enum'

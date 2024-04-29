@@ -1,7 +1,7 @@
 import { Role } from 'src/core/roles'
 import { MigrationInterface, QueryRunner } from 'typeorm'
 
-export class Roles1714314384267 implements MigrationInterface {
+export class Roles1712314384267 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const roles = [
       {

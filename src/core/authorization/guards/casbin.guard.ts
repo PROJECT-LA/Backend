@@ -28,11 +28,16 @@ export class CasbinGuard implements CanActivate {
       throw new UnauthorizedException()
     }
 
-    const isPermitted = await this.enforcer.enforce(
-      user.roles,
-      resource,
-      action
-    )
+    const roleNames = user.roles.map((role) => role.name)
+
+    let isPermitted = false
+    for (const role of roleNames) {
+      isPermitted = await this.enforcer.enforce(role, resource, action)
+      if (isPermitted) {
+        break
+      }
+    }
+
     if (isPermitted) {
       return true
     }

@@ -15,11 +15,12 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
 import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
 import { BaseController } from 'src/common/abstract/base-controller.dto'
 import { ParamIdDto } from 'src/common/dto'
+import { CasbinGuard } from 'src/core/authorization/guards/casbin.guard'
 
 @ApiTags('Roles')
 @ApiBearerAuth()
 @Controller('roles')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 export class RolesController extends BaseController {
   constructor(private readonly rolesService: RolesService) {
     super()

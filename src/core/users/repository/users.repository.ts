@@ -69,7 +69,10 @@ export class UsersRepository {
       .findOne({ where: { username } })
   }
   async findUserById(id: string): Promise<User> {
-    return await this.dataSource.getRepository(User).findOne({ where: { id } })
+    return await this.dataSource.getRepository(User).findOne({
+      where: { id },
+      relations: ['roles'],
+    })
   }
   async findUserByEmail(email: string): Promise<User> {
     return await this.dataSource
