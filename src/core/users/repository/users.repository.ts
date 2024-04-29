@@ -82,6 +82,7 @@ export class UsersRepository {
     const query = this.dataSource
       .getRepository(User)
       .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'roles')
       .select([
         'user.id',
         'user.names',
@@ -89,6 +90,8 @@ export class UsersRepository {
         'user.email',
         'user.phone',
         'user.status',
+        'roles.id',
+        'roles.name',
       ])
       .take(limit)
       .skip(skip)

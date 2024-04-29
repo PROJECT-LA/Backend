@@ -10,6 +10,7 @@ import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
 import { TextService } from 'src/common/lib/text.service'
 import { RolesRepository } from 'src/core/roles/repository'
+import { MESSAGES } from '@nestjs/core/constants'
 @Injectable()
 export class UserService {
   constructor(
@@ -109,7 +110,7 @@ export class UserService {
       throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
     }
     if (data.roles.length === 0) {
-      throw new PreconditionFailedException('Nose envio ningun rol')
+      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_SEND)
     }
     const foundRoles = await Promise.all(
       roles.map(async (role) => {

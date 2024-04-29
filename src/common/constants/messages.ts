@@ -18,6 +18,7 @@ export enum Messages {
 
   EXCEPTION_ROLE_NOT_FOUND = 'Rol no encontrado.',
   EXCEPTION_ROLE_NAME_EXISTS = 'El nombre del rol ya existe.',
+  EXCEPTION_ROLE_NOT_SEND = 'No se envió ningún rol.',
 
   //RESPONSES FROM CONTROLLER
   REPONSE_SUCCESS = 'Se completo con exito',

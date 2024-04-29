@@ -5,24 +5,24 @@ export class Roles1714314384267 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const roles = [
       {
-        name: 'Administrador',
-        rol: 'ADMINISTRADOR',
+        description: 'Administrador',
+        name: 'ADMINISTRADOR',
       },
       {
-        name: 'Gerente',
-        rol: 'GERENTE',
+        description: 'Gerente',
+        name: 'GERENTE',
       },
       {
-        name: 'Auditor',
-        rol: 'AUDITOR',
+        description: 'Auditor',
+        name: 'AUDITOR',
       },
       {
-        name: 'Cliente',
-        rol: 'CLIENTE',
+        description: 'Cliente',
+        name: 'CLIENTE',
       },
     ]
     const newRoles = roles.map((role) => {
-      return new Role({ name: role.name, description: role.rol })
+      return new Role({ name: role.name, description: role.description })
     })
     await queryRunner.manager.save(newRoles)
   }
