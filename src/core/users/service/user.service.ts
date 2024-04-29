@@ -10,7 +10,7 @@ import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
 import { TextService } from 'src/common/lib/text.service'
 import { RolesRepository } from 'src/core/roles/repository'
-import { MESSAGES } from '@nestjs/core/constants'
+
 @Injectable()
 export class UserService {
   constructor(

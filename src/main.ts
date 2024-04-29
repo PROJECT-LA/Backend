@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
-import * as morgan from 'morgan'
+import morgan from 'morgan'
 import { CORS, SWAGGER_DEFAULT_CONFIG } from './common/constants'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
