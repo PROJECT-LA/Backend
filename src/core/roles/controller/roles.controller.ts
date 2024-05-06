@@ -11,11 +11,12 @@ import {
 } from '@nestjs/common'
 import { RolesService } from '../service/roles.service'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard'
+
 import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
-import { BaseController } from 'src/common/abstract/base-controller.dto'
 import { ParamIdDto } from 'src/common/dto'
-import { CasbinGuard } from 'src/core/authorization/guards/casbin.guard'
+import { CasbinGuard } from 'src/core/authorization'
+import { JwtAuthGuard } from 'src/core/auth'
+import { BaseController } from 'src/common'
 
 @ApiTags('Roles')
 @ApiBearerAuth()

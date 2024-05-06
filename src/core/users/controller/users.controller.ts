@@ -9,15 +9,13 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common'
-import { CreateUserDto } from '../dto/create-user.dto'
 import { UserService } from '../service'
-import { UpdateUserDto } from '../dto/update-user.dto'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { JwtAuthGuard } from 'src/core/auth/guards/jwt-auth.guard'
-import { BaseController } from 'src/common/abstract/base-controller.dto'
 import { ParamIdDto } from 'src/common/dto'
-import { FilterUserDto } from '../dto'
-import { CasbinGuard } from 'src/core/authorization/guards/casbin.guard'
+import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
+import { JwtAuthGuard } from 'src/core/auth/guards'
+import { BaseController } from 'src/common'
+import { CasbinGuard } from 'src/core/authorization'
 
 @ApiTags('Users')
 @ApiBearerAuth()
