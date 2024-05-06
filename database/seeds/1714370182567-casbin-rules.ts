@@ -46,7 +46,6 @@ export class CasbinRules1714370182567 implements MigrationInterface {
             v1: routePath,
             v2: action,
             v3: tipo,
-            status: STATUS.ACTIVE,
           })
           await queryRunner.manager.save(datosRegistro)
         }

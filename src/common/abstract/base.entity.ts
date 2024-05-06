@@ -10,7 +10,7 @@ export abstract class BaseEntity extends TypeOrmBaseEntity {
   id: string
 
   @Column({
-    name: 'state',
+    name: 'status',
     length: 30,
     type: 'varchar',
     nullable: false,

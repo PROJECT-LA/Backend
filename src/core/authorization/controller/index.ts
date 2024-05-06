@@ -1,1 +1,2 @@
-export { RolController } from './role.controller'
+export { AuthorizationController } from './authorization.controller'
+export { ModuloController } from './modulo.controller'

@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common'
 import { UsersModule } from './users/user.module'
 import { AuthModule } from './auth/auth.module'
 import { RolesModule } from './roles/roles.module'
-import { AuthorizationConfigModule } from './authorization/config/authorization.module'
+import { AuthorizationModule } from './authorization'
 
 @Module({
-  imports: [UsersModule, RolesModule, AuthModule, AuthorizationConfigModule],
+  imports: [UsersModule, RolesModule, AuthModule, AuthorizationModule],
 })
 export class CoreModule {}

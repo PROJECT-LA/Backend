@@ -1,8 +1,12 @@
-import { BaseEntity } from 'src/common/abstract/base.entity'
-import { Column, Entity } from 'typeorm'
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
 @Entity()
 export class CasbinRule extends BaseEntity {
+  @PrimaryGeneratedColumn({
+    comment: 'Clave primaria de la tabla CasbinRule',
+  })
+  public id: number
+
   @Column({
     nullable: true,
     type: 'varchar',

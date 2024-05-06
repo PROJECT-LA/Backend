@@ -24,7 +24,7 @@ import { AuthorizationService } from '../service'
 
 @ApiBearerAuth()
 @ApiTags('Autorización')
-@UseGuards(JwtAuthGuard, CasbinGuard)
+//@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('autorizacion')
 export class AuthorizationController extends BaseController {
   constructor(private authorizationService: AuthorizationService) {
@@ -44,7 +44,7 @@ export class AuthorizationController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API para actualizar una nueva política' })
-  @ApiQuery({ name: 'id' })
+  @ApiQuery({ name: 'query' })
   @ApiBody({
     type: CreateUpdatePoliciesDto,
     description: 'Actualizar política',
@@ -71,7 +71,6 @@ export class AuthorizationController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API para eliminar una política' })
-  @ApiQuery({ name: 'id' })
   @Delete('/politicas')
   async eliminarPolitica(@Query() query: CreateUpdatePoliciesDto) {
     const result = await this.authorizationService.deletePolicie(query)
@@ -83,7 +82,7 @@ export class AuthorizationController extends BaseController {
   })
   @Get('/permisos')
   async obtenerRoles() {
-    const result = await this.authorizationService.obtenerRoles()
+    const result = await this.authorizationService.getRoles()
     return this.successList(result)
   }
 }

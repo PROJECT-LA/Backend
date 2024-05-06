@@ -1,7 +1,7 @@
 import { Injectable, Query } from '@nestjs/common'
 import { AuthZManagementService } from 'nest-authz'
-import { ModuleService } from './module.service'
 import { CreateUpdatePoliciesDto, FilterPoliciesDto } from '../dto'
+import { ModuleService } from './module.service'
 
 type politicasResultType = [Array<CreateUpdatePoliciesDto>, number]
 
@@ -86,9 +86,9 @@ export class AuthorizationService {
 
   async updatePolicie(
     policie: CreateUpdatePoliciesDto,
-    politicaNueva: CreateUpdatePoliciesDto
+    newPolicie: CreateUpdatePoliciesDto
   ) {
-    const { subject, object, action, app } = politicaNueva
+    const { subject, object, action, app } = newPolicie
     await this.deletePolicie(policie)
     await this.authZManagerService.addPolicy(subject, object, action, app)
   }
@@ -99,11 +99,11 @@ export class AuthorizationService {
     return policie
   }
 
-  async obtenerRoles() {
+  async getRoles() {
     return await this.authZManagerService.getFilteredPolicy(3, 'frontend')
   }
 
-  async obtenerPermisosPorRol(rol: string) {
+  async getPoliciesByRole(rol: string) {
     const policies = await this.authZManagerService.getFilteredPolicy(
       3,
       'frontend'
