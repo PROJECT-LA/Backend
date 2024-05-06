@@ -8,8 +8,8 @@ import {
 import { UsersRepository } from '../repository'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
-import { TextService } from 'src/common/lib/text.service'
 import { RolesRepository } from 'src/core/roles/repository'
+import { TextService } from 'src/common'
 
 @Injectable()
 export class UserService {
