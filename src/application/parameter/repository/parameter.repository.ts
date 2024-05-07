@@ -102,14 +102,14 @@ export class ParameterRepository {
   }
 
   async create(parametroDto: CreateParameterDto) {
-    const { code, name, group, description } = parametroDto
-
-    const parameter = new Parameter()
-    parameter.code = code
-    parameter.name = name
-    parameter.group = group
-    parameter.description = description
-
+    const { code, name, group, description, status } = parametroDto
+    const parameter = this.dataSource.getRepository(Parameter).create({
+      code,
+      name,
+      group,
+      description,
+      status,
+    })
     return await this.dataSource.getRepository(Parameter).save(parameter)
   }
 }

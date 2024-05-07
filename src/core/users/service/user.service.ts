@@ -1,13 +1,14 @@
 import {
   Inject,
   Injectable,
+  NotFoundException,
   PreconditionFailedException,
   UnauthorizedException,
 } from '@nestjs/common'
 
 import { UsersRepository } from '../repository'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
-import { Messages } from 'src/common/constants'
+import { Messages, STATUS } from 'src/common/constants'
 import { RolesRepository } from 'src/core/roles/repository'
 import { RolePassport, TextService } from 'src/common'
 
@@ -153,5 +154,20 @@ export class UserService {
       throw new UnauthorizedException(`Rol no permitido.`)
     }
     return role
+  }
+
+  //Todo:Eavluar al inactivacion de roles
+  async changeStatus(idUser: string) {
+    const user = await this.usersRepository.findUserById(idUser)
+    if (!user) {
+      throw new NotFoundException(Messages.EXCEPTION_USER_NOT_FOUND)
+    }
+    const newStatus =
+      user.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
+    await this.usersRepository.updateStatus(idUser, newStatus)
+    return {
+      id: idUser,
+      status: newStatus,
+    }
   }
 }

@@ -10,7 +10,13 @@ import {
   Query,
 } from '@nestjs/common'
 import { UserService } from '../service'
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 import { ParamIdDto } from 'src/common/dto'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { JwtAuthGuard } from 'src/core/auth/guards'
@@ -37,10 +43,13 @@ export class UsersController extends BaseController {
   @Get()
   async findAll(@Query() paginacionQueryDto: FilterUserDto) {
     const result = await this.usersService.findAll(paginacionQueryDto)
-    return await this.successListRows(result)
+    return this.successListRows(result)
   }
 
   @ApiOperation({ summary: 'API: para obtener un usuario' })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
   @Get(':id')
   async findOne(@Param() param: ParamIdDto) {
     const { id } = param
@@ -49,6 +58,9 @@ export class UsersController extends BaseController {
 
   @ApiOperation({ summary: 'API: para actulizar un usuario' })
   @ApiBody({ type: UpdateUserDto })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
   @Patch(':id')
   async update(
     @Param() param: ParamIdDto,
@@ -66,5 +78,16 @@ export class UsersController extends BaseController {
     const { id } = param
     const result = this.usersService.delete(id)
     return this.successDelete(result)
+  }
+
+  @ApiOperation({ summary: 'API para cmabiar el estado de un usuario' })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @Patch('/:id/change-status')
+  async activar(@Param() params: ParamIdDto) {
+    const { id: idUser } = params
+    const result = await this.usersService.changeStatus(idUser)
+    return this.successUpdate(result)
   }
 }

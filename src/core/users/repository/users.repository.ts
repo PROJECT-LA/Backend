@@ -33,20 +33,6 @@ export class UsersRepository {
     return this.dataSource.getRepository(User).save(data)
   }
 
-  async update2(
-    id: string,
-    data: {
-      username?: string
-      email?: string
-      lastNames?: string
-      names?: string
-      phone?: string
-      //roles?: string[]
-    }
-  ): Promise<UpdateResult> {
-    return await this.dataSource.getRepository(User).update(id, data)
-  }
-
   async update(data: {
     username: string
     email: string
@@ -177,5 +163,16 @@ export class UsersRepository {
       )
     }
     return await query.getManyAndCount()
+  }
+  async updatePassword(id: string, newPassword: string): Promise<UpdateResult> {
+    return await this.dataSource
+      .getRepository(User)
+      .update(id, { password: newPassword })
+  }
+
+  async updateStatus(id: string, newStatus: string): Promise<UpdateResult> {
+    return await this.dataSource
+      .getRepository(User)
+      .update(id, { status: newStatus })
   }
 }

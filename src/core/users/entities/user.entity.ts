@@ -14,7 +14,7 @@ export class User extends BaseEntity implements IUser {
   @Column({ nullable: false, unique: true })
   email: string
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, update: false })
   password: string
 
   @Column({ nullable: true })
