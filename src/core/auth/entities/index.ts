@@ -1,1 +1,1 @@
-/* export {} from './auth.entity' */
+export { RefreshTokens } from './refreshToken.entity'

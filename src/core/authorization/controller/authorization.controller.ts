@@ -23,9 +23,9 @@ import { CasbinGuard } from '../guards'
 import { AuthorizationService } from '../service'
 
 @ApiBearerAuth()
-@ApiTags('Autorización')
+@ApiTags('Authorization')
 //@UseGuards(JwtAuthGuard, CasbinGuard)
-@Controller('autorizacion')
+@Controller('authorization')
 export class AuthorizationController extends BaseController {
   constructor(private authorizationService: AuthorizationService) {
     super()
@@ -37,7 +37,7 @@ export class AuthorizationController extends BaseController {
     description: 'Crear nueva política',
     required: true,
   })
-  @Post('/politicas')
+  @Post('/politicies')
   async crearPolitica(@Body() politica: CreateUpdatePoliciesDto) {
     const result = await this.authorizationService.createPolicie(politica)
     return this.successCreate(result)
@@ -50,7 +50,7 @@ export class AuthorizationController extends BaseController {
     description: 'Actualizar política',
     required: true,
   })
-  @Patch('/politicas')
+  @Patch('/policies')
   async actualizarPolitica(
     @Body() politica: CreateUpdatePoliciesDto,
     @Query() query: CreateUpdatePoliciesDto
@@ -64,14 +64,14 @@ export class AuthorizationController extends BaseController {
 
   @ApiOperation({ summary: 'API para obtener el listado de politicas' })
   @ApiQuery({ name: 'query', type: FilterPoliciesDto })
-  @Get('/politicas')
+  @Get('/policies')
   async findAll(@Query() paginacionQueryDto: FilterPoliciesDto) {
     const result = await this.authorizationService.findAll(paginacionQueryDto)
     return this.successListRows(result)
   }
 
   @ApiOperation({ summary: 'API para eliminar una política' })
-  @Delete('/politicas')
+  @Delete('/policies')
   async eliminarPolitica(@Query() query: CreateUpdatePoliciesDto) {
     const result = await this.authorizationService.deletePolicie(query)
     return this.successDelete(result)
@@ -80,7 +80,7 @@ export class AuthorizationController extends BaseController {
   @ApiOperation({
     summary: 'API para obtener las politicas definidas en formato CASBIN',
   })
-  @Get('/permisos')
+  @Get('/permits')
   async obtenerRoles() {
     const result = await this.authorizationService.getRoles()
     return this.successList(result)

@@ -52,7 +52,7 @@ export class Module extends BaseEntity {
   order: number
 
   @Column({
-    name: 'id_modulo',
+    name: 'id_module',
     type: 'bigint',
     nullable: true,
     comment: 'Clave foránea que índica que pertenece a otro módulo',

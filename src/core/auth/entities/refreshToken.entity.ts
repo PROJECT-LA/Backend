@@ -14,17 +14,17 @@ export class RefreshTokens {
   grantId: string
 
   @Column({
-    type: 'timestamp without time zone',
+    type: 'timestamp',
     comment: 'Fecha de creación de token',
   })
-  iat: Date
+  iat: string
 
   @Column({
     name: 'expires_at',
-    type: 'timestamp without time zone',
+    type: 'timestamp',
     comment: 'Fecha expiración de token',
   })
-  expiresAt: Date
+  expiresAt: string
 
   @Column({
     name: 'is_revoked',
