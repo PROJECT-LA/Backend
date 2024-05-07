@@ -1,8 +1,8 @@
 export interface PassportUser {
   id: string
   roles: RolePassport[]
-  idRole?: string
-  roleName?: string
+  idRole: string
+  roleName: string
   idToken?: string
   accessToken?: string
   refreshToken?: string
