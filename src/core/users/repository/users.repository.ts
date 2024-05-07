@@ -66,14 +66,61 @@ export class UsersRepository {
   async findByUserName(username: string): Promise<User> {
     return await this.dataSource
       .getRepository(User)
-      .findOne({ where: { username } })
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'roles')
+      .select([
+        'user.id',
+        'user.names',
+        'user.lastNames',
+        'user.email',
+        'user.phone',
+        'user.status',
+        'roles.id',
+        'roles.name',
+      ])
+      .where('user.username = :username', { username })
+      .getOne()
   }
+
+  async findByUserNameAndPassword(username: string): Promise<User> {
+    return await this.dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'roles')
+      .select([
+        'user.id',
+        'user.names',
+        'user.password',
+        'user.lastNames',
+        'user.email',
+        'user.phone',
+        'user.status',
+        'roles.id',
+        'roles.name',
+      ])
+      .where('user.username = :username', { username })
+      .getOne()
+  }
+
   async findUserById(id: string): Promise<User> {
-    return await this.dataSource.getRepository(User).findOne({
-      where: { id },
-      relations: ['roles'],
-    })
+    return await this.dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'roles')
+      .select([
+        'user.id',
+        'user.names',
+        'user.lastNames',
+        'user.email',
+        'user.phone',
+        'user.status',
+        'roles.id',
+        'roles.name',
+      ])
+      .where('user.id = :id', { id })
+      .getOne()
   }
+
   async findUserByEmail(email: string): Promise<User> {
     return await this.dataSource
       .getRepository(User)

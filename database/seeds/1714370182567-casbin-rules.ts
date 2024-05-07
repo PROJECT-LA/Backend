@@ -1,4 +1,3 @@
-import { STATUS } from 'src/common/constants'
 import { RoleEnum } from 'src/core/authorization/constants'
 import { CasbinRule } from 'src/core/authorization/entitites/casbin.entity'
 import { MigrationInterface, QueryRunner } from 'typeorm'

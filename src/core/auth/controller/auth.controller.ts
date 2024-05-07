@@ -4,10 +4,10 @@ import { AuthService } from '../service'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { AuthDto } from '../dto'
 import { CurrentUser } from '../decorators/current-user.decorator'
-import { User } from 'src/core/users'
 import { JwtAuthGuard } from '../guards/jwt-auth.guard'
 import { Response } from 'express'
 import { BaseController } from 'src/common/abstract/base-controller.dto'
+import { PassportUser } from 'src/common'
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController extends BaseController {
@@ -20,7 +20,7 @@ export class AuthController extends BaseController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @CurrentUser() user: User,
+    @CurrentUser() user: PassportUser,
     @Res({ passthrough: true }) response: Response
   ) {
     return await this.authService.login(user, response)

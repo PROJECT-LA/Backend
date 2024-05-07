@@ -9,7 +9,7 @@ import { UsersRepository } from '../repository'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
 import { Messages } from 'src/common/constants'
 import { RolesRepository } from 'src/core/roles/repository'
-import { TextService } from 'src/common'
+import { RolePassport, TextService } from 'src/common'
 
 @Injectable()
 export class UserService {
@@ -22,17 +22,18 @@ export class UserService {
   ) {}
 
   async validateUser(username: string, password: string) {
-    const user = await this.usersRepository.findByUserName(username)
+    const user = await this.usersRepository.findByUserNameAndPassword(username)
     if (!user) {
-      throw new UnauthorizedException(Messages.INVALID_CREDENTIALS)
+      throw new UnauthorizedException('Username')
     }
 
     const passwordIsValid = await this.textService.compare(
       password,
       user.password
     )
+
     if (!passwordIsValid) {
-      throw new UnauthorizedException(Messages.INVALID_CREDENTIALS)
+      throw new UnauthorizedException('password')
     }
     return user
   }
@@ -136,5 +137,21 @@ export class UserService {
 
   async findAll(paginacionQueryDto: FilterUserDto) {
     return await this.usersRepository.findAll(paginacionQueryDto)
+  }
+
+  getCurrentRole(roles: RolePassport[], idRol: string | null | undefined) {
+    if (roles.length < 1) {
+      throw new UnauthorizedException(`El usuario no cuenta con roles.`)
+    }
+
+    if (!idRol) {
+      return roles[0]
+    }
+
+    const role = roles.find((item) => item.id === idRol)
+    if (!role) {
+      throw new UnauthorizedException(`Rol no permitido.`)
+    }
+    return role
   }
 }

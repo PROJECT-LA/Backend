@@ -12,9 +12,8 @@ export class LocalAuthGuard extends AuthGuard('local') {
       const isPermitted = (await super.canActivate(context)) as boolean
       if (!isPermitted) throw new UnauthorizedException()
     } catch (err) {
-      throw new UnauthorizedException()
+      throw new UnauthorizedException('Credenciales Invalidas')
     }
-
     return true
   }
 }

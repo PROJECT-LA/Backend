@@ -1,8 +1,9 @@
-import { Injectable, Res } from '@nestjs/common'
-import { Response, response } from 'express'
+import { Injectable } from '@nestjs/common'
+import { Response } from 'express'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { User } from '../../users/entities/user.entity'
+import { UserService } from 'src/core/users'
+import { PassportUser } from 'src/common'
 
 export interface TokenPayload {
   userId: string
@@ -12,12 +13,21 @@ export interface TokenPayload {
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly userService: UserService
   ) {}
 
-  async login(user: User, response: Response) {
-    const tokenPayload: TokenPayload = {
-      userId: user.id.toLocaleString(),
+  async login(user: PassportUser, response: Response) {
+    if (user.roles.length === 0)
+      throw new Error('El usuario no tiene roles asignados')
+
+    const role = this.userService.getCurrentRole(user.roles, user.idRole)
+
+    const tokenPayload: PassportUser = {
+      id: user.id,
+      roles: user.roles,
+      idRole: role.id,
+      roleName: role.name,
     }
 
     const expires = new Date()
