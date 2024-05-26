@@ -26,10 +26,12 @@ import { LocalStrategy } from './auth/strategies/local.strategy'
 import { RefreshTokenStrategy } from './auth/strategies/rft.strategy'
 import { PolicyService } from './policies/service'
 import { CasbinModule } from './policies/config/casbin.module'
-import { DataSourceConfig } from './config/data.source'
+import { DataSourceConfig } from './db/orm-config-source'
+import { SharedModule } from '@app/common'
 
 @Module({
   imports: [
+    TypeOrmModule.forRoot(DataSourceConfig),
     TypeOrmModule.forFeature([User, Role, RefreshToken, ModuleEntity]),
     PassportModule,
     JwtModule.registerAsync({
@@ -43,9 +45,9 @@ import { DataSourceConfig } from './config/data.source'
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot(DataSourceConfig),
     CasbinModule,
     ScheduleModule.forRoot(),
+    SharedModule,
   ],
   controllers: [
     RoleController,

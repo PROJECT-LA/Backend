@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { compare, hash } from 'bcrypt'
 import zxcvbn from 'zxcvbn-typescript'
-import { Configurations } from '../config'
 import { customAlphabet, nanoid } from 'nanoid'
+import { Configurations } from '../constants'
 @Injectable()
 export class TextService {
   static encrypt(password: string) {
@@ -20,7 +20,7 @@ export class TextService {
   static generateShortRandomText(length = 8): string {
     const nanoid = customAlphabet(
       '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-      length
+      length,
     )
     return nanoid()
   }

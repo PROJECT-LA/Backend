@@ -20,7 +20,7 @@ export interface BaseInterfaceRepository<T> {
   preload(entityLike: DeepPartial<T>): Promise<T>
   update(
     id: string,
-    entityLike: QueryDeepPartialEntity<T>
+    entityLike: QueryDeepPartialEntity<T>,
   ): Promise<UpdateResult>
   delete(id: string): Promise<DeleteResult>
 }

@@ -15,11 +15,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
         useFactory: async (configService: ConfigService) => {
           const adapter = await TypeORMAdapter.newAdapter({
             type: 'mysql',
-            host: configService.get('DB_HOST'),
-            port: configService.get('DB_PORT'),
-            username: configService.get('DB_USERNAME'),
-            password: configService.get('DB_PASSWORD'),
-            database: configService.get('DB_NAME'),
+            host: configService.get('DB_HOST_AUTH'),
+            port: configService.get('DB_PORT_AUTH'),
+            username: configService.get('DB_USERNAME_AUTH'),
+            password: configService.get('DB_PASSWORD_AUTH'),
+            database: configService.get('DB_NAME_AUTH'),
             logging: false,
             synchronize: false,
           })

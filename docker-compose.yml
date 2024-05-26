@@ -1,0 +1,82 @@
+version: '3.9'
+services:
+  db_auth:
+    platform: linux/x86_64
+    image: mysql:latest
+    environment:
+      TZ: UTC
+      MYSQL_DATABASE: ${DB_NAME_AUTH}
+      MYSQL_USER: ${DB_USERNAME_AUTH}
+      MYSQL_PASSWORD: ${DB_PASSWORD_AUTH}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUTH}
+    ports:
+      - '${DB_PORT_AUTH}:3306'
+    volumes:
+      - db_data_auth:/var/lib/mysql
+    networks:
+      - mysql-phpmyadmin
+
+  db_audit:
+    platform: linux/x86_64
+    image: mysql:latest
+    environment:
+      TZ: UTC
+      MYSQL_DATABASE: ${DB_NAME_AUDIT}
+      MYSQL_USER: ${DB_USERNAME_AUDIT}
+      MYSQL_PASSWORD: ${DB_PASSWORD_AUDIT}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUDIT}
+    ports:
+      - '${DB_PORT_AUDIT}:3307'
+    volumes:
+      - db_data_audit:/var/lib/mysql
+    networks:
+      - mysql-phpmyadmin
+
+  phpmyadmin_auth:
+    depends_on:
+      - db_auth
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8090:80'
+    environment:
+      PMA_HOST: db_auth
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUTH}
+    networks:
+      - mysql-phpmyadmin
+
+  phpmyadmin_audit:
+    depends_on:
+      - db_audit
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - '8091:80'
+    environment:
+      PMA_HOST: db_audit
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUDIT}
+    networks:
+      - mysql-phpmyadmin
+
+  #rabitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - /var/lib/rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_PASS: ${RABBITMQ_PASS}
+      RABBITMQ_USER: ${RABBITMQ_USER}
+
+networks:
+  mysql-phpmyadmin:
+
+volumes:
+  db_data_auth:
+  db_data_audit:
