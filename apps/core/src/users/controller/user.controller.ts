@@ -1,35 +1,46 @@
-import { Controller, Inject } from '@nestjs/common'
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+  Query,
+} from '@nestjs/common'
 import { UserService } from '../service'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
-import { BaseController, SharedService } from '@app/common'
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { BaseController, ParamIdDto } from '@app/common'
+import { JwtAuthGuard } from '../../auth'
+import { CasbinGuard } from '../../policies'
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
+@UseGuards(JwtAuthGuard, CasbinGuard)
 export class UserController extends BaseController {
-  constructor(
-    private readonly usersService: UserService,
-    @Inject('SharedServiceInterface')
-    private readonly sharedService: SharedService,
-  ) {
+  constructor(private readonly usersService: UserService) {
     super()
   }
-
-  @MessagePattern({ cmd: 'create-user' })
-  async create(
-    @Ctx() context: RmqContext,
-    @Payload() { createUserDto }: { createUserDto: CreateUserDto },
-  ) {
-    this.sharedService.acknowledgeMessage(context)
+  @ApiOperation({ summary: 'API: para crear un usuario' })
+  @ApiBody({ type: CreateUserDto })
+  @Post()
+  async create(@Body() createUserDto: CreateUserDto) {
     const result = await this.usersService.create(createUserDto)
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'get-users' })
-  async findAll(
-    @Ctx() context: RmqContext,
-    @Payload() { paginacionQueryDto }: { paginacionQueryDto: FilterUserDto },
-  ) {
-    this.sharedService.acknowledgeMessage(context)
+  @ApiOperation({ summary: 'API: para obtener el listado de usuarios' })
+  @Get()
+  async findAll(@Query() paginacionQueryDto: FilterUserDto) {
     const result = await this.usersService.list(paginacionQueryDto)
     return this.successListRows(result)
   }
@@ -39,35 +50,43 @@ export class UserController extends BaseController {
     type: ParamIdDto,
   })
   @Get(':id')
-  async findOne(@Param() id: ParamIdDto) {
-    const { id } = id
+  async findOne(@Param() param: ParamIdDto) {
+    const { id } = param
     return await this.usersService.findOneById(id)
   }
 
  */
-
-  @MessagePattern({ cmd: 'update-user' })
+  @ApiOperation({ summary: 'API: para actulizar un usuario' })
+  @ApiBody({ type: UpdateUserDto })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @Patch(':id')
   async update(
-    @Ctx() context: RmqContext,
-    @Payload()
-    { id, updateUserDto }: { id: string; updateUserDto: UpdateUserDto },
+    @Param() param: ParamIdDto,
+    @Body() updateUserDto: UpdateUserDto,
   ) {
-    this.sharedService.acknowledgeMessage(context)
+    const { id } = param
     const result = await this.usersService.update(id, updateUserDto)
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-user' })
-  remove(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
-    this.sharedService.acknowledgeMessage(context)
+  @ApiOperation({ summary: 'API: para borrar un usuario' })
+  @Delete(':id')
+  remove(@Param() param: ParamIdDto) {
+    const { id } = param
     const result = this.usersService.delete(id)
     return this.successDelete(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-user' })
-  async activar(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
-    const result = await this.usersService.changeStatus(id)
-    this.sharedService.acknowledgeMessage(context)
+  @ApiOperation({ summary: 'API para cambiar el estado de un usuario' })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @Patch('/:id/change-status')
+  async activar(@Param() params: ParamIdDto) {
+    const { id: idUser } = params
+    const result = await this.usersService.changeStatus(idUser)
     return this.successUpdate(result)
   }
 }
