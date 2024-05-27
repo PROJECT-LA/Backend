@@ -1,12 +1,21 @@
-import { Controller, Get } from '@nestjs/common'
-import { AuditService } from './audit.service'
+import { Controller, Inject } from '@nestjs/common'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { SharedService } from '@app/common'
 
 @Controller()
 export class AuditController {
-  constructor(private readonly auditService: AuditService) {}
+  constructor(
+    @Inject('SharedServiceInterface')
+    private readonly sharedService: SharedService,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.auditService.getHello()
+  @MessagePattern({ cmd: 'get-friends' })
+  async getFriends(
+    @Ctx() context: RmqContext,
+    @Payload() payload: { userId: number },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+
+    return 'Menasje recuperado' + payload.userId
   }
 }

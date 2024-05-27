@@ -4,7 +4,7 @@ import { AuditController } from './audit.controller'
 
 @Module({
   imports: [
-    SharedModule.registerRmq('AUDIT_SERVICE', process.env.RABBITMQ_AUTH_QUEUE),
+    SharedModule.registerRmq('AUDIT_SERVICE', process.env.RABBITMQ_AUDIT_QUEUE),
   ],
   controllers: [AuditController],
 })
