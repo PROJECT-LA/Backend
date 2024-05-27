@@ -5,7 +5,14 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": false,
-    "tsConfigPath": "apps/api/tsconfig.app.json"
+    "tsConfigPath": "apps/api/tsconfig.app.json",
+    "assets": [
+      {
+        "include": "**/model.conf",
+        "outDir": "dist/apps/api/src",
+        "watchAssets": true
+      }
+    ]
   },
   "monorepo": true,
   "root": "apps/api",
@@ -28,20 +35,23 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     },
-    "core": {
+
+    "audit": {
       "type": "application",
-      "root": "apps/core",
+      "root": "apps/audit",
       "entryFile": "main",
-      "sourceRoot": "apps/core/src",
+      "sourceRoot": "apps/audit/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/core/tsconfig.app.json",
-        "assets": [
-          {
-            "include": "**/model.conf",
-            "outDir": "dist/apps/core/src",
-            "watchAssets": true
-          }
-        ]
+        "tsConfigPath": "apps/audit/tsconfig.app.json"
+      }
+    },
+    "files": {
+      "type": "application",
+      "root": "apps/files",
+      "entryFile": "main",
+      "sourceRoot": "apps/files/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/files/tsconfig.app.json"
       }
     }
   }
