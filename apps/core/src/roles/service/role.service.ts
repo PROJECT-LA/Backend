@@ -1,8 +1,9 @@
-import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
 import { RoleRepositoryInterface } from '../interface/role-repository.interface'
 import { PolicyService } from '../../policies/service'
 import { Messages, STATUS } from '@app/common'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class RoleService {
@@ -14,8 +15,7 @@ export class RoleService {
 
   async getRoleById(id: string) {
     const role = await this.roleRepository.findOneById(id)
-    if (!role)
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+    if (!role) throw new RpcException(Messages.EXCEPTION_ROLE_NOT_FOUND)
     return role
   }
 
@@ -43,7 +43,10 @@ export class RoleService {
       where: { name },
     })
     if (role && (idRole === undefined || role.id !== idRole)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NAME_EXISTS)
+      throw new RpcException({
+        message: Messages.EXCEPTION_ROLE_NAME_EXISTS,
+        code: 409,
+      })
     }
   }
 
@@ -53,13 +56,14 @@ export class RoleService {
 
   async changeRoleState(idRole: string) {
     const role = await this.roleRepository.findOneById(idRole)
+    if (!role) throw new RpcException(Messages.EXCEPTION_ROLE_NOT_FOUND)
     const newStatus =
       role.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
     try {
       await this.roleRepository.update(idRole, { status: newStatus })
       await this.policyService.changeRoleState(idRole, newStatus)
     } catch (error) {
-      throw new Error(Messages.EXCEPTION_UPDATE_ERROR)
+      throw new RpcException(Messages.EXCEPTION_UPDATE_ERROR)
     }
     return {
       id: idRole,

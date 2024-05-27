@@ -27,7 +27,7 @@ import { RefreshTokenStrategy } from './auth/strategies/rft.strategy'
 import { PolicyService } from './policies/service'
 import { CasbinModule } from './policies/config/casbin.module'
 import { DataSourceConfig } from './db/orm-config-source'
-import { SharedModule } from '@app/common'
+import { SharedModule, SharedService } from '@app/common'
 
 @Module({
   imports: [
@@ -69,6 +69,10 @@ import { SharedModule } from '@app/common'
     {
       provide: 'IModuleRepository',
       useClass: ModuleRepository,
+    },
+    {
+      provide: 'SharedServiceInterface',
+      useClass: SharedService,
     },
     UserService,
     RoleService,

@@ -26,4 +26,3 @@ bootstrap()
   SwaggerModule.setup(SWAGGER_DEFAULT_CONFIG.API_ROOT, app, document)
 } */
 //eslint-disable-next-line @typescript-eslint/no-floating-promises
-bootstrap()

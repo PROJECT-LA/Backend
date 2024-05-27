@@ -1,93 +1,64 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
+import { Controller, Inject } from '@nestjs/common'
 
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiOperation,
-  ApiProperty,
-  ApiTags,
-} from '@nestjs/swagger'
-import { BaseController, ParamIdDto } from '@app/common'
+import { BaseController, SharedService } from '@app/common'
 import { ModuleService } from '../services'
 import { CreateModuleDto, FilterModuleDto, UpdateModuleDto } from '../dto'
-import { JwtAuthGuard } from '../../auth'
-import { CasbinGuard } from '../../policies'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
-@ApiBearerAuth()
-@ApiTags('Modules')
-@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('modules')
 export class ModuleController extends BaseController {
-  constructor(private moduleService: ModuleService) {
+  constructor(
+    private moduleService: ModuleService,
+    @Inject('SharedServiceInterface')
+    private readonly sharedService: SharedService,
+  ) {
     super()
   }
 
-  @ApiOperation({ summary: 'API para obtener el listado de Módulos' })
-  @Get()
-  async list(@Query() paginacionQueryDto: FilterModuleDto) {
+  @MessagePattern({ cmd: 'get-modules' })
+  async list(
+    @Ctx() context: RmqContext,
+    @Payload() { paginacionQueryDto }: { paginacionQueryDto: FilterModuleDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.moduleService.list(paginacionQueryDto)
     return this.successListRows(result)
   }
 
-  @ApiOperation({ summary: 'API para crear un Módulo' })
-  @ApiBody({
-    type: CreateModuleDto,
-    description: 'Nuevo Modulo',
-    required: true,
-  })
-  @Post()
-  async create(@Body() moduleDto: CreateModuleDto) {
+  @MessagePattern({ cmd: 'create-module' })
+  async create(
+    @Ctx() context: RmqContext,
+    @Payload() { moduleDto }: { moduleDto: CreateModuleDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.moduleService.create(moduleDto)
     return this.successCreate(result)
   }
 
-  @ApiOperation({ summary: 'API para actualizar un Módulo' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @ApiBody({
-    type: UpdateModuleDto,
-    description: 'Modulo',
-    required: true,
-  })
-  @Patch(':id')
+  @MessagePattern({ cmd: 'update-module' })
   async update(
-    @Param() params: ParamIdDto,
-    @Body() moduleDto: UpdateModuleDto,
+    @Ctx() context: RmqContext,
+    @Payload() { id, moduleDto }: { id: string; moduleDto: UpdateModuleDto },
   ) {
-    const { id: idModule } = params
-    const result = await this.moduleService.update(idModule, moduleDto)
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.moduleService.update(id, moduleDto)
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API para eliminar un Módulo y submodulos' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
+  @MessagePattern({ cmd: 'delete-module' })
+  async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.moduleService.delete(id)
     return this.successDelete(result)
   }
 
-  @ApiOperation({ summary: 'API para cambiar el estado de un Módulo' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Patch(':id/status')
-  async changeStatus(@Param() params: ParamIdDto) {
-    const { id: idModule } = params
-    const result = await this.moduleService.changeStatus(idModule)
+  @MessagePattern({ cmd: 'change-status-module' })
+  async changeStatus(
+    @Ctx() context: RmqContext,
+    @Payload() { id }: { id: string },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.moduleService.changeStatus(id)
     return this.successUpdate(result)
   }
 }
