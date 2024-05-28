@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Init1716848999314 implements MigrationInterface {
-    name = 'Init1716848999314'
+export class Init1716859918251 implements MigrationInterface {
+    name = 'Init1716859918251'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.query(`CREATE TABLE \`roles\` (\`id\` bigint NOT NULL AUTO_INCREMENT, \`status\` varchar(30) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(255) NOT NULL, \`description\` varchar(255) NOT NULL, UNIQUE INDEX \`IDX_648e3f5447f725579d7d4ffdfb\` (\`name\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`users\` (\`id\` bigint NOT NULL AUTO_INCREMENT, \`status\` varchar(30) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`names\` varchar(255) NOT NULL, \`last_names\` varchar(255) NOT NULL, \`email\` varchar(255) NOT NULL, \`password\` varchar(255) NOT NULL, \`phone\` varchar(255) NULL, \`username\` varchar(255) NOT NULL, UNIQUE INDEX \`IDX_97672ac88f789774dd47f7c8be\` (\`email\`), UNIQUE INDEX \`IDX_fe0bb3f6520ee0469504521e71\` (\`username\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`CREATE TABLE \`roles\` (\`id\` bigint NOT NULL AUTO_INCREMENT, \`status\` varchar(30) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`name\` varchar(255) NOT NULL, \`description\` varchar(255) NOT NULL, UNIQUE INDEX \`IDX_648e3f5447f725579d7d4ffdfb\` (\`name\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`casbin_rule\` (\`id\` int NOT NULL AUTO_INCREMENT COMMENT 'Clave primaria de la tabla CasbinRule', \`ptype\` varchar(255) NULL COMMENT 'Tipo de política (p,g)', \`v0\` varchar(255) NULL COMMENT 'Regla de acceso (roles)', \`v1\` varchar(255) NULL COMMENT 'Regla de acceso (rutas)', \`v2\` varchar(255) NULL COMMENT 'Regla de acceso (GET, POST, PATCH, DELETE para backend y read, update, create y delete para frontend)', \`v3\` varchar(255) NULL COMMENT 'Regla de acceso (Backend, Frontend)', \`v4\` varchar(255) NULL COMMENT 'Regla de acceso', \`v5\` varchar(255) NULL COMMENT 'Regla de acceso', \`v6\` varchar(255) NULL COMMENT 'Regla de acceso', PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`modules\` (\`id\` bigint NOT NULL AUTO_INCREMENT, \`status\` varchar(30) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`title\` varchar(50) NOT NULL COMMENT 'Etiqueta del módulo para el Sidebar del proyecto', \`description\` varchar(250) NOT NULL COMMENT 'Ruta para acceder al módulo', \`icon\` varchar(50) NULL COMMENT 'Icono del módulo', \`order\` int NOT NULL COMMENT 'Orden del modulo en el sidebar', \`url\` varchar(50) NULL COMMENT 'Ruta para acceder al módulo', \`id_module\` bigint NULL COMMENT 'Clave foránea del módulo padre', UNIQUE INDEX \`IDX_b32d2596a6c578bf737e151747\` (\`url\`), PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
         await queryRunner.query(`CREATE TABLE \`refresh_tokens\` (\`id\` varchar(36) NOT NULL, \`grant_id\` bigint NOT NULL COMMENT 'Id del usuario', \`token\` text NOT NULL COMMENT 'token generado', \`iat\` datetime NOT NULL COMMENT 'Fecha de creación de token', \`exp\` datetime NOT NULL COMMENT 'Fecha expiración de token', PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);
@@ -26,11 +26,11 @@ export class Init1716848999314 implements MigrationInterface {
         await queryRunner.query(`DROP INDEX \`IDX_b32d2596a6c578bf737e151747\` ON \`modules\``);
         await queryRunner.query(`DROP TABLE \`modules\``);
         await queryRunner.query(`DROP TABLE \`casbin_rule\``);
+        await queryRunner.query(`DROP INDEX \`IDX_648e3f5447f725579d7d4ffdfb\` ON \`roles\``);
+        await queryRunner.query(`DROP TABLE \`roles\``);
         await queryRunner.query(`DROP INDEX \`IDX_fe0bb3f6520ee0469504521e71\` ON \`users\``);
         await queryRunner.query(`DROP INDEX \`IDX_97672ac88f789774dd47f7c8be\` ON \`users\``);
         await queryRunner.query(`DROP TABLE \`users\``);
-        await queryRunner.query(`DROP INDEX \`IDX_648e3f5447f725579d7d4ffdfb\` ON \`roles\``);
-        await queryRunner.query(`DROP TABLE \`roles\``);
     }
 
 }

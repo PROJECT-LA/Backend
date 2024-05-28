@@ -19,15 +19,15 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./apps/project/test/jest-e2e.json",
     "typeorm": "NODE_OPTIONS=--max_old_space_size=8192 ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migrations:clean": "rimraf apps/core/src/db/migrations/*",
-    "migrations:generate": "npm run typeorm -- migration:generate -d ./apps/core/src/db/orm-config-source.ts",
-    "migrations:run": "npm run typeorm -- migration:run -d ./apps/core/src/db/orm-config-source.ts",
-    "migrations:revert": "npm run typeorm -- migration:revert -d ./apps/core/src/db/orm-config-source.ts",
+    "migrations:clean": "rimraf apps/api/src/core/db/migrations/*",
+    "migrations:generate": "npm run typeorm -- migration:generate -d ./apps/api/src/core/db/orm-config-source.ts",
+    "migrations:run": "npm run typeorm -- migration:run -d ./apps/api/src/core/db/orm-config-source.ts",
+    "migrations:revert": "npm run typeorm -- migration:revert -d ./apps/api/src/core/db/orm-config-source.ts",
     "seeds:create": "npm run typeorm -- migration:create",
-    "seeds:run": "npm run typeorm -- migration:run -d ./apps/core/src/db/orm-seeds-source.ts",
-    "schema:drop": "npm run typeorm -- schema:drop -d ./apps/core/src/db/orm-config-source.ts",
+    "seeds:run": "npm run typeorm -- migration:run -d ./apps/api/src/core/db/orm-seeds-source.ts",
+    "schema:drop": "npm run typeorm -- schema:drop -d ./apps/api/src/core/db/orm-config-source.ts",
     "rimraf": "./node_modules/rimraf/bin.js",
-    "setup": "npm run migrations:clean && npm run schema:drop && npm run migrations:generate ./apps/core/src/db/migrations/init && npm run migrations:run && npm run seeds:run"
+    "setup": "npm run migrations:clean && npm run schema:drop && npm run migrations:generate ./apps/api/src/core/db/migrations/init && npm run migrations:run && npm run seeds:run"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
