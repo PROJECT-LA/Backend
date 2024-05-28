@@ -26,7 +26,7 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD_AUDIT}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUDIT}
     ports:
-      - '${DB_PORT_AUDIT}:3307'
+      - '${DB_PORT_AUDIT}:3306'
     volumes:
       - db_data_audit:/var/lib/mysql
     networks:
