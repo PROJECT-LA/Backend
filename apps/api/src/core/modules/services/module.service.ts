@@ -2,6 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ModuleRepositoryInterface } from '../interfaces'
 import { CreateModuleDto, FilterModuleDto, UpdateModuleDto } from '../dto'
 import { STATUS } from '@app/common'
+import { SectionPayload } from '@app/common/interfaces/payload.interface'
 
 @Injectable()
 export class ModuleService {
@@ -56,5 +57,12 @@ export class ModuleService {
       subModule.status = module.status
     })
     return await this.moduleRepository.save(module)
+  }
+
+  async getSideBar() {
+    const sidebarData = await this.moduleRepository.getModuleSubModules()
+    return sidebarData.filter(
+      (module: SectionPayload) => module.subModule.length > 0,
+    )
   }
 }

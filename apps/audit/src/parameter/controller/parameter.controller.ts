@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Inject, Query } from '@nestjs/common'
+import { Controller, Delete, Get, Inject } from '@nestjs/common'
 import { BaseController, PaginationQueryDto, SharedService } from '@app/common'
 import { ParameterService } from '../service'
 import { CreateParameterDto, UpdateParameterDto } from '../dto'
@@ -21,7 +21,6 @@ export class ParameterController extends BaseController {
     @Payload()
     { paginacionQueryDto }: { paginacionQueryDto: PaginationQueryDto },
   ) {
-    console.log(paginacionQueryDto)
     this.sharedService.acknowledgeMessage(context)
     const result = await this.parameterService.list(paginacionQueryDto)
     return this.successListRows(result)

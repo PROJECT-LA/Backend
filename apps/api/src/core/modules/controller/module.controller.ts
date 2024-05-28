@@ -19,7 +19,7 @@ import {
 } from '@nestjs/swagger'
 import { BaseController, ParamIdDto } from '@app/common'
 import { ModuleService } from '../services'
-import { CreateModuleDto, FilterModuleDto, UpdateModuleDto } from '../dto'
+import { CreateModuleDto, UpdateModuleDto } from '../dto'
 import { JwtAuthGuard } from '../../auth'
 import { CasbinGuard } from '../../policies'
 
@@ -34,9 +34,9 @@ export class ModuleController extends BaseController {
 
   @ApiOperation({ summary: 'API para obtener el listado de Módulos' })
   @Get()
-  async list(@Query() paginacionQueryDto: FilterModuleDto) {
-    const result = await this.moduleService.list(paginacionQueryDto)
-    return this.successListRows(result)
+  async list() {
+    const result = await this.moduleService.getSideBar()
+    return this.successList(result)
   }
 
   @ApiOperation({ summary: 'API para crear un Módulo' })

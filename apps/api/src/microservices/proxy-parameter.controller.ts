@@ -11,13 +11,14 @@ import {
   Query,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { ApiBody, ApiOperation, ApiProperty } from '@nestjs/swagger'
+import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
 import {
   CreateParameterDto,
   ParamGroupDto,
   UpdateParameterDto,
 } from 'apps/audit/src/parameter/dto'
 
+@ApiTags('Parameters')
 @Controller('parameters')
 export class ProxyParameterController {
   constructor(
