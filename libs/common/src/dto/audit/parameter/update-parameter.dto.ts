@@ -1,8 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty } from '@app/common'
-import { ParameterInterface } from '../interface'
+import { IsNotEmpty } from '../../../validation'
 
-export class UpdateParameterDto implements ParameterInterface {
+export class UpdateParameterDto {
   @ApiProperty({ example: 'PM-DP' })
   @IsNotEmpty()
   code: string

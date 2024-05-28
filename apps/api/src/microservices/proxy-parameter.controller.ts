@@ -1,4 +1,10 @@
-import { PaginationQueryDto, ParamIdDto } from '@app/common'
+import {
+  CreateParameterDto,
+  PaginationQueryDto,
+  ParamGroupDto,
+  ParamIdDto,
+  UpdateParameterDto,
+} from '@app/common'
 import {
   Body,
   Controller,
@@ -12,11 +18,6 @@ import {
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
-import {
-  CreateParameterDto,
-  ParamGroupDto,
-  UpdateParameterDto,
-} from 'apps/audit/src/parameter/dto'
 
 @ApiTags('Parameters')
 @Controller('parameters')
@@ -99,7 +100,7 @@ export class ProxyParameterController {
     return result
   }
 
-  @ApiOperation({ summary: 'API para eliminar un parámetro' })
+  @ApiOperation({ summary: 'API para eliminar un parametro' })
   @ApiProperty({
     type: ParamIdDto,
   })

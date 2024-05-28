@@ -4,8 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common'
-import { CreateParameterDto, UpdateParameterDto } from '../dto'
-import { PaginationQueryDto, STATUS } from '@app/common'
+
+import {
+  CreateParameterDto,
+  PaginationQueryDto,
+  STATUS,
+  UpdateParameterDto,
+} from '@app/common'
 import { MessagesParameter } from '../constant'
 import { ParameterRepositoryInterface } from '../interface'
 
@@ -13,7 +18,7 @@ import { ParameterRepositoryInterface } from '../interface'
 export class ParameterService {
   constructor(
     @Inject('IParameterRepository')
-    private parameterRepository: ParameterRepositoryInterface
+    private parameterRepository: ParameterRepositoryInterface,
   ) {}
 
   async create(parameterDto: CreateParameterDto) {

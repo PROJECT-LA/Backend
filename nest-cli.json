@@ -2,6 +2,8 @@
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "apps/api/src",
+  "monorepo": true,
+  "root": "apps/api",
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": false,
@@ -9,13 +11,11 @@
     "assets": [
       {
         "include": "**/model.conf",
-        "outDir": "dist/apps/api/src",
+        "outDir": "dist/apps/api/apps/api/src",
         "watchAssets": true
       }
     ]
   },
-  "monorepo": true,
-  "root": "apps/api",
   "projects": {
     "api": {
       "type": "application",

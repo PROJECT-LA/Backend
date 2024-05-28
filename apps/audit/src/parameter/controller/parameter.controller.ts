@@ -1,7 +1,12 @@
 import { Controller, Delete, Get, Inject } from '@nestjs/common'
-import { BaseController, PaginationQueryDto, SharedService } from '@app/common'
+import {
+  BaseController,
+  CreateParameterDto,
+  PaginationQueryDto,
+  SharedService,
+  UpdateParameterDto,
+} from '@app/common'
 import { ParameterService } from '../service'
-import { CreateParameterDto, UpdateParameterDto } from '../dto'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
 @Controller('parameters')
@@ -67,7 +72,7 @@ export class ParameterController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-parameter' })
+  @MessagePattern({ cmd: 'delete' })
   @Delete(':id')
   async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
     this.sharedService.acknowledgeMessage(context)

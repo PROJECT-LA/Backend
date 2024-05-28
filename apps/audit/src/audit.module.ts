@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { Parameter } from './parameter/entity'
 import { DataSourceConfig } from './db/orm-config-source'
 
+//MOdulo
 @Module({
   imports: [
     ConfigModule.forRoot({
