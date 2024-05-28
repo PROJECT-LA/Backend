@@ -82,9 +82,11 @@ export class ModuleRepository
         'module.title',
         'module.description',
         'module.status',
+        'module.order',
         'subModule.id',
         'subModule.title',
         'subModule.url',
+        'subModule.order',
         'subModule.icon',
         'subModule.status',
       ])
