@@ -18,10 +18,6 @@ export class UpdateProfileDto {
 
   phone?: string
 
-  @ApiProperty({ example: 'JPEREZ' })
-  @MaxLength(30)
-  username: string
-
   @ApiProperty({ example: '123456' })
   @MaxLength(10)
   ci: string

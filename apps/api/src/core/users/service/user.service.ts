@@ -76,10 +76,7 @@ export class UserService {
 
   async updateProfile(id: string, updateUserDto: UpdateProfileDto) {
     if (id) await this.getCurrentUser(id)
-    const userExists = await this.__findOneByUsername(updateUserDto.username)
-    if (userExists && userExists.id !== id) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
-    }
+
     const userExistsEmail = await this.__findOneByEmail(updateUserDto.email)
     if (userExistsEmail && userExistsEmail.id !== id) {
       throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
@@ -91,7 +88,6 @@ export class UserService {
       lastNames: updateUserDto.lastNames,
       phone: updateUserDto.phone,
       names: updateUserDto.names,
-      username: updateUserDto.username,
       ci: updateUserDto.ci,
       address: updateUserDto.address,
     })
@@ -130,6 +126,7 @@ export class UserService {
         roles: {
           id: true,
           name: true,
+          status: true,
         },
         names: true,
         lastNames: true,
