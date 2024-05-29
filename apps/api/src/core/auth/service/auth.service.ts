@@ -32,7 +32,7 @@ export class AuthService {
   async validateCredentials(username: string, password: string) {
     const user = await this.usersRepository.findOneByCondition({
       where: { username, status: STATUS.ACTIVE },
-      //relations: ['roles'],
+      relations: ['roles'],
       select: {
         id: true,
         password: true,
@@ -130,7 +130,7 @@ export class AuthService {
 
     const data = await this.usersRepository.findOneByCondition({
       where: { id: user.id },
-      select: ['id', 'username', 'email', 'phone', 'names', 'lastNames'],
+      select: ['id', 'username', 'email', 'phone', 'names', 'lastNames', 'ci'],
     })
     await this.deleteToken(idRefreshToken)
     const { token, refreshToken, tokenPayload } = await this.signIn(userRole)
@@ -146,6 +146,7 @@ export class AuthService {
         username: data.username,
         email: data.email,
         phone: data.phone,
+        ci: data.ci,
       },
       token: token,
       sidebarData: modules,
@@ -193,7 +194,7 @@ export class AuthService {
   async login(user: PassportUser) {
     const data = await this.usersRepository.findOneByCondition({
       where: { id: user.id },
-      select: ['id', 'username', 'email', 'phone', 'names', 'lastNames'],
+      select: ['id', 'username', 'email', 'phone', 'names', 'lastNames', 'ci'],
     })
     const { refreshToken, token, tokenPayload } = await this.signIn(user)
     const modules = await this.moduleAccess(tokenPayload.idRole)
@@ -208,6 +209,7 @@ export class AuthService {
         email: data.email,
         username: data.username,
         phone: data.phone,
+        ci: data.ci,
       },
       token: token,
       sidebarData: modules,

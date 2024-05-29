@@ -3,4 +3,5 @@ export enum RoleEnum {
   GERENTE = '2',
   CLIENTE = '3',
   AUDITOR = '4',
+  ALL = '*',
 }
