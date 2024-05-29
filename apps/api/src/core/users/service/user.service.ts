@@ -5,7 +5,6 @@ import { Messages, STATUS, TextService } from '@app/common'
 import { UserRepositoryInterface } from '../interface'
 import { In } from 'typeorm'
 import { RoleRepositoryInterface } from '../../roles/interface'
-import { FileService } from '@app/common/services/file.service'
 
 @Injectable()
 export class UserService {
@@ -14,7 +13,6 @@ export class UserService {
     private readonly usersRepository: UserRepositoryInterface,
     @Inject('IRoleRepository')
     private readonly rolesRepository: RoleRepositoryInterface,
-    private fileService: FileService,
   ) {}
   async list(paginacionQueryDto: FilterUserDto) {
     return await this.usersRepository.list(paginacionQueryDto)
@@ -72,59 +70,29 @@ export class UserService {
   }
 
   async delete(id: string) {
-    await this.__findOneById(id)
+    await this.getCurrentUser(id)
     return await this.usersRepository.delete(id)
   }
 
-  //Metodos de validacion de Usuarios
-  private async __validateUser(
-    data: { username: string; email: string; roles: string[] },
-    id?: string,
-  ) {
-    const { username, email, roles } = data
-    if (id) await this.__findOneById(id)
-    const userExists = await this.__findOneByUsername(username)
-    if (userExists && (id === undefined || userExists.id !== id)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
-    }
-
-    const userExistsEmail = await this.__findOneByEmail(email)
-    if (userExistsEmail && (id === undefined || userExistsEmail.id !== id)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
-    }
-    if (data.roles.length === 0) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_SEND)
-    }
-
-    const foundRoles = await this.rolesRepository.findManyByConditions({
-      where: [
-        {
-          id: In(roles),
-        },
-      ],
-    })
-    if (foundRoles.length < 1) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
-    }
-    //mejorara la validacion de roles
-    return foundRoles
+  async updatePassword(id: string, password: string) {
+    await this.getCurrentUser(id)
+    const hashedPassword = await TextService.encrypt(password)
+    await this.usersRepository.update(id, { password: hashedPassword })
+    return id
   }
 
-  private async __findOneByUsername(username: string) {
-    return await this.usersRepository.findOneByCondition({
-      where: { username },
-      select: ['id', 'username'],
-    })
+  async changeStatus(idUser: string) {
+    const user = await this.getCurrentUser(idUser)
+    const newStatus =
+      user.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
+    await this.usersRepository.update(idUser, { status: newStatus })
+    return {
+      id: idUser,
+      status: newStatus,
+    }
   }
 
-  private async __findOneByEmail(email: string) {
-    return await this.usersRepository.findOneByCondition({
-      where: { email },
-      select: ['id', 'email'],
-    })
-  }
-
-  async __findOneById(id: string) {
+  async getCurrentUser(id: string) {
     const user = await this.usersRepository.findOneByCondition({
       where: { id },
       relations: { roles: true },
@@ -149,25 +117,50 @@ export class UserService {
     }
     return user
   }
-
-  async updatePassword(id: string, password: string) {
-    await this.__findOneById(id)
-    const hashedPassword = await TextService.encrypt(password)
-    await this.usersRepository.update(id, { password: hashedPassword })
-    return id
-  }
-
-  async changeStatus(idUser: string) {
-    const user = await this.__findOneById(idUser)
-    const newStatus =
-      user.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
-    await this.usersRepository.update(idUser, { status: newStatus })
-    return {
-      id: idUser,
-      status: newStatus,
+  //Metodos de validacion de Usuarios
+  private async __validateUser(
+    data: { username: string; email: string; roles: string[] },
+    id?: string,
+  ) {
+    const { username, email, roles } = data
+    if (id) await this.getCurrentUser(id)
+    const userExists = await this.__findOneByUsername(username)
+    if (userExists && (id === undefined || userExists.id !== id)) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
     }
+
+    const userExistsEmail = await this.__findOneByEmail(email)
+    if (userExistsEmail && (id === undefined || userExistsEmail.id !== id)) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
+    }
+    if (data.roles.length === 0) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_SEND)
+    }
+
+    const foundRoles = await this.rolesRepository.findManyByConditions({
+      where: [
+        {
+          id: In(roles),
+        },
+      ],
+    })
+    if (foundRoles.length < 1) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+    }
+    return foundRoles
   }
-  async getCurrentUser(id: string) {
-    return await this.__findOneById(id)
+
+  private async __findOneByUsername(username: string) {
+    return await this.usersRepository.findOneByCondition({
+      where: { username },
+      select: ['id', 'username'],
+    })
+  }
+
+  private async __findOneByEmail(email: string) {
+    return await this.usersRepository.findOneByCondition({
+      where: { email },
+      select: ['id', 'email'],
+    })
   }
 }

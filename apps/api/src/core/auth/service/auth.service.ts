@@ -13,7 +13,6 @@ import {
   SectionPayload,
   UserPayload,
 } from '@app/common/interfaces/payload.interface'
-import { User } from '../../users/entities'
 
 dotenv.config()
 @Injectable()
@@ -33,29 +32,23 @@ export class AuthService {
   async validateCredentials(username: string, password: string) {
     const user = await this.usersRepository.findOneByCondition({
       where: { username, status: STATUS.ACTIVE },
-      relations: ['roles'],
-      select: ['id', 'password', 'username'],
+      //relations: ['roles'],
+      select: {
+        id: true,
+        password: true,
+        username: true,
+        roles: {
+          id: true,
+          name: true,
+          status: true,
+        },
+      },
     })
-
-    if (!user) throw new UnauthorizedException('Username')
-
+    if (!user) throw new UnauthorizedException()
     const passwordIsValid = await TextService.compare(password, user.password)
-
-    if (!passwordIsValid) throw new UnauthorizedException('password')
-    if (user.roles.length === 0) throw new UnauthorizedException('roles')
-    return this.__getFormatUser(user)
-  }
-
-  private async __getFormatUser(user: User) {
-    return {
-      id: user.id,
-      roles: user.roles
-        .filter((role) => role.status === STATUS.ACTIVE)
-        .map((item) => ({
-          id: item.id,
-          name: item.name,
-        })),
-    }
+    if (!passwordIsValid) throw new UnauthorizedException()
+    if (user.roles.length === 0) throw new UnauthorizedException()
+    return user
   }
 
   private async __validateRefreshToken(id: string) {
