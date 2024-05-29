@@ -5,7 +5,7 @@ export interface IUser {
   password: string
   ci: string
   username: string
-  location?: string
+  address?: string
   phone?: string
   image?: string
 }

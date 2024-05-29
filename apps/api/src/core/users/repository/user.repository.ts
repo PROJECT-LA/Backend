@@ -29,7 +29,7 @@ export class UserRepository
         'user.email',
         'user.phone',
         'user.ci',
-        'user.location',
+        'user.address',
         'user.status',
         'roles.id',
         'roles.name',

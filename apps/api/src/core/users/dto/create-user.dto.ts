@@ -35,7 +35,7 @@ export class CreateUserDto implements IUser {
   @MaxLength(10)
   ci: string
 
-  location?: string
+  address?: string
 
   status?: string
 }

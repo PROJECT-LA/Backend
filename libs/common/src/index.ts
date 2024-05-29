@@ -4,8 +4,5 @@ export * from './dto'
 export * from './interfaces'
 export * from './lib'
 export * from './validation'
-
-// modules
+export * from './services'
 export * from './modules/shared.module'
-// services
-export * from './services/shared.service'

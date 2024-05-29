@@ -10,6 +10,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { UserService } from '../service'
 import {
@@ -24,11 +25,13 @@ import {
   BaseController,
   MAX_IMAGE_LENGTH,
   ParamIdDto,
+  PassportUser,
   imageFileFilter,
 } from '@app/common'
 import { JwtAuthGuard } from '../../auth'
 import { CasbinGuard } from '../../policies'
 import { FileInterceptor } from '@nestjs/platform-express'
+import { CurrentUser } from '../../auth/decorators'
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -66,17 +69,22 @@ export class UserController extends BaseController {
     return this.successListRows(result)
   }
 
-  /*   @ApiOperation({ summary: 'API: para obtener un usuario' })
+  @ApiOperation({ summary: 'API: para obtener un usuario' })
   @ApiProperty({
     type: ParamIdDto,
   })
   @Get(':id')
-  async findOne(@Param() param: ParamIdDto) {
+  async getCurrentUser(
+    @CurrentUser() user: PassportUser,
+    @Param() param: ParamIdDto,
+  ) {
     const { id } = param
-    return await this.usersService.findOneById(id)
+    if (user.id !== id) {
+      throw new UnauthorizedException('Forbiden')
+    }
+    return await this.usersService.getCurrentUser(id)
   }
 
- */
   @ApiOperation({ summary: 'API: para actulizar un usuario' })
   @ApiBody({ type: UpdateUserDto })
   @ApiProperty({

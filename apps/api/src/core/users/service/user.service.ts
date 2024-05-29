@@ -36,7 +36,7 @@ export class UserService {
       password: await TextService.encrypt(createUserDto.password),
       phone: createUserDto.phone,
       ci: createUserDto.ci,
-      location: createUserDto.location,
+      address: createUserDto.address,
       names: createUserDto.names,
       username: createUserDto.username,
       roles: roles,
@@ -65,7 +65,7 @@ export class UserService {
       names: updateUserDto.names,
       username: updateUserDto.username,
       ci: updateUserDto.ci,
-      location: updateUserDto.location,
+      address: updateUserDto.address,
       roles: roles,
     })
     return await this.usersRepository.save(updateUser)
@@ -127,18 +127,22 @@ export class UserService {
   async __findOneById(id: string) {
     const user = await this.usersRepository.findOneByCondition({
       where: { id },
-      select: [
-        'id',
-        'names',
-        'lastNames',
-        'email',
-        'ci',
-        'location',
-        'phone',
-        'username',
-        'status',
-      ],
-      relations: ['roles'],
+      relations: { roles: true },
+      select: {
+        id: true,
+        roles: {
+          id: true,
+          name: true,
+        },
+        names: true,
+        lastNames: true,
+        email: true,
+        ci: true,
+        address: true,
+        phone: true,
+        username: true,
+        status: true,
+      },
     })
     if (!user) {
       throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
@@ -162,5 +166,8 @@ export class UserService {
       id: idUser,
       status: newStatus,
     }
+  }
+  async getCurrentUser(id: string) {
+    return await this.__findOneById(id)
   }
 }

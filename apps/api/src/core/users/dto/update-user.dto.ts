@@ -33,5 +33,5 @@ export class UpdateUserDto implements Partial<IUser> {
   @MaxLength(10)
   ci: string
 
-  location?: string
+  address?: string
 }

@@ -24,7 +24,7 @@ export class User extends BaseEntity implements IUser {
   ci: string
 
   @Column({ type: 'text', nullable: true })
-  location: string
+  address: string
 
   @Column({ nullable: false, unique: true })
   username: string
