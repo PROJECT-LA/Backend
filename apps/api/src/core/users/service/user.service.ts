@@ -1,6 +1,7 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 
 import {
+  ChangePaswwordDto,
   CreateUserDto,
   FilterUserDto,
   UpdateProfileDto,
@@ -99,9 +100,23 @@ export class UserService {
     return await this.usersRepository.delete(id)
   }
 
-  async updatePassword(id: string, password: string) {
-    await this.getCurrentUser(id)
-    const hashedPassword = await TextService.encrypt(password)
+  async updatePassword(id: string, changePaswwordDto: ChangePaswwordDto) {
+    const { newPassword, password } = changePaswwordDto
+    const user = await this.usersRepository.findOneByCondition({
+      where: { id },
+      select: ['id', 'password'],
+    })
+    if (!user) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
+    }
+    const passwordIsValid = await TextService.compare(password, user.password)
+    if (!passwordIsValid) {
+      throw new PreconditionFailedException(
+        Messages.EXCEPTION_PASSWORD_NOT_VALID,
+      )
+    }
+    //    const hashedPassword = await TextService.validateLevelPassword(newPassword)
+    const hashedPassword = await TextService.encrypt(newPassword)
     await this.usersRepository.update(id, { password: hashedPassword })
     return id
   }

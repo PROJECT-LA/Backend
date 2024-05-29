@@ -25,6 +25,7 @@ import {
   FilterUserDto,
   UpdateProfileDto,
   UpdateUserDto,
+  ChangePaswwordDto,
 } from '../dto'
 import {
   BaseController,
@@ -136,6 +137,20 @@ export class UserController extends BaseController {
   async activar(@Param() params: ParamIdDto) {
     const { id: idUser } = params
     const result = await this.usersService.changeStatus(idUser)
+    return this.successUpdate(result)
+  }
+
+  @ApiOperation({ summary: 'API para cambiar la contraseña de usuario' })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @Patch('/:id/change-password')
+  async changePassword(
+    @Param() params: ParamIdDto,
+    changePaswwordDto: ChangePaswwordDto,
+  ) {
+    const { id } = params
+    const result = await this.usersService.updatePassword(id, changePaswwordDto)
     return this.successUpdate(result)
   }
 }
