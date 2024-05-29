@@ -1,6 +1,11 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 
-import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
+import {
+  CreateUserDto,
+  FilterUserDto,
+  UpdateProfileDto,
+  UpdateUserDto,
+} from '../dto'
 import { Messages, STATUS, TextService } from '@app/common'
 import { UserRepositoryInterface } from '../interface'
 import { In } from 'typeorm'
@@ -67,6 +72,30 @@ export class UserService {
       roles: roles,
     })
     return await this.usersRepository.save(updateUser)
+  }
+
+  async updateProfile(id: string, updateUserDto: UpdateProfileDto) {
+    if (id) await this.getCurrentUser(id)
+    const userExists = await this.__findOneByUsername(updateUserDto.username)
+    if (userExists && userExists.id !== id) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
+    }
+    const userExistsEmail = await this.__findOneByEmail(updateUserDto.email)
+    if (userExistsEmail && userExistsEmail.id !== id) {
+      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
+    }
+
+    const updateUser = this.usersRepository.create({
+      id: id,
+      email: updateUserDto.email,
+      lastNames: updateUserDto.lastNames,
+      phone: updateUserDto.phone,
+      names: updateUserDto.names,
+      username: updateUserDto.username,
+      ci: updateUserDto.ci,
+      address: updateUserDto.address,
+    })
+    return await this.usersRepository.update(id, updateUser)
   }
 
   async delete(id: string) {

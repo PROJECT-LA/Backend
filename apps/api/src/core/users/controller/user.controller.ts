@@ -20,7 +20,12 @@ import {
   ApiProperty,
   ApiTags,
 } from '@nestjs/swagger'
-import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
+import {
+  CreateUserDto,
+  FilterUserDto,
+  UpdateProfileDto,
+  UpdateUserDto,
+} from '../dto'
 import {
   BaseController,
   MAX_IMAGE_LENGTH,
@@ -97,6 +102,21 @@ export class UserController extends BaseController {
   ) {
     const { id } = param
     const result = await this.usersService.update(id, updateUserDto)
+    return this.successUpdate(result)
+  }
+
+  @ApiOperation({ summary: 'API: para actulizar el perfil de usuario' })
+  @ApiBody({ type: UpdateProfileDto })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @Patch(':id/update-profile')
+  async updateProfile(
+    @Param() param: ParamIdDto,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
+    const { id } = param
+    const result = await this.usersService.updateProfile(id, updateProfileDto)
     return this.successUpdate(result)
   }
 
