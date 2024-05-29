@@ -19,6 +19,7 @@ export class Users1713742322774 implements MigrationInterface {
         phone: '71981339',
         status: STATUS.ACTIVE,
         roles: ['1', '2', '3'],
+        ci: '123456',
       },
       {
         names: 'GERENTE',
@@ -31,6 +32,7 @@ export class Users1713742322774 implements MigrationInterface {
         phone: '63201339',
         status: STATUS.ACTIVE,
         roles: ['2', '3', '4'],
+        ci: '4231212',
       },
     ]
     const newUsers = users.map((user) => {
@@ -44,6 +46,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: user.updatedAt,
         phone: user.phone,
         status: user.status,
+        ci: user.ci,
         roles: user.roles.map((role) => {
           return new Role({ id: role })
         }),

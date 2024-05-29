@@ -20,6 +20,12 @@ export class User extends BaseEntity implements IUser {
   @Column({ nullable: true })
   phone: string
 
+  @Column({ nullable: false })
+  ci: string
+
+  @Column({ type: 'text', nullable: true })
+  location: string
+
   @Column({ nullable: false, unique: true })
   username: string
 

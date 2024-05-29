@@ -5,6 +5,7 @@ import { Messages, STATUS, TextService } from '@app/common'
 import { UserRepositoryInterface } from '../interface'
 import { In } from 'typeorm'
 import { RoleRepositoryInterface } from '../../roles/interface'
+import { FileService } from '@app/common/services/file.service'
 
 @Injectable()
 export class UserService {
@@ -13,12 +14,16 @@ export class UserService {
     private readonly usersRepository: UserRepositoryInterface,
     @Inject('IRoleRepository')
     private readonly rolesRepository: RoleRepositoryInterface,
+    private fileService: FileService,
   ) {}
   async list(paginacionQueryDto: FilterUserDto) {
     return await this.usersRepository.list(paginacionQueryDto)
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async create(
+    createUserDto: CreateUserDto,
+    image: Express.Multer.File | null | undefined,
+  ) {
     const roles = await this.__validateUser({
       username: createUserDto.username,
       email: createUserDto.email,
@@ -30,10 +35,16 @@ export class UserService {
       lastNames: createUserDto.lastNames,
       password: await TextService.encrypt(createUserDto.password),
       phone: createUserDto.phone,
+      ci: createUserDto.ci,
+      location: createUserDto.location,
       names: createUserDto.names,
       username: createUserDto.username,
       roles: roles,
     })
+
+    if (image) {
+    }
+    //this.fileService.writteFile(newUser, 'ds', image)
     return await this.usersRepository.save(newUser)
   }
 
@@ -53,6 +64,8 @@ export class UserService {
       phone: updateUserDto.phone,
       names: updateUserDto.names,
       username: updateUserDto.username,
+      ci: updateUserDto.ci,
+      location: updateUserDto.location,
       roles: roles,
     })
     return await this.usersRepository.save(updateUser)
@@ -119,6 +132,8 @@ export class UserService {
         'names',
         'lastNames',
         'email',
+        'ci',
+        'location',
         'phone',
         'username',
         'status',

@@ -3,6 +3,9 @@ export interface IUser {
   lastNames: string
   email: string
   password: string
-  phone?: string
+  ci: string
   username: string
+  location?: string
+  phone?: string
+  image?: string
 }

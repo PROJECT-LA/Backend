@@ -29,6 +29,7 @@ import { CasbinModule } from './core/policies/config/casbin.module'
 import { DataSourceConfig } from './core/db/orm-config-source'
 import { SharedModule } from '@app/common'
 import { MicroserviceModule } from './microservices/microservice.module'
+import { FileService } from '@app/common/services/file.service'
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { MicroserviceModule } from './microservices/microservice.module'
     RefreshTokenStrategy,
     ConfigService,
     PolicyService,
+    FileService,
   ],
 })
 export class CoreModule {}

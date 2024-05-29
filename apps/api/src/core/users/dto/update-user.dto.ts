@@ -28,4 +28,10 @@ export class UpdateUserDto implements Partial<IUser> {
   @IsNotEmpty()
   @ApiProperty({ example: ['1'] })
   roles: Array<string>
+
+  @ApiProperty({ example: '123456' })
+  @MaxLength(10)
+  ci: string
+
+  location?: string
 }

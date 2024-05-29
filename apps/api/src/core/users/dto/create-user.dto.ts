@@ -31,5 +31,11 @@ export class CreateUserDto implements IUser {
   @ApiProperty({ example: ['1'] })
   roles: Array<string>
 
+  @ApiProperty({ example: '123456' })
+  @MaxLength(10)
+  ci: string
+
+  location?: string
+
   status?: string
 }

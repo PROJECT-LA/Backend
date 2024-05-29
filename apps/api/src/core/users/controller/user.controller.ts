@@ -8,6 +8,8 @@ import {
   Delete,
   UseGuards,
   Query,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common'
 import { UserService } from '../service'
 import {
@@ -18,9 +20,15 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CreateUserDto, FilterUserDto, UpdateUserDto } from '../dto'
-import { BaseController, ParamIdDto } from '@app/common'
+import {
+  BaseController,
+  MAX_IMAGE_LENGTH,
+  ParamIdDto,
+  imageFileFilter,
+} from '@app/common'
 import { JwtAuthGuard } from '../../auth'
 import { CasbinGuard } from '../../policies'
+import { FileInterceptor } from '@nestjs/platform-express'
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -30,11 +38,24 @@ export class UserController extends BaseController {
   constructor(private readonly usersService: UserService) {
     super()
   }
+
   @ApiOperation({ summary: 'API: para crear un usuario' })
   @ApiBody({ type: CreateUserDto })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: MAX_IMAGE_LENGTH,
+        files: 1,
+      },
+    }),
+  )
   @Post()
-  async create(@Body() createUserDto: CreateUserDto) {
-    const result = await this.usersService.create(createUserDto)
+  async create(
+    @UploadedFile() image: Express.Multer.File,
+    @Body() createUserDto: CreateUserDto,
+  ) {
+    const result = await this.usersService.create(createUserDto, image)
     return this.successCreate(result)
   }
 

@@ -28,6 +28,8 @@ export class UserRepository
         'user.lastNames',
         'user.email',
         'user.phone',
+        'user.ci',
+        'user.location',
         'user.status',
         'roles.id',
         'roles.name',
@@ -59,6 +61,9 @@ export class UserRepository
         new Brackets((qb) => {
           qb.orWhere('user.names like :filter', { filter: `%${filter}%` })
           qb.orWhere('user.lastNames like :filter', {
+            filter: `%${filter}%`,
+          })
+          qb.orWhere('user.ci like :filter', {
             filter: `%${filter}%`,
           })
         }),
