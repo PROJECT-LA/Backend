@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from 'typeorm'
 import { IModule } from '../interfaces'
+import { Role } from '../../roles/entities'
 
 @Check(UtilService.buildStatusCheck(STATUS))
 @Entity({ name: 'modules' })
@@ -49,6 +50,17 @@ export class ModuleEntity extends BaseEntity implements IModule {
     nullable: true,
   })
   url?: string | null
+
+  @Column({
+    type: 'bigint',
+    nullable: false,
+    comment: 'Clave foránea de la reacion con el rol',
+  })
+  idRole: string
+
+  @ManyToOne(() => Role, (role) => role.modules)
+  @JoinColumn({ name: 'id_role', referencedColumnName: 'id' })
+  role: Role
 
   @Column({
     type: 'bigint',

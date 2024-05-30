@@ -5,5 +5,5 @@ import { ModuleEntity } from '../entities'
 export interface ModuleRepositoryInterface
   extends BaseInterfaceRepository<ModuleEntity> {
   list(paginationQueryDto: FilterModuleDto)
-  getModuleSubModules()
+  getModuleSubModules(id: string)
 }

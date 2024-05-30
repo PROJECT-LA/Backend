@@ -32,9 +32,10 @@ export class ModuleController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API para obtener el listado de Módulos' })
-  @Get()
-  async list() {
-    const result = await this.moduleService.getSideBar()
+  @Get(':id')
+  async list(@Param() params: ParamIdDto) {
+    const { id } = params
+    const result = await this.moduleService.getSideBar(id)
     return this.successList(result)
   }
 

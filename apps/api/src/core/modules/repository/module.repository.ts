@@ -66,7 +66,7 @@ export class ModuleRepository
     return await query.getManyAndCount()
   }
 
-  async getModuleSubModules() {
+  async getModuleSubModules(id: string) {
     return await this.module
       .createQueryBuilder('module')
       .leftJoinAndSelect(
@@ -83,17 +83,20 @@ export class ModuleRepository
         'module.description',
         'module.status',
         'module.order',
+        'module.idRole',
         'subModule.id',
         'subModule.title',
         'subModule.url',
         'subModule.order',
         'subModule.icon',
         'subModule.status',
+        'subModule.idRole',
       ])
       .where('module.module is NULL')
       .andWhere('module.status = :status', {
         status: STATUS.ACTIVE,
       })
+      .andWhere('module.idRole = :idRole', { idRole: id })
       .orderBy('module.order', 'ASC')
       .addOrderBy('subModule.order', 'ASC')
       .getMany()

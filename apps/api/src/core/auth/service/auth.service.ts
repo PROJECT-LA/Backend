@@ -180,7 +180,7 @@ export class AuthService {
 
   async moduleAccess(idRole: string) {
     const policies = await this.policyService.getPoliciesByRole(idRole)
-    const sidebarData = await this.moduleRepository.getModuleSubModules()
+    const sidebarData = await this.moduleRepository.getModuleSubModules(idRole)
     return sidebarData
       .map((module: SectionPayload) => ({
         ...module,

@@ -80,6 +80,7 @@ export class Sidebar1716434581709 implements MigrationInterface {
           order: item.order,
           status: 'ACTIVO',
           icon: null,
+          idRole: '1',
         }),
       )
 
@@ -93,6 +94,7 @@ export class Sidebar1716434581709 implements MigrationInterface {
             description: subMenu.description,
             order: subMenu.order,
             status: 'ACTIVO',
+            idRole: '1',
           }),
         )
       }

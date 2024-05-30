@@ -59,8 +59,8 @@ export class ModuleService {
     return await this.moduleRepository.save(module)
   }
 
-  async getSideBar() {
-    const sidebarData = await this.moduleRepository.getModuleSubModules()
+  async getSideBar(id: string) {
+    const sidebarData = await this.moduleRepository.getModuleSubModules(id)
     console.log(sidebarData)
     return sidebarData.filter(
       (module: SectionPayload) => module.subModule.length > 0,

@@ -26,6 +26,7 @@ export class CreateModuleDto implements IModule {
   @IsNumber()
   order: number
 
+  @ApiProperty({ example: '1' })
   @IsOptional()
   @IsNumberString()
   idModule?: string
@@ -33,6 +34,10 @@ export class CreateModuleDto implements IModule {
   @IsOptional()
   @IsString()
   status?: string
+
+  @IsNotEmpty()
+  @IsNumberString()
+  idRole?: string
 
   @ApiProperty({ example: 'Somewhere Description' })
   @IsNotEmpty()
