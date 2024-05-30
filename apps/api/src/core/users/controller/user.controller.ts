@@ -148,7 +148,7 @@ export class UserController extends BaseController {
   @Patch('/:id/change-password')
   async changePassword(
     @Param() params: ParamIdDto,
-    changePaswwordDto: ChangePaswwordDto,
+    @Body() changePaswwordDto: ChangePaswwordDto,
   ) {
     const { id } = params
     const result = await this.usersService.updatePassword(id, changePaswwordDto)
