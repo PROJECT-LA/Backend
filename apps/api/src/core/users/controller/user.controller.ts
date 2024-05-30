@@ -141,6 +141,7 @@ export class UserController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API para cambiar la contraseña de usuario' })
+  @ApiBody({ type: ChangePaswwordDto })
   @ApiProperty({
     type: ParamIdDto,
   })
