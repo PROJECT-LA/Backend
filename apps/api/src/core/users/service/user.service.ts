@@ -173,10 +173,18 @@ export class UserService {
         phone: true,
         username: true,
         status: true,
+        image: true,
       },
     })
-    if (!user) {
+    if (!user)
       throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
+    if (user.image) {
+      const result = this.fileService.send(
+        { cmd: 'get-avatar' },
+        { name: user.image },
+      )
+      const imageFile = await lastValueFrom(result)
+      user.image = imageFile
     }
     return user
   }

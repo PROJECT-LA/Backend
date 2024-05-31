@@ -1,7 +1,6 @@
 import { SharedService } from '@app/common'
-import { Controller, Get, Param, Res, Delete, Inject } from '@nestjs/common'
+import { Controller, Param, Delete, Inject } from '@nestjs/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
-import { Response } from 'express'
 import { extname } from 'path'
 import { FileService } from './file.service'
 
@@ -19,19 +18,18 @@ export class FileController {
     @Payload()
     { file, fileName }: { file: Express.Multer.File; fileName: string },
   ) {
-    console.log(file)
-    console.log(fileName)
     this.sharedService.acknowledgeMessage(context)
     const extension = extname(file.originalname).slice(1)
     return this.fileService.writteAvatars(`${fileName}.${extension}`, file)
   }
 
-  @Get(':name')
-  async getFile(@Param('name') name: string, @Res() res: Response) {
-    const streamableFile = this.fileService.readFile(
-      'ruta/del/directorio/',
-      name,
-    )
+  @MessagePattern({ cmd: 'get-avatar' })
+  async getAvatarBase64(
+    @Ctx() context: RmqContext,
+    @Payload() { name }: { name: string },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    return this.fileService.getAvatar(name)
     // streamableFile.stream.pipe(res)
   }
   @Delete(':name')

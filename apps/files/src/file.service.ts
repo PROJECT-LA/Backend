@@ -35,7 +35,7 @@ export class FileService {
           writeStream.write(Buffer.from(buffer.buffer))
           writeStream.on('finish', () => {
             writeStream.close()
-            resolve(filePath)
+            resolve(name)
           })
           writeStream.end()
         } catch (error) {
@@ -65,7 +65,7 @@ export class FileService {
           writeStream.write(Buffer.from(buffer.buffer))
           writeStream.on('finish', () => {
             writeStream.close()
-            resolve(filePath)
+            resolve(name)
           })
           writeStream.end()
         } catch (error) {
@@ -74,16 +74,29 @@ export class FileService {
       }),
     )
   }
-  getAvatar(name: 'string') {
+  getAvatar(name: string) {
     const route = this.configService.get<string>('AVATARS_PATH')
-    return this.readFile(route, name)
+    return this.fileToBase64(route, name)
   }
 
   readFile(route: string, name: string) {
     const baseRoute = route
-    const ruta = path.join(baseRoute + name)
+    const ruta = path.join(baseRoute, name)
     const fileStream = createReadStream(ruta)
     return new StreamableFile(fileStream)
+  }
+
+  fileToBase64(route: string, name: string): Promise<string> {
+    const filePath = path.join(route, name)
+    return new Promise((resolve, reject) => {
+      fs.readFile(filePath, { encoding: 'base64' }, (err, data) => {
+        if (err) {
+          reject(new RpcException('No se pudo leer el archivo.'))
+        } else {
+          resolve(data)
+        }
+      })
+    })
   }
 
   verifyFile(route: string, name: string) {
@@ -112,17 +125,5 @@ export class FileService {
     } catch (error) {
       throw new Error(error)
     }
-  }
-
-  fileToBase64(filename: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      fs.readFile(filename, { encoding: 'base64' }, (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(data)
-        }
-      })
-    })
   }
 }
