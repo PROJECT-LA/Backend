@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { UserRepositoryInterface } from '../interface'
 import { FilterUserDto } from '../dto'
-import { BaseRepository } from '@app/common'
+import { BaseRepository, STATUS } from '@app/common'
 @Injectable()
 export class UserRepository
   extends BaseRepository<User>
@@ -15,6 +15,20 @@ export class UserRepository
     private readonly user: Repository<User>,
   ) {
     super(user)
+  }
+
+  async validateCredentials(username: string): Promise<User> {
+    return this.user
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.roles', 'role', 'role.status = :roleStatus', {
+        roleStatus: STATUS.ACTIVE,
+      })
+      .where('user.username = :username AND user.status = :userStatus', {
+        username,
+        userStatus: STATUS.ACTIVE,
+      })
+      .select(['user.id', 'user.password', 'role.id', 'role.name'])
+      .getOne()
   }
 
   async list(filterDto: FilterUserDto): Promise<[User[], number]> {

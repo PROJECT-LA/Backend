@@ -4,4 +4,5 @@ import { BaseInterfaceRepository } from '@app/common'
 
 export interface UserRepositoryInterface extends BaseInterfaceRepository<User> {
   list(paginationQueryDto: FilterUserDto): Promise<[User[], number]>
+  validateCredentials(username: string): Promise<User>
 }

@@ -12,7 +12,7 @@ import { UserRepositoryInterface } from '../interface'
 import { In } from 'typeorm'
 import { RoleRepositoryInterface } from '../../roles/interface'
 import { ClientProxy } from '@nestjs/microservices'
-import { lastValueFrom } from 'rxjs'
+import { lastValueFrom, timeout } from 'rxjs'
 
 @Injectable()
 export class UserService {
@@ -163,7 +163,6 @@ export class UserService {
         roles: {
           id: true,
           name: true,
-          status: true,
         },
         names: true,
         lastNames: true,
@@ -179,10 +178,9 @@ export class UserService {
     if (!user)
       throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
     if (user.image) {
-      const result = this.fileService.send(
-        { cmd: 'get-avatar' },
-        { name: user.image },
-      )
+      const result = this.fileService
+        .send({ cmd: 'get-avatar' }, { name: user.image })
+        .pipe(timeout(5000))
       const imageFile = await lastValueFrom(result)
       user.image = imageFile
     }

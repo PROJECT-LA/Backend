@@ -23,6 +23,7 @@ export interface UserPayload {
     email: string
     phone: string
     ci: string
+    image?: any
   }
   token: string
   sidebarData: SectionPayload[]
