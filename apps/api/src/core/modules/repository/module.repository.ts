@@ -93,9 +93,6 @@ export class ModuleRepository
         'subModule.idRole',
       ])
       .where('module.module is NULL')
-      .andWhere('module.status = :status', {
-        status: STATUS.ACTIVE,
-      })
       .andWhere('module.idRole = :idRole', { idRole: id })
       .orderBy('module.order', 'ASC')
       .addOrderBy('subModule.order', 'ASC')
