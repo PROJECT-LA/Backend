@@ -1,6 +1,6 @@
 import { Brackets, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { BaseRepository, STATUS } from '@app/common'
+import { BaseRepository } from '@app/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ModuleEntity } from '../entities'
 import { ModuleRepositoryInterface } from '../interfaces'
@@ -69,14 +69,7 @@ export class ModuleRepository
   async getModuleSubModules(id: string) {
     return await this.module
       .createQueryBuilder('module')
-      .leftJoinAndSelect(
-        'module.subModule',
-        'subModule',
-        'subModule.status = :status',
-        {
-          status: STATUS.ACTIVE,
-        },
-      )
+      .leftJoinAndSelect('module.subModule', 'subModule')
       .select([
         'module.id',
         'module.title',

@@ -28,7 +28,7 @@ export class CasbinRules1714370182567 implements MigrationInterface {
         [RoleEnum.GERENTE]: 'read',
       },
       '/admin/modules': {
-        [RoleEnum.ADMINISTRADOR]: 'read|update|create|update',
+        [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
         [RoleEnum.GERENTE]: 'read',
       },
     }
