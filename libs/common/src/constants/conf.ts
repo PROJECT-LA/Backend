@@ -13,4 +13,6 @@ export enum fileConfigurations {
   FILE_TYPE = 'pdf',
 }
 
+export const AVATARS_PATH = process.env.AVATARS_PATH || 'uploads/avatars/'
+
 export const MAX_IMAGE_LENGTH = +(process.env.MAX_MB_IMAGE || 1) * 1024 * 1024

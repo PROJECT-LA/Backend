@@ -29,7 +29,7 @@ import { CasbinModule } from './core/policies/config/casbin.module'
 import { DataSourceConfig } from './core/db/orm-config-source'
 import { SharedModule } from '@app/common'
 import { MicroserviceModule } from './microservices/microservice.module'
-import { FileService } from '@app/common/services/file.service'
+import { FileService } from 'apps/files/src/file.service'
 
 @Module({
   imports: [
@@ -51,6 +51,7 @@ import { FileService } from '@app/common/services/file.service'
     ScheduleModule.forRoot(),
     SharedModule,
     MicroserviceModule,
+    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
   ],
   controllers: [
     RoleController,

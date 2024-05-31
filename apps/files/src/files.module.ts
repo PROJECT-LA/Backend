@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { FilesController } from './files.controller'
-import { FilesService } from './files.service'
 import { SharedModule, SharedService } from '@app/common'
 import { ConfigModule } from '@nestjs/config'
+import { FileController } from './files.controller'
+import { FileService } from './file.service'
 
 @Module({
   imports: [
@@ -11,9 +11,9 @@ import { ConfigModule } from '@nestjs/config'
     }),
     SharedModule,
   ],
-  controllers: [FilesController],
+  controllers: [FileController],
   providers: [
-    FilesService,
+    FileService,
     {
       provide: 'SharedServiceInterface',
       useClass: SharedService,

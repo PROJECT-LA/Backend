@@ -11,6 +11,8 @@ import { Messages, STATUS, TextService } from '@app/common'
 import { UserRepositoryInterface } from '../interface'
 import { In } from 'typeorm'
 import { RoleRepositoryInterface } from '../../roles/interface'
+import { ClientProxy } from '@nestjs/microservices'
+import { lastValueFrom } from 'rxjs'
 
 @Injectable()
 export class UserService {
@@ -19,6 +21,8 @@ export class UserService {
     private readonly usersRepository: UserRepositoryInterface,
     @Inject('IRoleRepository')
     private readonly rolesRepository: RoleRepositoryInterface,
+    @Inject('FILE_SERVICE')
+    private readonly fileService: ClientProxy,
   ) {}
   async list(paginacionQueryDto: FilterUserDto) {
     return await this.usersRepository.list(paginacionQueryDto)
@@ -75,7 +79,11 @@ export class UserService {
     return await this.usersRepository.save(updateUser)
   }
 
-  async updateProfile(id: string, updateUserDto: UpdateProfileDto) {
+  async updateProfile(
+    id: string,
+    updateUserDto: UpdateProfileDto,
+    image: Express.Multer.File | undefined | null,
+  ) {
     if (id) await this.getCurrentUser(id)
 
     const userExistsEmail = await this.__findOneByEmail(updateUserDto.email)
@@ -92,6 +100,20 @@ export class UserService {
       ci: updateUserDto.ci,
       address: updateUserDto.address,
     })
+    try {
+      if (image) {
+        const result = this.fileService.send(
+          { cmd: 'writte-avatar' },
+          { file: image, fileName: updateUser.ci },
+        )
+        const imageRoute = await lastValueFrom(result)
+        updateUser.image = imageRoute
+      }
+    } catch (error) {
+      throw new PreconditionFailedException(
+        'Ocurrio un error al subir la imagen',
+      )
+    }
     return await this.usersRepository.update(id, updateUser)
   }
 

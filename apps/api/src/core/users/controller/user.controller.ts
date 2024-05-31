@@ -16,6 +16,7 @@ import { UserService } from '../service'
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiProperty,
   ApiTags,
@@ -49,6 +50,7 @@ export class UserController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API: para crear un usuario' })
+  @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateUserDto })
   @UseInterceptors(
     FileInterceptor('image', {
@@ -107,17 +109,33 @@ export class UserController extends BaseController {
   }
 
   @ApiOperation({ summary: 'API: para actulizar el perfil de usuario' })
+  @Patch(':id/update-profile')
+  @ApiConsumes('multipart/form-data')
   @ApiBody({ type: UpdateProfileDto })
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch(':id/update-profile')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      fileFilter: imageFileFilter,
+      limits: {
+        fileSize: MAX_IMAGE_LENGTH,
+        files: 1,
+      },
+    }),
+  )
   async updateProfile(
     @Param() param: ParamIdDto,
     @Body() updateProfileDto: UpdateProfileDto,
+    @UploadedFile() image: Express.Multer.File,
   ) {
     const { id } = param
-    const result = await this.usersService.updateProfile(id, updateProfileDto)
+    console.log(image)
+    const result = await this.usersService.updateProfile(
+      id,
+      updateProfileDto,
+      image,
+    )
     return this.successUpdate(result)
   }
 

@@ -5,7 +5,6 @@ import { ProxyParameterController } from './proxy-parameter.controller'
 @Module({
   imports: [
     SharedModule.registerRmq('AUDIT_SERVICE', process.env.RABBITMQ_AUDIT_QUEUE),
-    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
   ],
   controllers: [ProxyParameterController],
 })

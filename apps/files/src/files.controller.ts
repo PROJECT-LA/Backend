@@ -1,20 +1,41 @@
-import { Controller, Inject } from '@nestjs/common'
-import { FilesService } from './files.service'
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { SharedService } from '@app/common'
+import { Controller, Get, Param, Res, Delete, Inject } from '@nestjs/common'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { Response } from 'express'
+import { extname } from 'path'
+import { FileService } from './file.service'
 
-@Controller()
-export class FilesController {
+@Controller('files')
+export class FileController {
   constructor(
-    private readonly fileService: FilesService,
+    private readonly fileService: FileService,
     @Inject('SharedServiceInterface')
     private readonly sharedService: SharedService,
   ) {}
 
-  @MessagePattern({ cmd: 'write-files-avatars' })
-  async writteFile(@Ctx() context: RmqContext, @Payload() {image,name}:{image:Express.Multer.File, name:string}) {
-   this.fileService.writeFile('path',name,image)
+  @MessagePattern({ cmd: 'writte-avatar' })
+  async uploadAvatar(
+    @Ctx() context: RmqContext,
+    @Payload()
+    { file, fileName }: { file: Express.Multer.File; fileName: string },
+  ) {
+    console.log(file)
+    console.log(fileName)
+    this.sharedService.acknowledgeMessage(context)
+    const extension = extname(file.originalname).slice(1)
+    return this.fileService.writteAvatars(`${fileName}.${extension}`, file)
   }
-   
-  @MessagePattern({ cmd: 'remove-files-avatars' })
+
+  @Get(':name')
+  async getFile(@Param('name') name: string, @Res() res: Response) {
+    const streamableFile = this.fileService.readFile(
+      'ruta/del/directorio/',
+      name,
+    )
+    // streamableFile.stream.pipe(res)
+  }
+  @Delete(':name')
+  deleteFile(@Param('name') name: string) {
+    this.fileService.removeFile('ruta/del/archivo', name)
+  }
 }

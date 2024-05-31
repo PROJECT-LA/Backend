@@ -23,6 +23,9 @@ export class User extends BaseEntity implements IUser {
   @Column({ nullable: false })
   ci: string
 
+  @Column({ nullable: true })
+  image?: string
+
   @Column({ type: 'text', nullable: true })
   address: string
 
