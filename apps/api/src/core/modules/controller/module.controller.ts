@@ -35,7 +35,7 @@ export class ModuleController extends BaseController {
   @Get(':id')
   async list(@Param() params: ParamIdDto) {
     const { id } = params
-    const result = await this.moduleService.getSideBar(id)
+    const result = await this.moduleService.getModulesByRole(id)
     return this.successList(result)
   }
 

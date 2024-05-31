@@ -134,7 +134,7 @@ export class AuthService {
     })
     await this.deleteToken(idRefreshToken)
     const { token, refreshToken, tokenPayload } = await this.signIn(userRole)
-    const modules = await this.moduleAccess(tokenPayload.idRole)
+    const modules = await this.getSideBarByRole(tokenPayload.idRole)
     const info: UserPayload = {
       id: user.id,
       roles: user.roles,
@@ -178,7 +178,7 @@ export class AuthService {
     return await this.tokenRepository.delete(id)
   }
 
-  async moduleAccess(idRole: string) {
+  /*   async moduleAccess(idRole: string) {
     const policies = await this.policyService.getPoliciesByRole(idRole)
     const sidebarData = await this.moduleRepository.getModuleSubModules(idRole)
     return sidebarData
@@ -189,6 +189,14 @@ export class AuthService {
         ),
       }))
       .filter((module: SectionPayload) => module.subModule.length > 0)
+  } */
+
+  async getSideBarByRole(id: string) {
+    const sidebarData = await this.moduleRepository.getSidebarByRole(id)
+    console.log(sidebarData)
+    return sidebarData.filter(
+      (module: SectionPayload) => module.subModule.length > 0,
+    )
   }
 
   async login(user: PassportUser) {
@@ -197,7 +205,7 @@ export class AuthService {
       select: ['id', 'username', 'email', 'phone', 'names', 'lastNames', 'ci'],
     })
     const { refreshToken, token, tokenPayload } = await this.signIn(user)
-    const modules = await this.moduleAccess(tokenPayload.idRole)
+    const modules = await this.getSideBarByRole(tokenPayload.idRole)
     const info: UserPayload = {
       id: user.id,
       roles: user.roles,

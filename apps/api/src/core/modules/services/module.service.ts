@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ModuleRepositoryInterface } from '../interfaces'
-import { CreateModuleDto, FilterModuleDto, UpdateModuleDto } from '../dto'
+import { CreateModuleDto, UpdateModuleDto } from '../dto'
 import { STATUS } from '@app/common'
 import { SectionPayload } from '@app/common/interfaces/payload.interface'
 
@@ -18,10 +18,6 @@ export class ModuleService {
     })
     if (!module) throw new NotFoundException('Modulo no encontrado')
     return module
-  }
-
-  async list(paginationQueryDto: FilterModuleDto) {
-    return await this.moduleRepository.list(paginationQueryDto)
   }
 
   async create(moduleDto: CreateModuleDto) {
@@ -59,9 +55,8 @@ export class ModuleService {
     return await this.moduleRepository.save(module)
   }
 
-  async getSideBar(id: string) {
+  async getModulesByRole(id: string) {
     const sidebarData = await this.moduleRepository.getModuleSubModules(id)
-    console.log(sidebarData)
     return sidebarData.filter(
       (module: SectionPayload) => module.subModule.length > 0,
     )
