@@ -25,20 +25,16 @@ export class ModuleService {
       const module = await this.moduleRepository.create({
         id: moduleDto.idModule,
       })
-      console.log(moduleDto.idModule)
       const order = await this.moduleRepository.getModuleOrderBySection(
         moduleDto.idModule,
       )
-      console.log('el orden ->>>', order)
       if (!order) newModule.order = 1
       newModule.order = order + 1
-      console.log(newModule.order)
       newModule.module = module
     } else {
       const order = await this.moduleRepository.getModuleOrderBySection(
         moduleDto.idRole,
       )
-      console.log(order)
       if (!order) newModule.order = 1
       newModule.order = order + 1
     }

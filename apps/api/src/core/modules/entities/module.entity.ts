@@ -45,7 +45,6 @@ export class ModuleEntity extends BaseEntity implements IModule {
   @Column({
     length: 50,
     type: 'varchar',
-    unique: true,
     comment: 'Ruta para acceder al módulo',
     nullable: true,
   })

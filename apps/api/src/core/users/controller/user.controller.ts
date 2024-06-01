@@ -130,7 +130,6 @@ export class UserController extends BaseController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     const { id } = param
-    console.log(image)
     const result = await this.usersService.updateProfile(
       id,
       updateProfileDto,
