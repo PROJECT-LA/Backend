@@ -77,18 +77,19 @@ export class ModuleService {
       const module = await this.moduleRepository.preload({
         id: moduleData.id,
       })
-      if (moduleData.subModules) {
-        for (const subModuleData of moduleData.subModules) {
-          const existingSubModule = await this.moduleRepository.preload({
-            id: subModuleData.id,
-          })
-          if (module.subModule) {
-            existingSubModule.order = parseInt(subModuleData.order)
-            module.subModule.push(existingSubModule)
+      if (module) {
+        module.subModule = module.subModule || []
+        if (moduleData.subModules) {
+          for (const subModuleData of moduleData.subModules) {
+            const existingSubModule = await this.moduleRepository.preload({
+              id: subModuleData.id,
+            })
+            if (existingSubModule) {
+              existingSubModule.order = parseInt(subModuleData.order)
+              module.subModule.push(existingSubModule)
+            }
           }
         }
-      }
-      if (module) {
         module.order = parseInt(moduleData.order)
         updatedModules.push(module)
       }
