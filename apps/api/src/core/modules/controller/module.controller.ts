@@ -91,12 +91,9 @@ export class ModuleController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API para actualizar le orden del sidebar' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
+  @ApiOperation({ summary: 'API para actualizar el orden del sidebar' })
   @ApiBody({
-    type: UpdateModuleDto,
+    type: NewOrderDto,
     description: 'Modulo',
     required: true,
   })

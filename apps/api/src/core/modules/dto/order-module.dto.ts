@@ -2,6 +2,17 @@ import { IsArray, IsNotEmpty, IsString, ValidateNested } from '@app/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
 
+class SubModuleDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  id: string
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty()
+  order: string
+}
 class SendItemDto {
   @IsNotEmpty()
   @IsString()
@@ -15,9 +26,9 @@ class SendItemDto {
 
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => SendItemDto)
-  @ApiProperty({ type: [SendItemDto] })
-  subModules: SendItemDto[]
+  @Type(() => SubModuleDto)
+  @ApiProperty({ type: [SubModuleDto] })
+  subModules?: SubModuleDto[]
 }
 
 export class NewOrderDto {
