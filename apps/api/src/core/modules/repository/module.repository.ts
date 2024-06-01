@@ -81,11 +81,11 @@ export class ModuleRepository
   async getOrderSection(id: string) {
     const order = await this.module
       .createQueryBuilder('module')
-      .select('MAX(module.order)', 'order')
+      .select('MAX(module.order)', 'max')
       .where('module.module is NULL')
       .andWhere('module.idRole = :idRole', { idRole: id })
       .getRawOne()
-    return order.order
+    return order.max
   }
 
   async getModuleOrderBySection(id: string) {

@@ -32,7 +32,7 @@ export class ModuleService {
       newModule.order = order + 1
       newModule.module = module
     } else {
-      const order = await this.moduleRepository.getModuleOrderBySection(
+      const order = await this.moduleRepository.getOrderSection(
         moduleDto.idRole,
       )
       if (!order) newModule.order = 1
