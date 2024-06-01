@@ -2,7 +2,6 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ModuleRepositoryInterface } from '../interfaces'
 import { CreateModuleDto, UpdateModuleDto } from '../dto'
 import { STATUS } from '@app/common'
-import { SectionPayload } from '@app/common/interfaces/payload.interface'
 
 @Injectable()
 export class ModuleService {
@@ -26,7 +25,22 @@ export class ModuleService {
       const module = await this.moduleRepository.create({
         id: moduleDto.idModule,
       })
+      console.log(moduleDto.idModule)
+      const order = await this.moduleRepository.getModuleOrderBySection(
+        moduleDto.idModule,
+      )
+      console.log('el orden ->>>', order)
+      if (!order) newModule.order = 1
+      newModule.order = order + 1
+      console.log(newModule.order)
       newModule.module = module
+    } else {
+      const order = await this.moduleRepository.getModuleOrderBySection(
+        moduleDto.idRole,
+      )
+      console.log(order)
+      if (!order) newModule.order = 1
+      newModule.order = order + 1
     }
     return await this.moduleRepository.save(newModule)
   }
@@ -56,9 +70,6 @@ export class ModuleService {
   }
 
   async getModulesByRole(id: string) {
-    const sidebarData = await this.moduleRepository.getModuleSubModules(id)
-    return sidebarData.filter(
-      (module: SectionPayload) => module.subModule.length > 0,
-    )
+    return await this.moduleRepository.getModuleSubModules(id)
   }
 }

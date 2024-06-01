@@ -77,4 +77,23 @@ export class ModuleRepository
       .addOrderBy('subModule.order', 'ASC')
       .getMany()
   }
+
+  async getOrderSection(id: string) {
+    const order = await this.module
+      .createQueryBuilder('module')
+      .select('MAX(module.order)', 'order')
+      .where('module.module is NULL')
+      .andWhere('module.idRole = :idRole', { idRole: id })
+      .getRawOne()
+    return order.order
+  }
+
+  async getModuleOrderBySection(id: string) {
+    const query = await this.module
+      .createQueryBuilder('module')
+      .select('MAX(module.order)', 'max')
+      .where('module.idModule = :module', { module: id })
+      .getRawOne()
+    return query.max
+  }
 }

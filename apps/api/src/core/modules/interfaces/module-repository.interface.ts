@@ -5,4 +5,6 @@ export interface ModuleRepositoryInterface
   extends BaseInterfaceRepository<ModuleEntity> {
   getModuleSubModules(id: string)
   getSidebarByRole(id: string)
+  getOrderSection(id: string)
+  getModuleOrderBySection(id: string)
 }

@@ -178,8 +178,6 @@ export class AuthService {
 
   @Cron(process.env.RFT_REVISIONS || '0')
   deleteTokenExpireds() {
-    console.log('HI')
-
     return this.tokenRepository.removeExpiredTokens()
   }
 }

@@ -1,10 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumber,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from '@app/common'
+import { IsNotEmpty, IsNumberString, IsOptional, IsString } from '@app/common'
 import { ApiProperty } from '@nestjs/swagger'
 import { IModule } from '../interfaces'
 
@@ -23,10 +17,6 @@ export class UpdateModuleDto implements IModule {
   @IsOptional()
   @IsString()
   icon?: string
-
-  @ApiProperty({ example: 7 })
-  @IsNumber()
-  order: number
 
   @IsOptional()
   @IsNumberString()
