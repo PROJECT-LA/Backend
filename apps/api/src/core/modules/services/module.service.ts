@@ -82,7 +82,7 @@ export class ModuleService {
           const existingSubModule = await this.moduleRepository.preload({
             id: subModuleData.id,
           })
-          if (existingSubModule && module) {
+          if (module.subModule) {
             existingSubModule.order = parseInt(subModuleData.order)
             module.subModule.push(existingSubModule)
           }
