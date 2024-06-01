@@ -72,14 +72,11 @@ export class ModuleService {
 
   async updateOrder(newOrder: NewOrderDto) {
     const { data } = newOrder
-    console.log(data)
     const updatedModules: ModuleEntity[] = []
     for (const moduleData of data) {
       const existingModule = await this.moduleRepository.preload({
         id: moduleData.id,
       })
-      console.log(existingModule)
-      existingModule.order = parseInt(moduleData.order)
       if (moduleData.subModules) {
         for (const subModuleData of moduleData.subModules) {
           const existingSubModule = await this.moduleRepository.preload({
@@ -88,10 +85,14 @@ export class ModuleService {
           if (existingModule.subModule) {
             existingSubModule.order = parseInt(subModuleData.order)
             existingModule.subModule.push(existingSubModule)
+            await this.moduleRepository.save(existingSubModule)
           }
         }
       }
-      updatedModules.push(existingModule)
+      if (existingModule) {
+        existingModule.order = parseInt(moduleData.order)
+        updatedModules.push(existingModule)
+      }
     }
     await this.moduleRepository.saveMany(updatedModules)
   }
