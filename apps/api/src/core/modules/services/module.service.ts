@@ -74,7 +74,7 @@ export class ModuleService {
     const { data } = newOrder
     const updatedModules: ModuleEntity[] = []
     for (const moduleData of data) {
-      const existingModule = await this.moduleRepository.preload({
+      const module = await this.moduleRepository.preload({
         id: moduleData.id,
       })
       if (moduleData.subModules) {
@@ -82,16 +82,15 @@ export class ModuleService {
           const existingSubModule = await this.moduleRepository.preload({
             id: subModuleData.id,
           })
-          if (existingModule.subModule) {
+          if (existingSubModule) {
             existingSubModule.order = parseInt(subModuleData.order)
-            existingModule.subModule.push(existingSubModule)
-            await this.moduleRepository.save(existingSubModule)
+            module.subModule.push(existingSubModule)
           }
         }
       }
-      if (existingModule) {
-        existingModule.order = parseInt(moduleData.order)
-        updatedModules.push(existingModule)
+      if (module) {
+        module.order = parseInt(moduleData.order)
+        updatedModules.push(module)
       }
     }
     await this.moduleRepository.saveMany(updatedModules)
