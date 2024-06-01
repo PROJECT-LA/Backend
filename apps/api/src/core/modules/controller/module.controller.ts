@@ -18,7 +18,7 @@ import {
 } from '@nestjs/swagger'
 import { BaseController, ParamIdDto } from '@app/common'
 import { ModuleService } from '../services'
-import { CreateModuleDto, UpdateModuleDto } from '../dto'
+import { CreateModuleDto, NewOrderDto, UpdateModuleDto } from '../dto'
 import { JwtAuthGuard } from '../../auth'
 import { CasbinGuard } from '../../policies'
 
@@ -88,6 +88,21 @@ export class ModuleController extends BaseController {
   async changeStatus(@Param() params: ParamIdDto) {
     const { id: idModule } = params
     const result = await this.moduleService.changeStatus(idModule)
+    return this.successUpdate(result)
+  }
+
+  @ApiOperation({ summary: 'API para actualizar le orden del sidebar' })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @ApiBody({
+    type: UpdateModuleDto,
+    description: 'Modulo',
+    required: true,
+  })
+  @Patch('change/order')
+  async updateSidebar(@Body() moduleDto: NewOrderDto) {
+    const result = await this.moduleService.updateOrder(moduleDto)
     return this.successUpdate(result)
   }
 }

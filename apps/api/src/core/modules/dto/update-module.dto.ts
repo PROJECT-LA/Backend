@@ -28,5 +28,6 @@ export class UpdateModuleDto implements IModule {
 
   @ApiProperty({ example: 'Somewhere Description' })
   @IsString()
-  description: string
+  @IsOptional()
+  description?: string
 }

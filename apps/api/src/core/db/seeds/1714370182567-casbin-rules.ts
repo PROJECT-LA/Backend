@@ -107,6 +107,9 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/api/modules/:id/status': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH|GET',
       },
+      '/api/modules/change/order': {
+        [RoleEnum.ADMINISTRADOR]: 'PATCH',
+      },
     }
 
     const registrarCasbin = async (

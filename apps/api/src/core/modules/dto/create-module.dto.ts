@@ -32,5 +32,6 @@ export class CreateModuleDto implements IModule {
 
   @ApiProperty({ example: 'Somewhere Description' })
   @IsString()
+  @IsOptional()
   description?: string
 }

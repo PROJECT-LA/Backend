@@ -1,7 +1,8 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { ModuleRepositoryInterface } from '../interfaces'
-import { CreateModuleDto, UpdateModuleDto } from '../dto'
+import { CreateModuleDto, NewOrderDto, UpdateModuleDto } from '../dto'
 import { STATUS } from '@app/common'
+import { ModuleEntity } from '../entities'
 
 @Injectable()
 export class ModuleService {
@@ -67,5 +68,28 @@ export class ModuleService {
 
   async getModulesByRole(id: string) {
     return await this.moduleRepository.getModuleSubModules(id)
+  }
+
+  async updateOrder(newOrder: NewOrderDto) {
+    const { data } = newOrder
+
+    const updatedModules: ModuleEntity[] = []
+    for (const moduleData of data) {
+      const existingModule = await this.moduleRepository.preload({
+        id: moduleData.id,
+      })
+      existingModule.order = parseInt(moduleData.order)
+      if (moduleData.subModules) {
+        for (const subModuleData of moduleData.subModules) {
+          const existingSubModule = await this.moduleRepository.preload({
+            id: subModuleData.id,
+          })
+          existingSubModule.order = parseInt(subModuleData.order)
+          existingModule.subModule.push(existingSubModule)
+        }
+      }
+      updatedModules.push(existingModule)
+    }
+    await this.moduleRepository.saveMany(updatedModules) // Usa save en lugar de saveMany
   }
 }
