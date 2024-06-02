@@ -40,9 +40,9 @@ export class SidebarGerency1716434581710 implements MigrationInterface {
             order: 1,
           },
           {
-            url: '/admin/plantillas',
+            url: '/admin/templates',
             title: 'Plantillas',
-            icono: 'package-open',
+            icono: 'scale',
             description: 'Gestión de Plantillas',
             order: 2,
           },
