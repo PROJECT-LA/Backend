@@ -7,9 +7,11 @@ export class CasbinRules1714370182567 implements MigrationInterface {
     const frontendRoutes: CasbinValue = {
       '/admin/home': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
       },
       '/admin/profile': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
       },
       '/admin/users': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
@@ -21,7 +23,7 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       },
       '/admin/parameters': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
-        [RoleEnum.GERENTE]: 'read',
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
       },
       '/admin/policies': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
@@ -30,6 +32,12 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/admin/modules': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
         [RoleEnum.GERENTE]: 'read',
+      },
+      '/admin/templates': {
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
+      },
+      '/admin/templates/:id/controls': {
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
       },
     }
 
