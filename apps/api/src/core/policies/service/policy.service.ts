@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, Query } from '@nestjs/common'
 import { AuthZManagementService } from 'nest-authz'
 import { CreatePolicyDto, FilterPoliciesDto } from '../dto'
 import { PassportUser, STATUS } from '@app/common'
-import { RoleRepositoryInterface } from '../../roles/interface'
+import { IRoleRepository } from '../../roles/interface'
 
 type politicasResultType = [Array<CreatePolicyDto>, number]
 
@@ -11,7 +11,7 @@ export class PolicyService {
   constructor(
     private readonly authZManagerService: AuthZManagementService,
     @Inject('IRoleRepository')
-    private readonly roleRepository: RoleRepositoryInterface,
+    private readonly roleRepository: IRoleRepository,
   ) {}
 
   async findAll(

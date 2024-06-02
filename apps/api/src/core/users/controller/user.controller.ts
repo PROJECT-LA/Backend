@@ -90,7 +90,7 @@ export class UserController extends BaseController {
     if (user.id !== id) {
       throw new UnauthorizedException('Forbiden')
     }
-    return await this.usersService.getCurrentUser(id)
+    return await this.usersService.getUserProfile(id)
   }
 
   @ApiOperation({ summary: 'API: para actulizar un usuario' })

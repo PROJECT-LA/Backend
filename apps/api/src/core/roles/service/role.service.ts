@@ -1,6 +1,6 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
-import { RoleRepositoryInterface } from '../interface/role-repository.interface'
+import { IRoleRepository } from '../interface/iRole-repository'
 import { PolicyService } from '../../policies/service'
 import { Messages, STATUS } from '@app/common'
 
@@ -8,7 +8,7 @@ import { Messages, STATUS } from '@app/common'
 export class RoleService {
   constructor(
     @Inject('IRoleRepository')
-    private readonly roleRepository: RoleRepositoryInterface,
+    private readonly roleRepository: IRoleRepository,
     private readonly policyService: PolicyService,
   ) {}
 

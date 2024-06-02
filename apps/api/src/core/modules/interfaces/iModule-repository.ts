@@ -1,10 +1,10 @@
 import { BaseInterfaceRepository } from '@app/common'
 import { ModuleEntity } from '../entities'
 
-export interface ModuleRepositoryInterface
+export interface IModuleRepository
   extends BaseInterfaceRepository<ModuleEntity> {
   getModuleSubModules(id: string)
   getSidebarByRole(id: string)
-  getOrderSection(id: string)
-  getModuleOrderBySection(id: string)
+  getOrderSectionByRole(id: string): Promise<number | null | undefined>
+  getModuleOrderBySection(id: string): Promise<number | null | undefined>
 }

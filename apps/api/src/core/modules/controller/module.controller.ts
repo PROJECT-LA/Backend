@@ -31,7 +31,9 @@ export class ModuleController extends BaseController {
     super()
   }
 
-  @ApiOperation({ summary: 'API para obtener el listado de Módulos' })
+  @ApiOperation({
+    summary: 'API para obtener el listado de Módulos en base al rol',
+  })
   @Get(':id')
   async list(@Param() params: ParamIdDto) {
     const { id } = params

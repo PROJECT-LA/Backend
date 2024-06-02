@@ -11,7 +11,6 @@ import {
 } from '@nestjs/common'
 
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
-
 import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
 import { BaseController, ParamIdDto } from '@app/common'
 import { RoleService } from '../service'
@@ -40,12 +39,6 @@ export class RoleController extends BaseController {
     return this.successListRows(result)
   }
 
-  /*   @Get(':id')
-  async findOne(@Param() param: ParamIdDto) {
-    const { id } = param
-    return await this.roleService.getRoleById(id)
-  }
- */
   @ApiOperation({ summary: 'API: para actulizar un rol' })
   @ApiBody({ type: UpdateRoleDto })
   @Patch(':id')

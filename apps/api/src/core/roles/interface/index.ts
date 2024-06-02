@@ -1,2 +1,2 @@
-export { IRol } from './role.interface'
-export { RoleRepositoryInterface } from './role-repository.interface'
+export { IRol } from './iRole-entity'
+export { IRoleRepository } from './iRole-repository'

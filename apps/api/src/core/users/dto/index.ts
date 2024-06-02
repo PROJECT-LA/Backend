@@ -1,5 +1,5 @@
 export { CreateUserDto } from './create-user.dto'
 export { UpdateUserDto } from './update-user.dto'
-export { FilterUserDto } from './pagination.dto'
+export { FilterUserDto } from './filter-user.dto'
 export { UpdateProfileDto } from './update-profile.dto'
-export { ChangePaswwordDto } from './restore-pass.dto'
+export { ChangePaswwordDto } from './update-password.dto'

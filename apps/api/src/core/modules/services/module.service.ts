@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
-import { ModuleRepositoryInterface } from '../interfaces'
+import { IModuleRepository } from '../interfaces'
 import { CreateModuleDto, NewOrderDto, UpdateModuleDto } from '../dto'
 import { STATUS } from '@app/common'
 import { ModuleEntity } from '../entities'
@@ -8,10 +8,10 @@ import { ModuleEntity } from '../entities'
 export class ModuleService {
   constructor(
     @Inject('IModuleRepository')
-    private readonly moduleRepository: ModuleRepositoryInterface,
+    private readonly moduleRepository: IModuleRepository,
   ) {}
 
-  async getModule(id: string) {
+  async getModuleById(id: string) {
     const module = await this.moduleRepository.findOneByCondition({
       where: { id },
       relations: ['subModule'],
@@ -23,7 +23,7 @@ export class ModuleService {
   async create(moduleDto: CreateModuleDto) {
     const newModule = this.moduleRepository.create(moduleDto)
     if (moduleDto.idModule) {
-      const module = await this.moduleRepository.create({
+      const module = this.moduleRepository.create({
         id: moduleDto.idModule,
       })
       const order = await this.moduleRepository.getModuleOrderBySection(
@@ -33,7 +33,7 @@ export class ModuleService {
       newModule.order = order + 1
       newModule.module = module
     } else {
-      const order = await this.moduleRepository.getOrderSection(
+      const order = await this.moduleRepository.getOrderSectionByRole(
         moduleDto.idRole,
       )
       if (!order) newModule.order = 1
@@ -43,13 +43,12 @@ export class ModuleService {
   }
 
   async update(id: string, moduleDto: UpdateModuleDto) {
-    await this.getModule(id)
+    await this.getModuleById(id)
     return await this.moduleRepository.update(id, moduleDto)
   }
 
   async delete(id: string) {
-    const module = await this.getModule(id)
-    console.log(module)
+    await this.getModuleById(id)
     return await this.moduleRepository.delete(id)
   }
 
@@ -60,25 +59,24 @@ export class ModuleService {
     })
     module.status =
       module.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
-    module.subModule.forEach((subModule) => {
-      subModule.status = module.status
-    })
+    if (module.subModule) {
+      module.subModule.forEach((subModule) => {
+        subModule.status = module.status
+      })
+    }
     return await this.moduleRepository.save(module)
-  }
-
-  async getModulesByRole(id: string) {
-    return await this.moduleRepository.getModuleSubModules(id)
   }
 
   async updateOrder(newOrder: NewOrderDto) {
     const { data } = newOrder
     const updatedModules: ModuleEntity[] = []
+
     for (const moduleData of data) {
       const module = await this.moduleRepository.preload({
         id: moduleData.id,
       })
       if (module) {
-        module.subModule = module.subModule || []
+        module.subModule = []
         if (moduleData.subModules) {
           for (const subModuleData of moduleData.subModules) {
             const existingSubModule = await this.moduleRepository.preload({
@@ -95,5 +93,9 @@ export class ModuleService {
       }
     }
     await this.moduleRepository.saveMany(updatedModules)
+  }
+
+  async getModulesByRole(id: string) {
+    return await this.moduleRepository.getModuleSubModules(id)
   }
 }

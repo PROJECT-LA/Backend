@@ -2,13 +2,13 @@ import { Brackets, Repository } from 'typeorm'
 import { User } from '../entities'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { UserRepositoryInterface } from '../interface'
+import { IUserRepository } from '../interface'
 import { FilterUserDto } from '../dto'
 import { BaseRepository, STATUS } from '@app/common'
 @Injectable()
 export class UserRepository
   extends BaseRepository<User>
-  implements UserRepositoryInterface
+  implements IUserRepository
 {
   constructor(
     @InjectRepository(User)

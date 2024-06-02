@@ -6,12 +6,12 @@ import { Cron } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
 
 import dotenv from 'dotenv'
-import { UserRepositoryInterface } from '../../users/interface'
-import { ModuleRepositoryInterface } from '../../modules/interfaces'
+import { IModuleRepository } from '../../modules/interfaces'
 import { UserPayload } from '@app/common/interfaces/payload.interface'
 import { User } from '../../users/entities'
 import { ClientProxy } from '@nestjs/microservices'
 import { lastValueFrom, timeout } from 'rxjs'
+import { IUserRepository } from '../../users/interface'
 
 dotenv.config()
 @Injectable()
@@ -20,11 +20,11 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     @Inject('IUserRepository')
-    private readonly usersRepository: UserRepositoryInterface,
+    private readonly usersRepository: IUserRepository,
     @Inject('IRefreshTokenRepository')
     private readonly tokenRepository: TokenRepositoryInterface,
     @Inject('IModuleRepository')
-    private readonly moduleRepository: ModuleRepositoryInterface,
+    private readonly moduleRepository: IModuleRepository,
     @Inject('FILE_SERVICE')
     private readonly fileService: ClientProxy,
   ) {}
