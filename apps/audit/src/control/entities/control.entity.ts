@@ -7,11 +7,12 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm'
-import { Template } from '../../template/entities/template.entity'
+import { IControl } from '../interface'
+import { Template } from '../../template/entities'
 
 @Entity('controls')
 @Check(UtilService.buildStatusCheck(STATUS))
-export class Control extends BaseEntity {
+export class Control extends BaseEntity implements IControl {
   @Column({ length: 200, type: 'varchar' })
   oControl: string
 
@@ -25,7 +26,7 @@ export class Control extends BaseEntity {
   gControl: string
 
   @Column({ length: 200, type: 'varchar' })
-  gControlDescripcion: string
+  gControlDescription: string
 
   @Column({ length: 5, type: 'varchar' })
   gControlCode: string
@@ -39,12 +40,8 @@ export class Control extends BaseEntity {
   @Column({ length: 5, type: 'varchar' })
   eControlCode: string
 
-  @Column({
-    type: 'bigint',
-    nullable: false,
-    comment: 'Clave foránea de la reacion con el rol',
-  })
-  idRole: string
+  @Column({ name: 'id_template' })
+  idTemplate: string
 
   @ManyToOne(() => Template, (template) => template.controls)
   @JoinColumn({ name: 'id_template', referencedColumnName: 'id' })

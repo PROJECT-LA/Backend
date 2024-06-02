@@ -13,6 +13,10 @@ import { TemplateRepository } from './template/repository'
 import { Template } from './template/entities'
 import { TemplateController } from './template/controller'
 import { TemplateService } from './template/service'
+import { ControlRepository } from './control/repository/control.repository'
+import { ControlService } from './control/service'
+import { Control } from './control/entities'
+import { ControlController } from './control/controller'
 
 @Module({
   imports: [
@@ -21,9 +25,14 @@ import { TemplateService } from './template/service'
     }),
     SharedModule,
     TypeOrmModule.forRoot(DataSourceConfig),
-    TypeOrmModule.forFeature([Parameter, Template]),
+    TypeOrmModule.forFeature([Parameter, Template, Control]),
   ],
-  controllers: [AuditController, ParameterController, TemplateController],
+  controllers: [
+    AuditController,
+    ParameterController,
+    TemplateController,
+    ControlController,
+  ],
   providers: [
     AuditService,
     {
@@ -38,8 +47,13 @@ import { TemplateService } from './template/service'
       provide: 'ITemplateRepository',
       useClass: TemplateRepository,
     },
+    {
+      provide: 'IControlRepository',
+      useClass: ControlRepository,
+    },
     ParameterService,
     TemplateService,
+    ControlService,
   ],
 })
 export class AuditModule {}
