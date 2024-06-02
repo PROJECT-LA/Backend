@@ -1,2 +1,2 @@
 export { ITemplate } from './iTemplate-entity'
-export {} from './iTemplate-repository'
+export { ITemplateRepository } from './iTemplate-repository'

@@ -28,10 +28,10 @@ export class ProxyParameterController {
 
   @ApiOperation({ summary: 'API para obtener el listado de parámetros' })
   @Get()
-  async list(@Query() paginacionQueryDto: PaginationQueryDto) {
+  async list(@Query() paginationQueryDto: PaginationQueryDto) {
     const result = this.auditService.send(
       { cmd: 'get-parameters' },
-      { paginacionQueryDto },
+      { paginationQueryDto },
     )
     return result
   }
@@ -52,7 +52,7 @@ export class ProxyParameterController {
   @ApiOperation({ summary: 'API para crear un nuevo parámetro' })
   @ApiBody({
     type: CreateParameterDto,
-    description: 'new Parametro',
+    description: 'new Parameter',
     required: true,
   })
   @Post()
@@ -70,7 +70,7 @@ export class ProxyParameterController {
   })
   @ApiBody({
     type: UpdateParameterDto,
-    description: 'new Rol',
+    description: 'Update Parameter',
     required: true,
   })
   @Patch(':id')
@@ -92,10 +92,10 @@ export class ProxyParameterController {
   })
   @Patch('/:id/change-status')
   async changeStatus(@Param() params: ParamIdDto) {
-    const { id: idParameter } = params
+    const { id } = params
     const result = this.auditService.send(
       { cmd: 'change-status-parameter' },
-      { idParameter },
+      { id },
     )
     return result
   }

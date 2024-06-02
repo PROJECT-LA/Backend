@@ -25,8 +25,8 @@ export class UserService {
     private readonly fileService: ClientProxy,
   ) {}
 
-  async list(paginacionQueryDto: FilterUserDto) {
-    return await this.usersRepository.list(paginacionQueryDto)
+  async list(paginationQueryDto: FilterUserDto) {
+    return await this.usersRepository.list(paginationQueryDto)
   }
 
   async create(

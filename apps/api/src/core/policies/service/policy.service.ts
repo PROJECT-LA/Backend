@@ -15,9 +15,9 @@ export class PolicyService {
   ) {}
 
   async findAll(
-    @Query() paginacionQueryDto: FilterPoliciesDto,
+    @Query() paginationQueryDto: FilterPoliciesDto,
   ): Promise<politicasResultType> {
-    const { limit, page, filter, aplication, order, sense } = paginacionQueryDto
+    const { limit, page, filter, aplication, order, sense } = paginationQueryDto
     const roles = await this.roleRepository.findAll({ select: ['id', 'name'] })
     const policie = await this.authZManagerService.getPolicy()
 

@@ -55,8 +55,8 @@ export class AuthorizationController extends BaseController {
 
   @ApiOperation({ summary: 'API para obtener el listado de politicas' })
   @Get()
-  async findAllPolicies(@Query() paginacionQueryDto: FilterPoliciesDto) {
-    const result = await this.policyService.findAll(paginacionQueryDto)
+  async findAllPolicies(@Query() paginationQueryDto: FilterPoliciesDto) {
+    const result = await this.policyService.findAll(paginationQueryDto)
     return this.successListRows(result)
   }
 

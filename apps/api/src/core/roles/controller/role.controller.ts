@@ -34,8 +34,8 @@ export class RoleController extends BaseController {
   }
   @ApiOperation({ summary: 'API: para obtener el listado de roles' })
   @Get()
-  async findAll(@Query() paginacionQueryDto: FilterRoleDto) {
-    const result = await this.roleService.list(paginacionQueryDto)
+  async findAll(@Query() paginationQueryDto: FilterRoleDto) {
+    const result = await this.roleService.list(paginationQueryDto)
     return this.successListRows(result)
   }
 

@@ -9,8 +9,11 @@ import { ParameterService } from './parameter/service'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { Parameter } from './parameter/entity'
 import { DataSourceConfig } from './db/orm-config-source'
+import { TemplateRepository } from './template/repository'
+import { Template } from './template/entities'
+import { TemplateController } from './template/controller'
+import { TemplateService } from './template/service'
 
-//MOdulo
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -18,9 +21,9 @@ import { DataSourceConfig } from './db/orm-config-source'
     }),
     SharedModule,
     TypeOrmModule.forRoot(DataSourceConfig),
-    TypeOrmModule.forFeature([Parameter]),
+    TypeOrmModule.forFeature([Parameter, Template]),
   ],
-  controllers: [AuditController, ParameterController],
+  controllers: [AuditController, ParameterController, TemplateController],
   providers: [
     AuditService,
     {
@@ -31,7 +34,12 @@ import { DataSourceConfig } from './db/orm-config-source'
       provide: 'IParameterRepository',
       useClass: ParameterRepository,
     },
+    {
+      provide: 'ITemplateRepository',
+      useClass: TemplateRepository,
+    },
     ParameterService,
+    TemplateService,
   ],
 })
 export class AuditModule {}

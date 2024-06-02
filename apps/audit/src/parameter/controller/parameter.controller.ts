@@ -24,10 +24,10 @@ export class ParameterController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { paginacionQueryDto }: { paginacionQueryDto: PaginationQueryDto },
+    { paginationQueryDto }: { paginationQueryDto: PaginationQueryDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.list(paginacionQueryDto)
+    const result = await this.parameterService.list(paginationQueryDto)
     return this.successListRows(result)
   }
 
@@ -72,7 +72,7 @@ export class ParameterController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete' })
+  @MessagePattern({ cmd: 'delete-parameter' })
   @Delete(':id')
   async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
     this.sharedService.acknowledgeMessage(context)

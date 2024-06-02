@@ -47,8 +47,8 @@ export class RoleService {
     }
   }
 
-  async list(paginacionQueryDto: FilterRoleDto) {
-    return await this.roleRepository.list(paginacionQueryDto)
+  async list(paginationQueryDto: FilterRoleDto) {
+    return await this.roleRepository.list(paginationQueryDto)
   }
 
   async changeRoleState(idRole: string) {

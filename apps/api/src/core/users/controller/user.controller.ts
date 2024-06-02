@@ -72,8 +72,8 @@ export class UserController extends BaseController {
 
   @ApiOperation({ summary: 'API: para obtener el listado de usuarios' })
   @Get()
-  async findAll(@Query() paginacionQueryDto: FilterUserDto) {
-    const result = await this.usersService.list(paginacionQueryDto)
+  async findAll(@Query() paginationQueryDto: FilterUserDto) {
+    const result = await this.usersService.list(paginationQueryDto)
     return this.successListRows(result)
   }
 
