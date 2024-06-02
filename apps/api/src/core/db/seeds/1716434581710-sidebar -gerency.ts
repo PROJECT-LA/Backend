@@ -27,6 +27,21 @@ export class SidebarGerency1716434581710 implements MigrationInterface {
         ],
       },
       {
+        url: '/auditorias',
+        title: 'Auditorías',
+        description: 'Sección de Configuracion de Auditorias',
+        order: 2,
+        subMenus: [
+          {
+            url: '/admin/templates',
+            title: 'Plantillas',
+            icono: 'scale',
+            description: 'Gestión de Plantillas',
+            order: 2,
+          },
+        ],
+      },
+      {
         url: '/configuraciones',
         title: 'Configuración',
         description: 'Sección de configuraciones',
@@ -38,13 +53,6 @@ export class SidebarGerency1716434581710 implements MigrationInterface {
             icono: 'settings-2',
             description: 'Parámetros generales del sistema',
             order: 1,
-          },
-          {
-            url: '/admin/templates',
-            title: 'Plantillas',
-            icono: 'scale',
-            description: 'Gestión de Plantillas',
-            order: 2,
           },
         ],
       },
