@@ -1,8 +1,7 @@
-import { IControl } from 'apps/audit/src/control/interface'
 import { IsNotEmpty, MaxLength } from '../../../validation'
 import { ApiProperty } from '@nestjs/swagger'
 
-export class CreateControlDto implements IControl {
+export class CreateControlDto {
   @ApiProperty({ example: 'OCONTROL' })
   @IsNotEmpty()
   @MaxLength(200)

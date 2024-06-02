@@ -1,6 +1,7 @@
-import { FilterTemplateDto, ParamIdDto } from '@app/common'
+import { ParamIdDto } from '@app/common'
 import {
   CreateControlDto,
+  FilterControlDto,
   UpdateControlDto,
 } from '@app/common/dto/audit/control'
 import {
@@ -28,7 +29,8 @@ export class ProxyControlController {
     summary: 'API para obtener el listado de controles de una plantilla',
   })
   @Get()
-  async list(@Query() paginationQueryDto: FilterTemplateDto) {
+  async list(@Query() paginationQueryDto: FilterControlDto) {
+    console.log(paginationQueryDto)
     const result = this.auditService.send(
       { cmd: 'get-controls' },
       { paginationQueryDto },

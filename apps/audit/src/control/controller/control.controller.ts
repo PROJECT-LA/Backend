@@ -1,9 +1,10 @@
 import { Controller, Inject } from '@nestjs/common'
-import { BaseController, FilterTemplateDto, SharedService } from '@app/common'
+import { BaseController, SharedService } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { ControlService } from '../service'
 import {
   CreateControlDto,
+  FilterControlDto,
   UpdateControlDto,
 } from '@app/common/dto/audit/control'
 
@@ -17,17 +18,14 @@ export class ControlController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-control' })
+  @MessagePattern({ cmd: 'get-controls' })
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    {
-      id,
-      paginationQueryDto,
-    }: { id: string; paginationQueryDto: FilterTemplateDto },
+    { paginationQueryDto }: { paginationQueryDto: FilterControlDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.list(id, paginationQueryDto)
+    const result = await this.controlService.list(paginationQueryDto)
     return this.successListRows(result)
   }
 

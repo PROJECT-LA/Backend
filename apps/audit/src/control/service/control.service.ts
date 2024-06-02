@@ -23,8 +23,8 @@ export class ControlService {
     return control
   }
 
-  async list(id: string, filterDto: FilterControlDto) {
-    return await this.controlRepository.list(id, filterDto)
+  async list(filterDto: FilterControlDto) {
+    return await this.controlRepository.list(filterDto)
   }
 
   async create(controlDto: CreateControlDto) {
@@ -46,7 +46,6 @@ export class ControlService {
   async changeStatus(id: string) {
     const module = await this.controlRepository.findOneByCondition({
       where: { id },
-      relations: ['subModule'],
     })
     module.status =
       module.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE

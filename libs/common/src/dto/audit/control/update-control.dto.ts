@@ -1,7 +1,8 @@
+import { IControl } from 'apps/audit/src/control/interface'
 import { IsNotEmpty, MaxLength } from '../../../validation'
 import { ApiProperty } from '@nestjs/swagger'
 
-export class UpdateControlDto {
+export class UpdateControlDto implements IControl {
   @ApiProperty({ example: 'OCONTROL' })
   @IsNotEmpty()
   @MaxLength(200)
@@ -12,7 +13,7 @@ export class UpdateControlDto {
   @MaxLength(200)
   oControlDescription: string
 
-  @ApiProperty({ example: 'OCONTROL_CODE' })
+  @ApiProperty({ example: 'O-123' })
   @IsNotEmpty()
   @MaxLength(5)
   oControlCode: string
@@ -27,7 +28,7 @@ export class UpdateControlDto {
   @MaxLength(200)
   gControlDescription: string
 
-  @ApiProperty({ example: 'GCONTROL_CODE' })
+  @ApiProperty({ example: 'G-123' })
   @IsNotEmpty()
   @MaxLength(5)
   gControlCode: string
@@ -42,7 +43,7 @@ export class UpdateControlDto {
   @MaxLength(200)
   eControlDescription: string
 
-  @ApiProperty({ example: 'ECONTROL_CODE' })
+  @ApiProperty({ example: 'E-123' })
   @IsNotEmpty()
   @MaxLength(5)
   eControlCode: string

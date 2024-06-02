@@ -18,8 +18,9 @@ export class ControlRepository
     super(control)
   }
 
-  async list(id: string, filterDto: FilterControlDto) {
-    const { limit, order, sense, skip, filter } = filterDto
+  async list(filterDto: FilterControlDto) {
+    const { limit, order, sense, skip, filter, idTemplate } = filterDto
+    console.log(filterDto)
     const query = this.control
       .createQueryBuilder('control')
       .select([
@@ -28,13 +29,14 @@ export class ControlRepository
         'control.oControlDescription',
         'control.oControlCode',
         'control.gControl',
-        'control.gControlDescripcion',
+        'control.gControlDescription',
         'control.gControlCode',
         'control.eControl',
         'control.eControlDescription',
         'control.eControlCode',
         'control.status',
       ])
+      .where('control.idTemplate = :idTemplate', { idTemplate })
       .take(limit)
       .skip(skip)
 
@@ -65,6 +67,7 @@ export class ControlRepository
         }),
       )
     }
+
     return await query.getManyAndCount()
   }
 }
