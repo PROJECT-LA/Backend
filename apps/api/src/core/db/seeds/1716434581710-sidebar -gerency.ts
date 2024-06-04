@@ -33,7 +33,7 @@ export class SidebarGerency1716434581710 implements MigrationInterface {
         order: 2,
         subMenus: [
           {
-            url: '/admin/templates',
+            url: '/admin/plantillas',
             title: 'Plantillas',
             icono: 'scale',
             description: 'Gestión de Plantillas',

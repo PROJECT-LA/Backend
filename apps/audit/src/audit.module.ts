@@ -17,6 +17,10 @@ import { ControlRepository } from './control/repository/control.repository'
 import { ControlService } from './control/service'
 import { Control } from './control/entities'
 import { ControlController } from './control/controller'
+import { LevelRepository } from './level/repository/level.repository'
+import { LevelController } from './level/controller'
+import { MaturityLevel } from './level/entities'
+import { LevelService } from './level/service'
 
 @Module({
   imports: [
@@ -25,13 +29,14 @@ import { ControlController } from './control/controller'
     }),
     SharedModule,
     TypeOrmModule.forRoot(DataSourceConfig),
-    TypeOrmModule.forFeature([Parameter, Template, Control]),
+    TypeOrmModule.forFeature([Parameter, Template, Control, MaturityLevel]),
   ],
   controllers: [
     AuditController,
     ParameterController,
     TemplateController,
     ControlController,
+    LevelController,
   ],
   providers: [
     AuditService,
@@ -51,9 +56,14 @@ import { ControlController } from './control/controller'
       provide: 'IControlRepository',
       useClass: ControlRepository,
     },
+    {
+      provide: 'ILevelRepository',
+      useClass: LevelRepository,
+    },
     ParameterService,
     TemplateService,
     ControlService,
+    LevelService,
   ],
 })
 export class AuditModule {}

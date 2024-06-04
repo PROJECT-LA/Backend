@@ -31,33 +31,6 @@ services:
       - db_data_audit:/var/lib/mysql
     networks:
       - mysql-phpmyadmin
-
-  phpmyadmin_auth:
-    depends_on:
-      - db_auth
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    ports:
-      - '8090:80'
-    environment:
-      PMA_HOST: db_auth
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUTH}
-    networks:
-      - mysql-phpmyadmin
-
-  phpmyadmin_audit:
-    depends_on:
-      - db_audit
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    ports:
-      - '8091:80'
-    environment:
-      PMA_HOST: db_audit
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD_AUDIT}
-    networks:
-      - mysql-phpmyadmin
-
   #rabitmq
   rabbitmq:
     image: rabbitmq:3-management

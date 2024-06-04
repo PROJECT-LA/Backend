@@ -3,6 +3,7 @@ import { Module } from '@nestjs/common'
 import { ProxyParameterController } from './proxy-parameter.controller'
 import { ProxyTemplateController } from './proxy-template.controller'
 import { ProxyControlController } from './proxy-control.controller'
+import { ProxyLevelController } from './proxy-level.controller'
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ProxyControlController } from './proxy-control.controller'
     ProxyParameterController,
     ProxyTemplateController,
     ProxyControlController,
+    ProxyLevelController,
   ],
 })
 export class MicroserviceModule {}
