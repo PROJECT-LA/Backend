@@ -35,10 +35,10 @@ import {
   PassportUser,
   imageFileFilter,
 } from '@app/common'
-import { JwtAuthGuard } from '../../auth'
+import { JwtAuthGuard } from '../../access-tokens'
 import { CasbinGuard } from '../../policies'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { CurrentUser } from '../../auth/decorators'
+import { CurrentUser } from '../../access-tokens/decorators'
 
 @ApiTags('Users')
 @ApiBearerAuth()

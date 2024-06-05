@@ -19,7 +19,7 @@ import {
 import { BaseController, ParamIdDto } from '@app/common'
 import { ModuleService } from '../services'
 import { CreateModuleDto, NewOrderDto, UpdateModuleDto } from '../dto'
-import { JwtAuthGuard } from '../../auth'
+import { JwtAuthGuard } from '../../access-tokens'
 import { CasbinGuard } from '../../policies'
 
 @ApiBearerAuth()

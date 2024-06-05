@@ -35,7 +35,6 @@
         "tsConfigPath": "libs/common/tsconfig.lib.json"
       }
     },
-
     "audit": {
       "type": "application",
       "root": "apps/audit",
@@ -52,6 +51,15 @@
       "sourceRoot": "apps/files/src",
       "compilerOptions": {
         "tsConfigPath": "apps/files/tsconfig.app.json"
+      }
+    },
+    "auth": {
+      "type": "application",
+      "root": "apps/auth",
+      "entryFile": "main",
+      "sourceRoot": "apps/auth/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/auth/tsconfig.app.json"
       }
     }
   }

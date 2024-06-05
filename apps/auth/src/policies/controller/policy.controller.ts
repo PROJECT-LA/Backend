@@ -14,8 +14,8 @@ import { BaseController, PassportUser } from '@app/common'
 import { CreatePolicyDto, FilterPoliciesDto, RouteDto } from '../dto'
 import { CasbinGuard } from '../guards'
 import { PolicyService } from '../service'
-import { JwtAuthGuard } from '../../auth'
-import { CurrentUser } from '../../auth/decorators'
+import { JwtAuthGuard } from '../../access-tokens'
+import { CurrentUser } from '../../access-tokens/decorators'
 
 @ApiBearerAuth()
 @ApiTags('Policies')
