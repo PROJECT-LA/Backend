@@ -57,7 +57,11 @@ export class UserService {
     return await this.usersRepository.save(newUser)
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+    image: Express.Multer.File,
+  ) {
     const roles = await this.__validateUser(
       {
         username: updateUserDto.username,

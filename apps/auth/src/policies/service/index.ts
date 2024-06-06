@@ -1,1 +1,1 @@
-export { PolicyService } from './policy.service'
+export * from './policy.service'

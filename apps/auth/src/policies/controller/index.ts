@@ -1,1 +1,1 @@
-export { AuthorizationController } from './policy.controller'
+export * from './policy.controller'

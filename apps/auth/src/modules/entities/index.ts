@@ -1,1 +1,1 @@
-export { ModuleEntity } from './module.entity'
+export * from './module.entity'

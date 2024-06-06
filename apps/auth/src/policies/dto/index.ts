@@ -1,3 +1,3 @@
-export { FilterPoliciesDto } from './filter-policies.dto'
-export { CreatePolicyDto } from './create-policie.dto'
-export { RouteDto } from './route.dto'
+export * from './filter-policies.dto'
+export * from './create-policie.dto'
+export * from './route.dto'

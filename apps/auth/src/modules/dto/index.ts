@@ -1,3 +1,3 @@
-export { CreateModuleDto } from './create-module.dto'
-export { UpdateModuleDto } from './update-module.dto'
-export { NewOrderDto } from './order-module.dto'
+export * from './create-module.dto'
+export * from './update-module.dto'
+export * from './order-module.dto'

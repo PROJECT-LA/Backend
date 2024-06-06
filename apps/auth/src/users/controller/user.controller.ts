@@ -1,26 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Query,
-  UseInterceptors,
-  UploadedFile,
-  UnauthorizedException,
-} from '@nestjs/common'
-import { UserService } from '../service'
-import {
-  ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
-  ApiOperation,
-  ApiProperty,
-  ApiTags,
-} from '@nestjs/swagger'
+import { Inject } from '@nestjs/common'
 import {
   CreateUserDto,
   FilterUserDto,
@@ -28,147 +6,128 @@ import {
   UpdateUserDto,
   ChangePaswwordDto,
 } from '../dto'
-import {
-  BaseController,
-  MAX_IMAGE_LENGTH,
-  ParamIdDto,
-  PassportUser,
-  imageFileFilter,
-} from '@app/common'
-import { JwtAuthGuard } from '../../access-tokens'
-import { CasbinGuard } from '../../policies'
-import { FileInterceptor } from '@nestjs/platform-express'
-import { CurrentUser } from '../../access-tokens/decorators'
+import { BaseController, ParamIdDto, SharedService } from '@app/common'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { UserService } from '../service'
 
-@ApiTags('Users')
-@ApiBearerAuth()
-@Controller('users')
-@UseGuards(JwtAuthGuard, CasbinGuard)
 export class UserController extends BaseController {
-  constructor(private readonly usersService: UserService) {
+  constructor(
+    private readonly usersService: UserService,
+    @Inject('SharedServiceInterface')
+    private readonly sharedService: SharedService,
+  ) {
     super()
   }
 
-  @ApiOperation({ summary: 'API: para crear un usuario' })
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: CreateUserDto })
-  @UseInterceptors(
-    FileInterceptor('image', {
-      fileFilter: imageFileFilter,
-      limits: {
-        fileSize: MAX_IMAGE_LENGTH,
-        files: 1,
-      },
-    }),
-  )
-  @Post()
-  async create(
-    @UploadedFile() image: Express.Multer.File,
-    @Body() createUserDto: CreateUserDto,
+  @MessagePattern({ cmd: 'get-users' })
+  async getUsers(
+    @Ctx() context: RmqContext,
+    @Payload() { pagination }: { pagination: FilterUserDto },
   ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.usersService.list(pagination)
+    return this.successListRows(result)
+  }
+
+  @MessagePattern({ cmd: 'create-user' })
+  async createUser(
+    @Ctx() context: RmqContext,
+    @Payload()
+    {
+      createUserDto,
+      image,
+    }: { createUserDto: CreateUserDto; image: Express.Multer.File },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.usersService.create(createUserDto, image)
     return this.successCreate(result)
   }
 
-  @ApiOperation({ summary: 'API: para obtener el listado de usuarios' })
-  @Get()
-  async findAll(@Query() paginationQueryDto: FilterUserDto) {
-    const result = await this.usersService.list(paginationQueryDto)
-    return this.successListRows(result)
+  @MessagePattern({ cmd: 'get-user' })
+  async getCurrentUser(@Payload() { param }: { param: ParamIdDto }) {
+    return await this.usersService.getUserProfile(param.id)
   }
 
-  @ApiOperation({ summary: 'API: para obtener un usuario' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Get(':id')
-  async getCurrentUser(
-    @CurrentUser() user: PassportUser,
-    @Param() param: ParamIdDto,
+  @MessagePattern({ cmd: 'update-user' })
+  async updateUser(
+    @Ctx() context: RmqContext,
+    @Payload()
+    {
+      param,
+      updateUserDto,
+      image,
+    }: {
+      param: ParamIdDto
+      updateUserDto: UpdateUserDto
+      image: Express.Multer.File
+    },
   ) {
-    const { id } = param
-    if (user.id !== id) {
-      throw new UnauthorizedException('Forbiden')
-    }
-    return await this.usersService.getUserProfile(id)
-  }
-
-  @ApiOperation({ summary: 'API: para actulizar un usuario' })
-  @ApiBody({ type: UpdateUserDto })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Patch(':id')
-  async update(
-    @Param() param: ParamIdDto,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
-    const { id } = param
-    const result = await this.usersService.update(id, updateUserDto)
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.usersService.update(
+      param.id,
+      updateUserDto,
+      image,
+    )
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API: para actulizar el perfil de usuario' })
-  @Patch(':id/update-profile')
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({ type: UpdateProfileDto })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @UseInterceptors(
-    FileInterceptor('image', {
-      fileFilter: imageFileFilter,
-      limits: {
-        fileSize: MAX_IMAGE_LENGTH,
-        files: 1,
-      },
-    }),
-  )
+  @MessagePattern({ cmd: 'update-profile' })
   async updateProfile(
-    @Param() param: ParamIdDto,
-    @Body() updateProfileDto: UpdateProfileDto,
-    @UploadedFile() image: Express.Multer.File,
+    @Ctx() context: RmqContext,
+    @Payload()
+    {
+      param,
+      updateProfileDto,
+      image,
+    }: {
+      param: ParamIdDto
+      updateProfileDto: UpdateProfileDto
+      image: Express.Multer.File
+    },
   ) {
-    const { id } = param
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.usersService.updateProfile(
-      id,
+      param.id,
       updateProfileDto,
       image,
     )
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API: para borrar un usuario' })
-  @Delete(':id')
-  remove(@Param() param: ParamIdDto) {
-    const { id } = param
-    const result = this.usersService.delete(id)
+  @MessagePattern({ cmd: 'remove-user' })
+  removeUser(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = this.usersService.delete(param.id)
     return this.successDelete(result)
   }
 
-  @ApiOperation({ summary: 'API para cambiar el estado de un usuario' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Patch('/:id/change-status')
-  async activar(@Param() params: ParamIdDto) {
-    const { id: idUser } = params
-    const result = await this.usersService.changeStatus(idUser)
+  @MessagePattern({ cmd: 'change-status-user' })
+  async changeStatusUser(
+    @Ctx() context: RmqContext,
+    @Payload() { params }: { params: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.usersService.changeStatus(params.id)
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API para cambiar la contraseña de usuario' })
-  @ApiBody({ type: ChangePaswwordDto })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Patch('/:id/change-password')
+  @MessagePattern({ cmd: 'change-password' })
   async changePassword(
-    @Param() params: ParamIdDto,
-    @Body() changePaswwordDto: ChangePaswwordDto,
+    @Ctx() context: RmqContext,
+    @Payload()
+    {
+      params,
+      changePaswwordDto,
+    }: { params: ParamIdDto; changePaswwordDto: ChangePaswwordDto },
   ) {
-    const { id } = params
-    const result = await this.usersService.updatePassword(id, changePaswwordDto)
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.usersService.updatePassword(
+      params.id,
+      changePaswwordDto,
+    )
     return this.successUpdate(result)
   }
 }

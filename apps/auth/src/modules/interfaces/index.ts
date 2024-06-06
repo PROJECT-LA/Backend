@@ -1,2 +1,2 @@
-export { IModule } from './IModule-entity'
-export { IModuleRepository } from './iModule-repository'
+export * from './IModule-entity'
+export * from './iModule-repository'

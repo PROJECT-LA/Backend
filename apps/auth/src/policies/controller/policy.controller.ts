@@ -1,88 +1,80 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-} from '@nestjs/common'
-
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { BaseController, PassportUser } from '@app/common'
+import { Inject } from '@nestjs/common'
+import { BaseController, PassportUser, SharedService } from '@app/common'
 import { CreatePolicyDto, FilterPoliciesDto, RouteDto } from '../dto'
-import { CasbinGuard } from '../guards'
 import { PolicyService } from '../service'
-import { JwtAuthGuard } from '../../access-tokens'
-import { CurrentUser } from '../../access-tokens/decorators'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
-@ApiBearerAuth()
-@ApiTags('Policies')
-@UseGuards(JwtAuthGuard, CasbinGuard)
-@Controller('policies')
-export class AuthorizationController extends BaseController {
-  constructor(private policyService: PolicyService) {
+export class PolicyController extends BaseController {
+  constructor(
+    private policyService: PolicyService,
+    @Inject('SharedServiceInterface')
+    private readonly sharedService: SharedService,
+  ) {
     super()
   }
 
-  @ApiOperation({ summary: 'API para crear una nueva política' })
-  @ApiBody({
-    type: CreatePolicyDto,
-    description: 'Crear nueva política',
-    required: true,
-  })
-  @Post()
-  async createPolicy(@Body() policy: CreatePolicyDto) {
+  @MessagePattern({ cmd: 'create-policy' })
+  async createPolicy(
+    @Ctx() context: RmqContext,
+    @Payload() { policy }: { policy: CreatePolicyDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.policyService.createPolicie(policy)
     return this.successCreate(result)
   }
 
-  @ApiOperation({ summary: 'API para actualizar una nueva política' })
-  @ApiBody({
-    type: CreatePolicyDto,
-    description: 'Actualizar política',
-    required: true,
-  })
-  @Patch()
   async updatePolicy(
-    @Body() policy: CreatePolicyDto,
-    @Query() query: CreatePolicyDto,
+    @Ctx() context: RmqContext,
+    @Payload()
+    {
+      oldPolicy,
+      newPolicy,
+    }: { oldPolicy: CreatePolicyDto; newPolicy: CreatePolicyDto },
   ) {
-    const result = await this.policyService.updatePolicie(query, policy)
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.policyService.updatePolicie(oldPolicy, newPolicy)
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API para obtener el listado de politicas' })
-  @Get()
-  async findAllPolicies(@Query() paginationQueryDto: FilterPoliciesDto) {
-    const result = await this.policyService.findAll(paginationQueryDto)
+  @MessagePattern({ cmd: 'get-policies' })
+  async getPolicies(
+    @Ctx() context: RmqContext,
+    @Payload() { pagination }: { pagination: FilterPoliciesDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.policyService.findAll(pagination)
     return this.successListRows(result)
   }
 
-  @ApiOperation({ summary: 'API para eliminar una política' })
-  @Delete()
-  async eliminarPolitica(@Query() query: CreatePolicyDto) {
-    const result = await this.policyService.deletePolicie(query)
+  @MessagePattern({ cmd: 'remove-policy' })
+  async removePolicy(
+    @Ctx() context: RmqContext,
+    @Payload() { policy }: { policy: CreatePolicyDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.policyService.deletePolicie(policy)
     return this.successDelete(result)
   }
 
-  @ApiOperation({
-    summary: 'API para obtener las politicas definidas en formato CASBIN',
-  })
-  @Post('authorization')
+  @MessagePattern({ cmd: 'get-policies-by-route' })
   async getPoliciesByRoute(
-    @Body() routeDto: RouteDto,
-    @CurrentUser() user: PassportUser,
+    @Ctx() context: RmqContext,
+    @Payload() { user, routeDto }: { routeDto: RouteDto; user: PassportUser },
   ) {
-    const { route } = routeDto
-    const result = await this.policyService.getPoliciesByRoute(route, user)
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.policyService.getPoliciesByRoute(
+      routeDto.route,
+      user,
+    )
     return this.successList(result)
   }
 
-  @ApiOperation({ summary: 'API para cambiar el estado de una política' })
-  @Patch('status')
-  async changeStatusPolicy(@Body() policy: CreatePolicyDto) {
+  @MessagePattern({ cmd: 'change-status-policy' })
+  async changeStatusPolicy(
+    @Ctx() context: RmqContext,
+    @Payload() { policy }: { policy: CreatePolicyDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.policyService.changeStatusPolicy(policy)
     return this.successUpdate(result)
   }

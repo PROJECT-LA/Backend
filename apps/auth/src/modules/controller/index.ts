@@ -1,1 +1,1 @@
-export { ModuleController } from './module.controller'
+export * from './module.controller'

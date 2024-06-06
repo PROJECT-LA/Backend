@@ -1,2 +1,2 @@
-export { IRol } from './iRole-entity'
-export { IRoleRepository } from './iRole-repository'
+export * from './iRole-entity'
+export * from './iRole-repository'

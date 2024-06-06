@@ -1,1 +1,1 @@
-export { RoleController } from './role.controller'
+export * from './role.controller'

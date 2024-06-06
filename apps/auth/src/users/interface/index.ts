@@ -1,2 +1,2 @@
-export { IUser } from './iUser-entity'
-export { IUserRepository } from './iUser-repository'
+export * from './iUser-entity'
+export * from './iUser-repository'

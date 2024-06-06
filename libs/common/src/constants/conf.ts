@@ -7,12 +7,32 @@ export enum Configurations {
   SALT_ROUNDS = 10, // NUMERO DE SALTOS PARA GENERACIÓN DE HASH
 }
 
-export enum fileConfigurations {
-  MAX_SIZE = 1024 * 1024 * 5, // 5MB
-  MAX_FILES = 1, // 1 archivo
-  FILE_TYPE = 'pdf',
+// Configuración para la carga de archivos
+export const FILE_UPLOAD_CONFIG = {
+  // Tamaño máximo del archivo en bytes (por defecto: 15MB)
+  MAX_SIZE: +(process.env.MAX_MB_FILE || 5) * 1024 * 1024,
+
+  // Número máximo de archivos que se pueden cargar a la vez
+  MAX_FILES: +(process.env.MAX_FILES || 5) * 1024 * 1024,
+
+  // Ruta donde se guardarán los avatares cargados
+  FILE_PATH: process.env.FILES_PATH || 'uploads/files/',
 }
 
-export const AVATARS_PATH = process.env.AVATARS_PATH || 'uploads/avatars/'
+// Configuración para la carga de avatares
+export const AVATAR_UPLOAD_CONFIG = {
+  // Tamaño máximo del archivo en bytes (por defecto: 1MB)
+  MAX_SIZE: +(process.env.MAX_MB_IMAGE || 1) * 1024 * 1024,
 
-export const MAX_IMAGE_LENGTH = +(process.env.MAX_MB_IMAGE || 1) * 1024 * 1024
+  // Número máximo de archivos que se pueden cargar a la vez
+  MAX_FILES: 1,
+
+  // Ruta donde se guardarán los avatares cargados
+  FILE_PATH: process.env.AVATARS_PATH || 'uploads/avatars/',
+}
+
+export const AUTH_SERVICE = 'auth'
+
+export const FILE_SERVICE = 'file'
+
+export const AUDIT_SERVICE = 'audit'

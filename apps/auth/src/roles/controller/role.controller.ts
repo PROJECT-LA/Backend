@@ -1,69 +1,69 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  Query,
-} from '@nestjs/common'
-
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Inject } from '@nestjs/common'
 import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
-import { BaseController, ParamIdDto } from '@app/common'
+import { BaseController, ParamIdDto, SharedService } from '@app/common'
 import { RoleService } from '../service'
-import { JwtAuthGuard } from '../../access-tokens'
-import { CasbinGuard } from '../../policies'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
-@ApiTags('Roles')
-@ApiBearerAuth()
-@Controller('roles')
-@UseGuards(JwtAuthGuard, CasbinGuard)
 export class RoleController extends BaseController {
-  constructor(private readonly roleService: RoleService) {
+  constructor(
+    private readonly roleService: RoleService,
+    @Inject('SharedServiceInterface')
+    private readonly sharedService: SharedService,
+  ) {
     super()
   }
-  @ApiOperation({ summary: 'API: para crear un rol' })
-  @ApiBody({ type: CreateRoleDto })
-  @Post()
-  async create(@Body() createRoleDto: CreateRoleDto) {
+
+  @MessagePattern({ cmd: 'create-role' })
+  async create(
+    @Ctx() context: RmqContext,
+    @Payload() { createRoleDto }: { createRoleDto: CreateRoleDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
     const result = await this.roleService.create(createRoleDto)
     return this.successCreate(result)
   }
-  @ApiOperation({ summary: 'API: para obtener el listado de roles' })
-  @Get()
-  async findAll(@Query() paginationQueryDto: FilterRoleDto) {
-    const result = await this.roleService.list(paginationQueryDto)
+
+  @MessagePattern({ cmd: 'get-roles' })
+  async findAll(
+    @Ctx() context: RmqContext,
+    @Payload() { filter }: { filter: FilterRoleDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.roleService.list(filter)
     return this.successListRows(result)
   }
 
-  @ApiOperation({ summary: 'API: para actulizar un rol' })
-  @ApiBody({ type: UpdateRoleDto })
-  @Patch(':id')
+  @MessagePattern({ cmd: 'update-role' })
   async update(
-    @Param() param: ParamIdDto,
-    @Body() updateRoleDto: UpdateRoleDto,
+    @Ctx() context: RmqContext,
+    @Payload()
+    {
+      param,
+      updateRoleDto,
+    }: { param: ParamIdDto; updateRoleDto: UpdateRoleDto },
   ) {
-    const { id } = param
-    const result = await this.roleService.updateRole(id, updateRoleDto)
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.roleService.updateRole(param.id, updateRoleDto)
     return this.successUpdate(result)
   }
 
-  @ApiOperation({ summary: 'API: para eliminar un rol' })
-  @Delete(':id')
-  async remove(@Param() param: ParamIdDto) {
-    const { id } = param
-    const result = await this.roleService.deleteRole(id)
+  @MessagePattern({ cmd: 'delete-role' })
+  async remove(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.roleService.deleteRole(param.id)
     return this.successDelete(result)
   }
 
-  @ApiOperation({ summary: 'API: para cambiar el estado de un rol' })
-  @Patch(':id/change-status')
-  async changeStatus(@Param() param: ParamIdDto) {
-    const { id } = param
-    const result = await this.roleService.changeRoleState(id)
+  @MessagePattern({ cmd: 'change-status-role' })
+  async changeStatus(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.roleService.changeRoleState(param.id)
     return this.successUpdate(result)
   }
 }
