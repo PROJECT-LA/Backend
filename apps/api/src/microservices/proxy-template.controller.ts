@@ -1,4 +1,4 @@
-import {
+/* import {
   CreateTemplateDto,
   FilterTemplateDto,
   ParamIdDto,
@@ -97,3 +97,4 @@ export class ProxyTemplateController {
     return result
   }
 }
+ */

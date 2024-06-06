@@ -11,11 +11,8 @@ import {
 } from '@nestjs/common'
 
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
 import { BaseController, ParamIdDto } from '@app/common'
-import { RoleService } from '../service'
-import { JwtAuthGuard } from '../../access-tokens'
-import { CasbinGuard } from '../../policies'
+import { CasbinGuard, JwtAuthGuard } from '../guards'
 
 @ApiTags('Roles')
 @ApiBearerAuth()

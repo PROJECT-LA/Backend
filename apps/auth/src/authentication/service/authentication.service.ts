@@ -12,10 +12,13 @@ import { User } from '../../users/entities'
 import { ClientProxy } from '@nestjs/microservices'
 import { lastValueFrom, timeout } from 'rxjs'
 import { IUserRepository } from '../../users/interface'
+import { AuthDto } from '../dto'
+import { Enforcer } from 'casbin'
+import { AUTHZ_ENFORCER } from 'nest-authz'
 
 dotenv.config()
 @Injectable()
-export class AuthService {
+export class AuthenticationService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
@@ -25,17 +28,19 @@ export class AuthService {
     private readonly tokenRepository: TokenRepositoryInterface,
     @Inject('IModuleRepository')
     private readonly moduleRepository: IModuleRepository,
+    @Inject(AUTHZ_ENFORCER) private enforcer: Enforcer,
     @Inject('FILE_SERVICE')
     private readonly fileService: ClientProxy,
   ) {}
 
-  async validateCredentials(username: string, password: string) {
+  async validateCredentials(authDto: AuthDto) {
+    const { password, username } = authDto
     const user = await this.usersRepository.validateCredentials(username)
     if (!user) throw new UnauthorizedException()
     const passwordIsValid = await TextService.compare(password, user.password)
     if (!passwordIsValid) throw new UnauthorizedException()
     if (user.roles.length === 0) throw new UnauthorizedException()
-    return user
+    return await this.login(user)
   }
 
   /******************************************* CREACION DE TOKENS */
@@ -157,6 +162,22 @@ export class AuthService {
 
   async deleteToken(id: string) {
     return await this.tokenRepository.delete(id)
+  }
+
+  async validateToken(jwt: string) {
+    const user = await this.jwtService.verifyAsync(jwt, {
+      ignoreExpiration: false,
+      secret: this.configService.get('JWT_SECRET'),
+    })
+    return user
+  }
+
+  async validateRole(idRole: string, rosource: string, action: string) {
+    const isPermitted = await this.enforcer.enforce(idRole, rosource, action)
+    if (!isPermitted) {
+      throw new UnauthorizedException('Permisos insuficientes')
+    }
+    return true
   }
 
   private __getCurrentRole(

@@ -1,4 +1,4 @@
-import { ParamIdDto } from '@app/common'
+/* import { ParamIdDto } from '@app/common'
 import {
   CreateControlDto,
   FilterControlDto,
@@ -100,3 +100,4 @@ export class ProxyControlController {
     return result
   }
 }
+ */

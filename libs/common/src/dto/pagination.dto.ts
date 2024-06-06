@@ -8,7 +8,7 @@ import {
   Max,
   Min,
 } from '../validation'
-import { Order } from '../constants'
+import { Order } from '../constants/order'
 
 const LIMIT_MIN = 10
 const LIMIT_MAX = 50

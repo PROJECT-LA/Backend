@@ -1,4 +1,4 @@
-import {
+/* import {
   CreateParameterDto,
   PaginationQueryDto,
   ParamGroupDto,
@@ -111,3 +111,4 @@ export class ProxyParameterController {
     return result
   }
 }
+ */

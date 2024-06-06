@@ -1,4 +1,4 @@
-import { ParamIdDto } from '@app/common'
+/* import { ParamIdDto } from '@app/common'
 import {
   CreateLevelDto,
   FilterLevelDto,
@@ -90,3 +90,4 @@ export class ProxyLevelController {
     return result
   }
 }
+ */

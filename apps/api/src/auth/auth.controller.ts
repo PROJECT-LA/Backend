@@ -9,25 +9,26 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
-import { LocalAuthGuard } from '../guards/local-auth.guard'
-import { AuthService } from '../service'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { AuthDto, ChangeRoleDto } from '../dto'
-import { CurrentUser } from '../decorators/current-user.decorator'
-import { JwtAuthGuard } from '../guards/jwt-auth.guard'
+
 import {
   RefreshTokenCookieService,
   PassportUser,
   JwtCookieService,
   BaseController,
+  AUTH_SERVICE,
 } from '@app/common'
 import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
+import { ClientProxy } from '@nestjs/microservices'
+import { AuthDto, ChangeRoleDto } from 'apps/auth/src/authentication/dto'
+import { CurrentUser } from '@app/common/decorators/current-user.decorator'
+import { JwtAuthGuard } from '../guards/auth.guard'
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController extends BaseController {
   constructor(
-    private readonly authService: AuthService,
+    @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,
     @Inject(ConfigService) private configService: ConfigService,
   ) {
     super()
@@ -35,10 +36,13 @@ export class AuthController extends BaseController {
 
   @ApiOperation({ summary: 'API para autenticación con usuario y contraseña' })
   @ApiBody({ description: 'Autenticación de usuarios', type: AuthDto })
-  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@CurrentUser() user: PassportUser, @Res() res: Response) {
-    const { refreshToken, token, info } = await this.authService.login(user)
+  async login(@Res() res: Response, @Body() authDto: AuthDto) {
+    const result = await this.authService
+      .send({ cmd: 'login' }, { authDto })
+      .toPromise()
+
+    const { refreshToken, token, info } = result
 
     return res
       .cookie(
@@ -62,10 +66,9 @@ export class AuthController extends BaseController {
   @ApiOperation({ summary: 'API para logout' })
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response) {
-    const idRefreshToken =
-      req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
-    if (idRefreshToken === undefined) return res.sendStatus(401)
-    await this.authService.deleteToken(idRefreshToken)
+    const id = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
+    if (id === undefined) return res.sendStatus(401)
+    await this.authService.send({ cmd: 'logout' }, { id }).pipe().toPromise()
     return res.clearCookie('token').clearCookie('rft').sendStatus(200)
   }
 
@@ -81,12 +84,10 @@ export class AuthController extends BaseController {
     const idRefreshToken =
       req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (idRefreshToken === undefined) return res.sendStatus(401)
-    const { info, refreshToken, token } = await this.authService.changeRole(
-      user,
-      roleDto.idRole,
-      idRefreshToken,
-    )
-
+    const result = await this.authService
+      .send({ cmd: 'change-role' }, { user, roleDto, idRefreshToken })
+      .toPromise()
+    const { info, refreshToken, token } = result
     return res
       .cookie(
         this.configService.getOrThrow('JWT_COOKIE'),
@@ -112,11 +113,10 @@ export class AuthController extends BaseController {
     const clientRft = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (!clientToken || !clientRft)
       throw new UnauthorizedException('Tokens Expirados')
-    const { token, refreshToken } = await this.authService.renovateToken(
-      clientToken,
-      clientRft,
-    )
-
+    const result = await this.authService
+      .send({ cmd: 'refresh-token' }, { clientToken, clientRft })
+      .toPromise()
+    const { token, refreshToken } = result
     return res
       .cookie(
         this.configService.getOrThrow('JWT_COOKIE'),

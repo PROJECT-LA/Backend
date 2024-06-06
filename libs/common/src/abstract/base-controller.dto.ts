@@ -1,5 +1,5 @@
+import { Messages } from '../constants/messages'
 import { SuccessResponseDto } from '../dto/success-response.dto'
-import { Messages } from '../constants'
 
 type ListType<T> = [Array<T>, number]
 

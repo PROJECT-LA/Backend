@@ -1,4 +1,4 @@
-import {
+/* import {
   Body,
   Controller,
   Delete,
@@ -105,3 +105,4 @@ export class ModuleController extends BaseController {
     return this.successUpdate(result)
   }
 }
+ */

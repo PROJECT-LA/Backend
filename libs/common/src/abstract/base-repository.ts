@@ -7,8 +7,8 @@ import {
   Repository,
   UpdateResult,
 } from 'typeorm'
-import { BaseInterfaceRepository } from '../interfaces'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
+import { BaseInterfaceRepository } from '../interfaces/repository.interface'
 
 interface HasId {
   id: string

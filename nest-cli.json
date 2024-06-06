@@ -11,7 +11,7 @@
     "assets": [
       {
         "include": "**/model.conf",
-        "outDir": "dist/apps/api/apps/api/src",
+        "outDir": "dist/apps/auth/apps/auth/src",
         "watchAssets": true
       }
     ]
