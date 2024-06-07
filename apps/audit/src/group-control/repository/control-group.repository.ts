@@ -2,14 +2,14 @@ import { Brackets, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { BaseRepository } from '@app/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { IControlGroupRepository } from '../interface'
 import { ControlGroup } from '../entities'
 import { FilterControlGroupDto } from '@app/common/dto/audit/control-group'
+import { ControlGroupRepositoryInterface } from '../interface'
 
 @Injectable()
 export class ControlGroupRepository
   extends BaseRepository<ControlGroup>
-  implements IControlGroupRepository
+  implements ControlGroupRepositoryInterface
 {
   constructor(
     @InjectRepository(ControlGroup)

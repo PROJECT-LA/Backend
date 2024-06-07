@@ -5,13 +5,13 @@ import {
   STATUS,
   UpdateControlGroupDto,
 } from '@app/common'
-import { IControlGroupRepository } from '../interface'
+import { ControlGroupRepositoryInterface } from '../interface'
 
 @Injectable()
 export class ControlGroupService {
   constructor(
     @Inject('IControlGroupRepository')
-    private readonly controlRepository: IControlGroupRepository,
+    private controlRepository: ControlGroupRepositoryInterface,
   ) {}
 
   async getControlById(id: string) {

@@ -20,7 +20,7 @@ import { LevelService } from './level/service'
 import { ControlGroupController } from './group-control/controller'
 import { ControlGroupRepository } from './group-control/repository'
 import { ControlGroupService } from './group-control/service'
-import { Control } from './group-control/entities'
+import { Control, ControlGroup } from './group-control/entities'
 
 @Module({
   imports: [
@@ -29,7 +29,13 @@ import { Control } from './group-control/entities'
     }),
     SharedModule,
     TypeOrmModule.forRoot(DataSourceConfig),
-    TypeOrmModule.forFeature([Parameter, Template, Control, MaturityLevel]),
+    TypeOrmModule.forFeature([
+      Parameter,
+      Template,
+      ControlGroup,
+      MaturityLevel,
+      Control,
+    ]),
   ],
   controllers: [
     AuditController,

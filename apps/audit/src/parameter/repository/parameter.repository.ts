@@ -12,7 +12,7 @@ export class ParameterRepository
 {
   constructor(
     @InjectRepository(Parameter)
-    private readonly parameter: Repository<Parameter>
+    private readonly parameter: Repository<Parameter>,
   ) {
     super(parameter)
   }
@@ -65,7 +65,7 @@ export class ParameterRepository
           qb.orWhere('parameter.group like :filter', {
             filter: `%${filter}%`,
           })
-        })
+        }),
       )
     }
     return await query.getManyAndCount()
