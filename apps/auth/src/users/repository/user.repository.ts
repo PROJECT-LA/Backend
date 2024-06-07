@@ -3,8 +3,7 @@ import { User } from '../entities'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { IUserRepository } from '../interface'
-import { FilterUserDto } from '../dto'
-import { BaseRepository, STATUS } from '@app/common'
+import { BaseRepository, FilterUserDto, STATUS } from '@app/common'
 @Injectable()
 export class UserRepository
   extends BaseRepository<User>

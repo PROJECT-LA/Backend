@@ -1,7 +1,12 @@
 import { Controller, Inject } from '@nestjs/common'
 import { AuthenticationService } from '../service'
-import { ChangeRoleDto, AuthDto } from '../dto'
-import { PassportUser, BaseController, SharedService } from '@app/common'
+import {
+  ChangeRoleDto,
+  AuthDto,
+  PassportUser,
+  BaseController,
+  SharedService,
+} from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
 @Controller()

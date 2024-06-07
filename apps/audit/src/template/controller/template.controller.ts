@@ -3,6 +3,7 @@ import {
   BaseController,
   CreateTemplateDto,
   FilterTemplateDto,
+  ParamIdDto,
   SharedService,
   UpdateTemplateDto,
 } from '@app/common'
@@ -23,20 +24,20 @@ export class TemplateController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { paginationQueryDto }: { paginationQueryDto: FilterTemplateDto },
+    { filter }: { filter: FilterTemplateDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.list(paginationQueryDto)
+    const result = await this.templateService.list(filter)
     return this.successListRows(result)
   }
 
   @MessagePattern({ cmd: 'create-template' })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { templateDto }: { templateDto: CreateTemplateDto },
+    @Payload() { createTemplateDto }: { createTemplateDto: CreateTemplateDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.create(templateDto)
+    const result = await this.templateService.create(createTemplateDto)
     return this.successCreate(result)
   }
 
@@ -44,28 +45,36 @@ export class TemplateController extends BaseController {
   async update(
     @Ctx() context: RmqContext,
     @Payload()
-    { id, templateDto }: { id: string; templateDto: UpdateTemplateDto },
+    {
+      param,
+      updateTemplateDto,
+    }: { param: ParamIdDto; updateTemplateDto: UpdateTemplateDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.update(id, templateDto)
+    const result = await this.templateService.update(
+      param.id,
+      updateTemplateDto,
+    )
     return this.successUpdate(result)
   }
 
   @MessagePattern({ cmd: 'change-status-template' })
   async changeStatus(
     @Ctx() context: RmqContext,
-    @Payload() { id }: { id: string },
+    @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.changeTemplateState(id)
+    const result = await this.templateService.changeTemplateState(param.id)
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-template' })
-  @Delete(':id')
-  async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
+  @MessagePattern({ cmd: 'remove-template' })
+  async delete(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.delete(id)
+    const result = await this.templateService.delete(param.id)
     return this.successDelete(result)
   }
 }

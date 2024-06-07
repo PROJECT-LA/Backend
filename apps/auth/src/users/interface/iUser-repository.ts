@@ -1,6 +1,5 @@
 import { User } from '../entities'
-import { FilterUserDto } from '../dto'
-import { BaseInterfaceRepository } from '@app/common'
+import { BaseInterfaceRepository, FilterUserDto } from '@app/common'
 
 export interface IUserRepository extends BaseInterfaceRepository<User> {
   list(paginationQueryDto: FilterUserDto): Promise<[User[], number]>

@@ -1,7 +1,11 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { IModuleRepository } from '../interfaces'
-import { CreateModuleDto, NewOrderDto, UpdateModuleDto } from '../dto'
-import { STATUS } from '@app/common'
+import {
+  CreateModuleDto,
+  NewOrderDto,
+  UpdateModuleDto,
+  STATUS,
+} from '@app/common'
 import { ModuleEntity } from '../entities'
 
 @Injectable()

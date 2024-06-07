@@ -1,10 +1,9 @@
 import { Brackets, Repository } from 'typeorm'
 import { Role } from '../entities'
 import { Injectable } from '@nestjs/common'
-import { BaseRepository } from '@app/common'
+import { BaseRepository, FilterRoleDto } from '@app/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { IRoleRepository } from '../interface'
-import { FilterRoleDto } from '../dto'
 
 @Injectable()
 export class RoleRepository

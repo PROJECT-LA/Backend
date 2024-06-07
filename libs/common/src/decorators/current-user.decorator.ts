@@ -1,32 +1,28 @@
-/* import { createParamDecorator, ExecutionContext } from '@nestjs/common'
-import { User } from 'src/core/users'
-
-export const getCurrentUserByContext = (context: ExecutionContext): User => {
-  if (context.getType() === 'http') {
-    return context.switchToHttp().getRequest().user
-  }
-  if (context.getType() === 'rpc') {
-    return context.switchToRpc().getData().user
-  }
-}
-
-export const CurrentUser = createParamDecorator(
-  (_data: unknown, context: ExecutionContext) =>
-    getCurrentUserByContext(context)
-)
- */
-
-import { createParamDecorator, ExecutionContext } from '@nestjs/common'
+import {
+  createParamDecorator,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { PassportUser } from '@app/common'
+
 export const getCurrentUserByContext = (
   context: ExecutionContext,
 ): PassportUser => {
   if (context.getType() === 'http') {
-    return context.switchToHttp().getRequest().user
+    const request = context.switchToHttp().getRequest()
+    if (!request.user) {
+      throw new UnauthorizedException('User not authenticated')
+    }
+    return request.user
   }
   if (context.getType() === 'rpc') {
-    return context.switchToRpc().getData().user
+    const data = context.switchToRpc().getData()
+    if (!data.user) {
+      throw new UnauthorizedException('User not authenticated')
+    }
+    return data.user
   }
+  throw new UnauthorizedException('Unsupported context type')
 }
 
 export const CurrentUser = createParamDecorator(

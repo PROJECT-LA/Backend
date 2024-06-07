@@ -1,6 +1,12 @@
 import { Inject } from '@nestjs/common'
-import { BaseController, PassportUser, SharedService } from '@app/common'
-import { CreatePolicyDto, FilterPoliciesDto, RouteDto } from '../dto'
+import {
+  BaseController,
+  PassportUser,
+  SharedService,
+  CreatePolicyDto,
+  FilterPoliciesDto,
+  RouteDto,
+} from '@app/common'
 import { PolicyService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
@@ -23,6 +29,7 @@ export class PolicyController extends BaseController {
     return this.successCreate(result)
   }
 
+  @MessagePattern({ cmd: 'update-policy' })
   async updatePolicy(
     @Ctx() context: RmqContext,
     @Payload()
@@ -39,10 +46,10 @@ export class PolicyController extends BaseController {
   @MessagePattern({ cmd: 'get-policies' })
   async getPolicies(
     @Ctx() context: RmqContext,
-    @Payload() { pagination }: { pagination: FilterPoliciesDto },
+    @Payload() { filter }: { filter: FilterPoliciesDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.policyService.findAll(pagination)
+    const result = await this.policyService.findAll(filter)
     return this.successListRows(result)
   }
 
@@ -56,7 +63,7 @@ export class PolicyController extends BaseController {
     return this.successDelete(result)
   }
 
-  @MessagePattern({ cmd: 'get-policies-by-route' })
+  @MessagePattern({ cmd: 'get-route-policy' })
   async getPoliciesByRoute(
     @Ctx() context: RmqContext,
     @Payload() { user, routeDto }: { routeDto: RouteDto; user: PassportUser },

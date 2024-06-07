@@ -1,18 +1,21 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
-import { PassportUser, RolePassport, TextService } from '@app/common'
+import {
+  PassportUser,
+  RolePassport,
+  TextService,
+  AuthDto,
+  UserPayload,
+} from '@app/common'
 import { Cron } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
-
 import dotenv from 'dotenv'
 import { IModuleRepository } from '../../modules/interfaces'
-import { UserPayload } from '@app/common/interfaces/payload.interface'
 import { User } from '../../users/entities'
 import { ClientProxy } from '@nestjs/microservices'
 import { lastValueFrom, timeout } from 'rxjs'
 import { IUserRepository } from '../../users/interface'
-import { AuthDto } from '../dto'
 import { Enforcer } from 'casbin'
 import { AUTHZ_ENFORCER } from 'nest-authz'
 

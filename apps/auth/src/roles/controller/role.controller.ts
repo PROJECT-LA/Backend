@@ -1,6 +1,12 @@
 import { Inject } from '@nestjs/common'
-import { CreateRoleDto, FilterRoleDto, UpdateRoleDto } from '../dto'
-import { BaseController, ParamIdDto, SharedService } from '@app/common'
+import {
+  CreateRoleDto,
+  FilterRoleDto,
+  UpdateRoleDto,
+  BaseController,
+  ParamIdDto,
+  SharedService,
+} from '@app/common'
 import { RoleService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
@@ -47,7 +53,7 @@ export class RoleController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-role' })
+  @MessagePattern({ cmd: 'remove-role' })
   async remove(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },

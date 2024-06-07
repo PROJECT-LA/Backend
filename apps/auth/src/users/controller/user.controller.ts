@@ -5,8 +5,10 @@ import {
   UpdateProfileDto,
   UpdateUserDto,
   ChangePaswwordDto,
-} from '../dto'
-import { BaseController, ParamIdDto, SharedService } from '@app/common'
+  BaseController,
+  ParamIdDto,
+  SharedService,
+} from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { UserService } from '../service'
 
@@ -107,10 +109,10 @@ export class UserController extends BaseController {
   @MessagePattern({ cmd: 'change-status-user' })
   async changeStatusUser(
     @Ctx() context: RmqContext,
-    @Payload() { params }: { params: ParamIdDto },
+    @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.usersService.changeStatus(params.id)
+    const result = await this.usersService.changeStatus(param.id)
     return this.successUpdate(result)
   }
 
@@ -119,13 +121,13 @@ export class UserController extends BaseController {
     @Ctx() context: RmqContext,
     @Payload()
     {
-      params,
+      param,
       changePaswwordDto,
-    }: { params: ParamIdDto; changePaswwordDto: ChangePaswwordDto },
+    }: { param: ParamIdDto; changePaswwordDto: ChangePaswwordDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
     const result = await this.usersService.updatePassword(
-      params.id,
+      param.id,
       changePaswwordDto,
     )
     return this.successUpdate(result)

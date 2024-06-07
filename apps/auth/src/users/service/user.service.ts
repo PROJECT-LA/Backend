@@ -1,13 +1,14 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
-
 import {
   ChangePaswwordDto,
   CreateUserDto,
   FilterUserDto,
   UpdateProfileDto,
   UpdateUserDto,
-} from '../dto'
-import { Messages, STATUS, TextService } from '@app/common'
+  Messages,
+  STATUS,
+  TextService,
+} from '@app/common'
 import { IUserRepository } from '../interface'
 import { In } from 'typeorm'
 import { IRoleRepository } from '../../roles/interface'

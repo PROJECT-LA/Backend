@@ -1,7 +1,13 @@
 import { Inject } from '@nestjs/common'
-import { BaseController, ParamIdDto, SharedService } from '@app/common'
+import {
+  CreateModuleDto,
+  NewOrderDto,
+  UpdateModuleDto,
+  BaseController,
+  ParamIdDto,
+  SharedService,
+} from '@app/common'
 import { ModuleService } from '../services'
-import { CreateModuleDto, NewOrderDto, UpdateModuleDto } from '../dto'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
 export class ModuleController extends BaseController {
@@ -13,7 +19,7 @@ export class ModuleController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-module' })
+  @MessagePattern({ cmd: 'get-modules' })
   async getModuleByRole(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -60,6 +66,7 @@ export class ModuleController extends BaseController {
     return this.successDelete(result)
   }
 
+  @MessagePattern({ cmd: 'change-status-module' })
   async changeStatusModule(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },

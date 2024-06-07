@@ -1,13 +1,15 @@
-import { Controller, Delete, Get, Inject } from '@nestjs/common'
+import { Controller, Inject } from '@nestjs/common'
 import {
   BaseController,
   CreateParameterDto,
   PaginationQueryDto,
+  ParamIdDto,
   SharedService,
   UpdateParameterDto,
 } from '@app/common'
 import { ParameterService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
+import { ParamGroupDto } from '@app/common/dto/audit/parameter'
 
 @Controller('parameters')
 export class ParameterController extends BaseController {
@@ -20,34 +22,34 @@ export class ParameterController extends BaseController {
   }
 
   @MessagePattern({ cmd: 'get-parameters' })
-  @Get()
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { paginationQueryDto }: { paginationQueryDto: PaginationQueryDto },
+    { filter }: { filter: PaginationQueryDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.list(paginationQueryDto)
+    const result = await this.parameterService.list(filter)
     return this.successListRows(result)
   }
 
   @MessagePattern({ cmd: 'get-groups' })
   async findByGroup(
     @Ctx() context: RmqContext,
-    @Payload() { group }: { group: string },
+    @Payload() { param }: { param: ParamGroupDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.findByGroup(group)
+    const result = await this.parameterService.findByGroup(param.group)
     return this.successList(result)
   }
 
   @MessagePattern({ cmd: 'create-parameter' })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { parametroDto }: { parametroDto: CreateParameterDto },
+    @Payload()
+    { createParameterDto }: { createParameterDto: CreateParameterDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.create(parametroDto)
+    const result = await this.parameterService.create(createParameterDto)
     return this.successCreate(result)
   }
 
@@ -55,28 +57,36 @@ export class ParameterController extends BaseController {
   async update(
     @Ctx() context: RmqContext,
     @Payload()
-    { id, parametroDto }: { id: string; parametroDto: UpdateParameterDto },
+    {
+      param,
+      updateParameterDto,
+    }: { param: ParamIdDto; updateParameterDto: UpdateParameterDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.update(id, parametroDto)
+    const result = await this.parameterService.update(
+      param.id,
+      updateParameterDto,
+    )
     return this.successUpdate(result)
   }
 
   @MessagePattern({ cmd: 'change-status-parameter' })
   async changeStatus(
     @Ctx() context: RmqContext,
-    @Payload() { id }: { id: string },
+    @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.changeStatus(id)
+    const result = await this.parameterService.changeStatus(param.id)
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-parameter' })
-  @Delete(':id')
-  async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
+  @MessagePattern({ cmd: 'remove-parameter' })
+  async delete(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.parameterService.delete(id)
+    const result = await this.parameterService.delete(param.id)
     return this.successDelete(result)
   }
 }

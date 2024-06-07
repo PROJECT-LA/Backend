@@ -4,13 +4,13 @@ import morgan from 'morgan'
 import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
-import { CoreModule } from './core.module'
+import { ApiModule } from './api.module'
 import { CORS, SWAGGER_DEFAULT_CONFIG } from '@app/common'
 /**
  * Bootstrap the application
  */
 async function bootstrap() {
-  const app = await NestFactory.create(CoreModule)
+  const app = await NestFactory.create(ApiModule)
   app.use(morgan('dev'))
   const configService = app.get(ConfigService)
   app.setGlobalPrefix(configService.get('API_PREFIX'))

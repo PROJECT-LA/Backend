@@ -1,7 +1,11 @@
 import { Inject, Injectable, NotFoundException, Query } from '@nestjs/common'
 import { AuthZManagementService } from 'nest-authz'
-import { CreatePolicyDto, FilterPoliciesDto } from '../dto'
-import { PassportUser, STATUS } from '@app/common'
+import {
+  CreatePolicyDto,
+  FilterPoliciesDto,
+  PassportUser,
+  STATUS,
+} from '@app/common'
 import { IRoleRepository } from '../../roles/interface'
 
 type politicasResultType = [Array<CreatePolicyDto>, number]
