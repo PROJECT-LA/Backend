@@ -7,14 +7,7 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": false,
-    "tsConfigPath": "apps/api/tsconfig.app.json",
-    "assets": [
-      {
-        "include": "**/model.conf",
-        "outDir": "dist/apps/auth/apps/auth/src",
-        "watchAssets": true
-      }
-    ]
+    "tsConfigPath": "apps/api/tsconfig.app.json"
   },
   "projects": {
     "api": {
@@ -59,7 +52,14 @@
       "entryFile": "main",
       "sourceRoot": "apps/auth/src",
       "compilerOptions": {
-        "tsConfigPath": "apps/auth/tsconfig.app.json"
+        "tsConfigPath": "apps/auth/tsconfig.app.json",
+        "assets": [
+          {
+            "include": "**/model.conf",
+            "outDir": "dist/apps/auth/apps/auth/src",
+            "watchAssets": true
+          }
+        ]
       }
     }
   }

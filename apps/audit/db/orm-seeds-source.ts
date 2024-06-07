@@ -14,7 +14,7 @@ const SeedDataSource = new DataSource({
   database: configService.getOrThrow('DB_NAME_AUDIT'),
   synchronize: false,
   logging: false,
-  entities: [__dirname + '/../**/**/*.entity{.ts,.js}'],
+  entities: [__dirname + '/../src/**/**/*.entity{.ts,.js}'],
   migrations: [__dirname + '/seeds/*.ts'],
   namingStrategy: new SnakeNamingStrategy(),
 })
