@@ -2,36 +2,6 @@ import { IsNotEmpty, MaxLength } from '../../../validation'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateControlDto {
-  @ApiProperty({ example: 'OCONTROL' })
-  @IsNotEmpty()
-  @MaxLength(200)
-  oControl: string
-
-  @ApiProperty({ example: 'OCONTROL-DESCRIPTION' })
-  @IsNotEmpty()
-  @MaxLength(200)
-  oControlDescription: string
-
-  @ApiProperty({ example: 'O-123' })
-  @IsNotEmpty()
-  @MaxLength(5)
-  oControlCode: string
-
-  @ApiProperty({ example: 'GCONTROL' })
-  @IsNotEmpty()
-  @MaxLength(200)
-  gControl: string
-
-  @ApiProperty({ example: 'GCONTROL-DESCRIPTION' })
-  @IsNotEmpty()
-  @MaxLength(200)
-  gControlDescription: string
-
-  @ApiProperty({ example: 'G-123' })
-  @IsNotEmpty()
-  @MaxLength(5)
-  gControlCode: string
-
   @ApiProperty({ example: 'ECONTROL' })
   @IsNotEmpty()
   @MaxLength(200)
@@ -49,5 +19,5 @@ export class CreateControlDto {
 
   @ApiProperty({ example: '1' })
   @IsNotEmpty()
-  idTemplate: string
+  idControlGroup: string
 }

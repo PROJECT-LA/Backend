@@ -2,23 +2,23 @@ import { Brackets, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
 import { BaseRepository } from '@app/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Control } from '../entities'
-import { FilterControlDto } from '@app/common/dto/audit/control'
-import { IControlRepository } from '../interface'
+import { IControlGroupRepository } from '../interface'
+import { ControlGroup } from '../entities'
+import { FilterControlGroupDto } from '@app/common/dto/audit/control-group'
 
 @Injectable()
-export class ControlRepository
-  extends BaseRepository<Control>
-  implements IControlRepository
+export class ControlGroupRepository
+  extends BaseRepository<ControlGroup>
+  implements IControlGroupRepository
 {
   constructor(
-    @InjectRepository(Control)
-    private readonly control: Repository<Control>,
+    @InjectRepository(ControlGroup)
+    private readonly control: Repository<ControlGroup>,
   ) {
     super(control)
   }
 
-  async list(filterDto: FilterControlDto) {
+  async list(filterDto: FilterControlGroupDto) {
     const { limit, order, sense, skip, filter, idTemplate } = filterDto
     console.log(filterDto)
     const query = this.control

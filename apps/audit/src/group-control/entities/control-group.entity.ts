@@ -7,38 +7,29 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm'
-import { IControl } from '../interface'
+import { IControlGroup } from '../interface'
 import { Template } from '../../template/entities'
 
 @Entity('controls')
 @Check(UtilService.buildStatusCheck(STATUS))
-export class Control extends BaseEntity implements IControl {
+export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ length: 200, type: 'varchar' })
-  oControl: string
+  objectiveControl: string
 
   @Column({ length: 200, type: 'varchar' })
-  oControlDescription: string
+  objectiveDescription: string
 
   @Column({ length: 5, type: 'varchar' })
-  oControlCode: string
+  objectiveCode: string
 
   @Column({ length: 200, type: 'varchar' })
-  gControl: string
+  groupControl: string
 
   @Column({ length: 200, type: 'varchar' })
-  gControlDescription: string
+  groupDescription: string
 
   @Column({ length: 5, type: 'varchar' })
-  gControlCode: string
-
-  @Column({ length: 200, type: 'varchar' })
-  eControl: string
-
-  @Column({ length: 200, type: 'varchar' })
-  eControlDescription: string
-
-  @Column({ length: 5, type: 'varchar' })
-  eControlCode: string
+  groupCode: string
 
   @Column({ name: 'id_template' })
   idTemplate: string
@@ -47,7 +38,7 @@ export class Control extends BaseEntity implements IControl {
   @JoinColumn({ name: 'id_template', referencedColumnName: 'id' })
   template: Template
 
-  constructor(data?: Partial<Control>) {
+  constructor(data?: Partial<ControlGroup>) {
     super(data)
   }
 

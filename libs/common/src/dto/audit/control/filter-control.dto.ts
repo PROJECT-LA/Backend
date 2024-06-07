@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { ApiPropertyOptional } from '@nestjs/swagger'
 import { IsOptional, IsString } from '../../../validation'
 import { PaginationQueryDto } from '../../base'
 
@@ -7,8 +7,4 @@ export class FilterControlDto extends PaginationQueryDto {
   @IsOptional()
   @IsString()
   readonly status?: string
-
-  @ApiProperty({ example: '1' })
-  @IsString()
-  readonly idTemplate: string
 }

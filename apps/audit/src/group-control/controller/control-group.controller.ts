@@ -1,17 +1,17 @@
 import { Controller, Inject } from '@nestjs/common'
 import { BaseController, SharedService } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
-import { ControlService } from '../service'
 import {
   CreateControlDto,
   FilterControlDto,
   UpdateControlDto,
 } from '@app/common/dto/audit/control'
+import { ControlGroupService } from '../service'
 
 @Controller('controls')
 export class ControlController extends BaseController {
   constructor(
-    private controlService: ControlService,
+    private controlGroupService: ControlGroupService,
     @Inject('SharedServiceInterface')
     private readonly sharedService: SharedService,
   ) {
@@ -22,10 +22,10 @@ export class ControlController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { paginationQueryDto }: { paginationQueryDto: FilterControlDto },
+    { filter }: { filter: FilterControlDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.list(paginationQueryDto)
+    const result = await this.controlGroupService.list(filter)
     return this.successListRows(result)
   }
 
@@ -36,7 +36,7 @@ export class ControlController extends BaseController {
   ) {
     console.group(controlDto)
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.create(controlDto)
+    const result = await this.controlGroupService.create(controlDto)
     return this.successCreate(result)
   }
 
@@ -47,7 +47,7 @@ export class ControlController extends BaseController {
     { id, controlDto }: { id: string; controlDto: UpdateControlDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.update(id, controlDto)
+    const result = await this.controlGroupService.update(id, controlDto)
     return this.successUpdate(result)
   }
 
@@ -57,14 +57,14 @@ export class ControlController extends BaseController {
     @Payload() { id }: { id: string },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.changeStatus(id)
+    const result = await this.controlGroupService.changeStatus(id)
     return this.successUpdate(result)
   }
 
   @MessagePattern({ cmd: 'delete-control' })
   async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.delete(id)
+    const result = await this.controlGroupService.delete(id)
     return this.successDelete(result)
   }
 }

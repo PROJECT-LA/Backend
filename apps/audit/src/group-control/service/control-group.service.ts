@@ -1,18 +1,17 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
-
-import { STATUS } from '@app/common'
-import { IControlRepository } from '../interface'
 import {
-  CreateControlDto,
-  FilterControlDto,
-  UpdateControlDto,
-} from '@app/common/dto/audit/control'
+  CreateControlGroupDto,
+  FilterControlGroupDto,
+  STATUS,
+  UpdateControlGroupDto,
+} from '@app/common'
+import { IControlGroupRepository } from '../interface'
 
 @Injectable()
-export class ControlService {
+export class ControlGroupService {
   constructor(
-    @Inject('IControlRepository')
-    private readonly controlRepository: IControlRepository,
+    @Inject('IControlGroupRepository')
+    private readonly controlRepository: IControlGroupRepository,
   ) {}
 
   async getControlById(id: string) {
@@ -23,17 +22,17 @@ export class ControlService {
     return control
   }
 
-  async list(filterDto: FilterControlDto) {
+  async list(filterDto: FilterControlGroupDto) {
     return await this.controlRepository.list(filterDto)
   }
 
-  async create(controlDto: CreateControlDto) {
+  async create(controlDto: CreateControlGroupDto) {
     const newModule = this.controlRepository.create(controlDto)
     console.log(newModule)
     return await this.controlRepository.save(newModule)
   }
 
-  async update(id: string, controlDto: UpdateControlDto) {
+  async update(id: string, controlDto: UpdateControlGroupDto) {
     await this.getControlById(id)
     return await this.controlRepository.update(id, controlDto)
   }
