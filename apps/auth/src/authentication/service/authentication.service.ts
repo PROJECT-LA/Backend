@@ -176,11 +176,7 @@ export class AuthenticationService {
   }
 
   async validateRole(idRole: string, rosource: string, action: string) {
-    const isPermitted = await this.enforcer.enforce(idRole, rosource, action)
-    if (!isPermitted) {
-      throw new UnauthorizedException('Permisos insuficientes')
-    }
-    return true
+    return await this.enforcer.enforce(idRole, rosource, action)
   }
 
   private __getCurrentRole(

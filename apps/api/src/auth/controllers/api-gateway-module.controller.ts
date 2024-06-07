@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common'
 import {
   ApiBearerAuth,
@@ -23,10 +24,11 @@ import {
   AUTH_SERVICE,
 } from '@app/common'
 import { ClientProxy } from '@nestjs/microservices'
+import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiBearerAuth()
 @ApiTags('Modules')
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('modules')
 export class ApiGatewayModuleController {
   constructor(
@@ -62,7 +64,6 @@ export class ApiGatewayModuleController {
   })
   @ApiBody({
     type: UpdateModuleDto,
-    description: 'Modulo',
     required: true,
   })
   @Patch(':id')
@@ -97,20 +98,19 @@ export class ApiGatewayModuleController {
       { cmd: 'change-status-module' },
       { param },
     )
-    result
+    return result
   }
 
   @ApiOperation({ summary: 'API para actualizar el orden del sidebar' })
   @ApiBody({
     type: NewOrderDto,
-    description: 'Modulo',
     required: true,
   })
   @Patch('change/order')
   async updateSidebar(@Body() orderDto: NewOrderDto) {
     const result = this.authService.send(
       { cmd: 'update-order-module' },
-      orderDto,
+      { orderDto },
     )
     return result
   }

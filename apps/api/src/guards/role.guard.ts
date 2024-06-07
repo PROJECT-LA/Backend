@@ -37,9 +37,10 @@ export class CasbinGuard implements CanActivate {
       )
       .pipe()
       .toPromise()
+
     if (result) return true
 
-    throw new ForbiddenException('Permisos insuficientes (CASBIN) ', {
+    throw new ForbiddenException('Permisos insuficientes', {
       cause: `CASBIN ${action} ${resource} -> false`,
     })
   }
