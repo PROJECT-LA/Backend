@@ -1,14 +1,16 @@
 import { Controller, Inject } from '@nestjs/common'
-import { BaseController, SharedService } from '@app/common'
-import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import {
-  CreateControlDto,
-  FilterControlDto,
-  UpdateControlDto,
-} from '@app/common/dto/audit/control'
+  BaseController,
+  CreateControlGroupDto,
+  FilterControlGroupDto,
+  ParamIdDto,
+  SharedService,
+  UpdateControlGroupDto,
+} from '@app/common'
+import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { ControlGroupService } from '../service'
 
-@Controller('controls')
+@Controller('controls-group')
 export class ControlController extends BaseController {
   constructor(
     private controlGroupService: ControlGroupService,
@@ -18,11 +20,11 @@ export class ControlController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-controls' })
+  @MessagePattern({ cmd: 'get-control-group' })
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { filter }: { filter: FilterControlDto },
+    { filter }: { filter: FilterControlGroupDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
     const result = await this.controlGroupService.list(filter)
@@ -32,39 +34,47 @@ export class ControlController extends BaseController {
   @MessagePattern({ cmd: 'create-control' })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { controlDto }: { controlDto: CreateControlDto },
+    @Payload() { controlGroupDto }: { controlGroupDto: CreateControlGroupDto },
   ) {
-    console.group(controlDto)
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlGroupService.create(controlDto)
+    const result = await this.controlGroupService.create(controlGroupDto)
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'update-control' })
+  @MessagePattern({ cmd: 'update-control-group' })
   async update(
     @Ctx() context: RmqContext,
     @Payload()
-    { id, controlDto }: { id: string; controlDto: UpdateControlDto },
+    {
+      param,
+      updateControlGroupDto,
+    }: { param: ParamIdDto; updateControlGroupDto: UpdateControlGroupDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlGroupService.update(id, controlDto)
+    const result = await this.controlGroupService.update(
+      param.id,
+      updateControlGroupDto,
+    )
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-control' })
+  @MessagePattern({ cmd: 'change-status-control-group' })
   async changeStatus(
     @Ctx() context: RmqContext,
-    @Payload() { id }: { id: string },
+    @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlGroupService.changeStatus(id)
+    const result = await this.controlGroupService.changeStatus(param.id)
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-control' })
-  async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
+  @MessagePattern({ cmd: 'remove-control-group' })
+  async remove(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlGroupService.delete(id)
+    const result = await this.controlGroupService.delete(param.id)
     return this.successDelete(result)
   }
 }

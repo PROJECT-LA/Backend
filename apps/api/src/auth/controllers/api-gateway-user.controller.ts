@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Inject,
+  UseGuards,
 } from '@nestjs/common'
 import {
   ApiBearerAuth,
@@ -32,11 +33,12 @@ import {
 } from '@app/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ClientProxy } from '@nestjs/microservices'
+import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller('users')
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 export class ApiGatewayUserController {
   constructor(
     @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common'
 import { MicroserviceAuditModule } from './audit/audit.module'
 import { MicroservicesAuthModule } from './auth/auth.module'
-import { MicroservicesSharedModule } from './shared/shred.module'
+import { MicroservicesSharedModule } from './shared/shared.module'
 
 @Module({
   imports: [

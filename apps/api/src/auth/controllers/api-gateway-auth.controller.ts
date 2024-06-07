@@ -24,6 +24,7 @@ import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
 import { ClientProxy } from '@nestjs/microservices'
 import { JwtAuthGuard } from '../../guards/auth.guard'
+
 @ApiTags('Auth')
 @Controller('auth')
 export class ApiGatewayAuthController extends BaseController {
@@ -81,6 +82,7 @@ export class ApiGatewayAuthController extends BaseController {
     @CurrentUser() user: PassportUser,
     @Body() roleDto: ChangeRoleDto,
   ) {
+    console.log(user)
     const idRefreshToken =
       req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (idRefreshToken === undefined) return res.sendStatus(401)
