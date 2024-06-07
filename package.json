@@ -28,14 +28,14 @@
     "seeds:run:auth": "npm run typeorm -- migration:run -d ./apps/auth/db/orm-seeds-source.ts",
     "schema:drop:auth": "npm run typeorm -- schema:drop -d ./apps/auth/db/orm-config-source.ts",
     "setup:auth": "npm run migrations:clean:auth && npm run schema:drop:auth && npm run migrations:generate:auth ./apps/auth/db/migrations/init && npm run migrations:run:auth && npm run seeds:run:auth",
-    "migrations:clean:audit": "rimraf apps/audit/src/db/migrations/*",
-    "migrations:generate:audit": "npm run typeorm -- migration:generate -d ./apps/audit/src/db/orm-config-source.ts",
-    "migrations:run:audit": "npm run typeorm -- migration:run -d ./apps/audit/src/db/orm-config-source.ts",
-    "migrations:revert:audit": "npm run typeorm -- migration:revert -d ./apps/audit/src/db/orm-config-source.ts",
+    "migrations:clean:audit": "rimraf apps/audit/db/migrations/*",
+    "migrations:generate:audit": "npm run typeorm -- migration:generate -d ./apps/audit/db/orm-config-source.ts",
+    "migrations:run:audit": "npm run typeorm -- migration:run -d ./apps/audit/db/orm-config-source.ts",
+    "migrations:revert:audit": "npm run typeorm -- migration:revert -d ./apps/audit/db/orm-config-source.ts",
     "seeds:create:audit": "npm run typeorm -- migration:create",
-    "seeds:run:audit": "npm run typeorm -- migration:run -d ./apps/audit/src/db/orm-seeds-source.ts",
-    "schema:drop:audit": "npm run typeorm -- schema:drop -d ./apps/audit/src/db/orm-config-source.ts",
-    "setup:audit": "npm run migrations:clean:audit && npm run schema:drop:audit && npm run migrations:generate:audit ./apps/audit/src/db/migrations/init && npm run migrations:run:audit && npm run seeds:run:audit"
+    "seeds:run:audit": "npm run typeorm -- migration:run -d ./apps/audit/db/orm-seeds-source.ts",
+    "schema:drop:audit": "npm run typeorm -- schema:drop -d ./apps/audit/db/orm-config-source.ts",
+    "setup:audit": "npm run migrations:clean:audit && npm run schema:drop:audit && npm run migrations:generate:audit ./apps/audit/db/migrations/init && npm run migrations:run:audit && npm run seeds:run:audit"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

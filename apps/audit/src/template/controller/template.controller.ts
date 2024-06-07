@@ -1,4 +1,4 @@
-import { Controller, Delete, Inject } from '@nestjs/common'
+import { Controller, Inject } from '@nestjs/common'
 import {
   BaseController,
   CreateTemplateDto,
