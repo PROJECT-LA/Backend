@@ -160,7 +160,7 @@ export class ApiGatewayUserController {
     @Param() param: ParamIdDto,
     @Body() changePaswwordDto: ChangePaswwordDto,
   ) {
-    const result = await this.authService.send(
+    const result = this.authService.send(
       { cmd: 'change-password' },
       { param, changePaswwordDto },
     )

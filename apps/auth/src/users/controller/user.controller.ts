@@ -24,10 +24,10 @@ export class UserController extends BaseController {
   @MessagePattern({ cmd: 'get-users' })
   async getUsers(
     @Ctx() context: RmqContext,
-    @Payload() { pagination }: { pagination: FilterUserDto },
+    @Payload() { filter }: { filter: FilterUserDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.usersService.list(pagination)
+    const result = await this.usersService.list(filter)
     return this.successListRows(result)
   }
 
