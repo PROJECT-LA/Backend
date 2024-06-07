@@ -6,11 +6,13 @@ import {
   Check,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm'
 import { IControlGroup } from '../interface'
 import { Template } from '../../template/entities'
+import { Control } from './control.entity'
 
-@Entity('controls')
+@Entity('control_groups')
 @Check(UtilService.buildStatusCheck(STATUS))
 export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ length: 200, type: 'varchar' })
@@ -34,9 +36,12 @@ export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ name: 'id_template' })
   idTemplate: string
 
-  @ManyToOne(() => Template, (template) => template.controls)
+  @ManyToOne(() => Template, (template) => template.controlGroup)
   @JoinColumn({ name: 'id_template', referencedColumnName: 'id' })
   template: Template
+
+  @OneToMany(() => Control, (control) => control.controlGroup)
+  controls: Control[]
 
   constructor(data?: Partial<ControlGroup>) {
     super(data)

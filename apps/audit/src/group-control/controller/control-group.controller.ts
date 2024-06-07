@@ -11,7 +11,7 @@ import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { ControlGroupService } from '../service'
 
 @Controller('controls-group')
-export class ControlController extends BaseController {
+export class ControlGroupController extends BaseController {
   constructor(
     private controlGroupService: ControlGroupService,
     @Inject('SharedServiceInterface')

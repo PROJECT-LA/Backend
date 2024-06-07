@@ -22,19 +22,20 @@ export class ControlGroupRepository
     const { limit, order, sense, skip, filter, idTemplate } = filterDto
     console.log(filterDto)
     const query = this.control
-      .createQueryBuilder('control')
+      .createQueryBuilder('control_group')
+      .leftJoinAndSelect('control_group.controls', 'controls')
       .select([
-        'control.id',
-        'control.oControl',
-        'control.oControlDescription',
-        'control.oControlCode',
-        'control.gControl',
-        'control.gControlDescription',
-        'control.gControlCode',
-        'control.eControl',
-        'control.eControlDescription',
-        'control.eControlCode',
-        'control.status',
+        'control_group.id',
+        'control_group.objectiveControl',
+        'control_group.objectiveDescription',
+        'control_group.objectiveCode',
+        'control_group.groupControl',
+        'control_group.groupDescription',
+        'control_group.groupCode',
+        'control_group.status',
+        'controls.eCode',
+        'controls.eDescription',
+        'controls.eControl',
       ])
       .where('control.idTemplate = :idTemplate', { idTemplate })
       .take(limit)

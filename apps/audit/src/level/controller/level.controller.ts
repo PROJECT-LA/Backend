@@ -1,5 +1,5 @@
 import { Controller, Delete, Inject } from '@nestjs/common'
-import { BaseController, SharedService } from '@app/common'
+import { BaseController, ParamIdDto, SharedService } from '@app/common'
 import { LevelService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import {
@@ -22,20 +22,20 @@ export class LevelController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { paginationQueryDto }: { paginationQueryDto: FilterLevelDto },
+    { filter }: { filter: FilterLevelDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.list(paginationQueryDto)
+    const result = await this.levelService.list(filter)
     return this.successListRows(result)
   }
 
   @MessagePattern({ cmd: 'create-level' })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { levelDto }: { levelDto: CreateLevelDto },
+    @Payload() { createLevelDto }: { createLevelDto: CreateLevelDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.create(levelDto)
+    const result = await this.levelService.create(createLevelDto)
     return this.successCreate(result)
   }
 
@@ -43,28 +43,31 @@ export class LevelController extends BaseController {
   async update(
     @Ctx() context: RmqContext,
     @Payload()
-    { id, levelDto }: { id: string; levelDto: UpdateLevelDto },
+    { param, levelDto }: { param: ParamIdDto; levelDto: UpdateLevelDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.update(id, levelDto)
+    const result = await this.levelService.update(param.id, levelDto)
     return this.successUpdate(result)
   }
 
   @MessagePattern({ cmd: 'change-status-level' })
   async changeStatus(
     @Ctx() context: RmqContext,
-    @Payload() { id }: { id: string },
+    @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.changeTemplateState(id)
+    const result = await this.levelService.changeTemplateState(param.id)
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'delete-level' })
+  @MessagePattern({ cmd: 'remove-level' })
   @Delete(':id')
-  async delete(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
+  async delete(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.delete(id)
+    const result = await this.levelService.delete(param.id)
     return this.successDelete(result)
   }
 }

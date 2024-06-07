@@ -1,1 +1,1 @@
-export { ControlController } from './control.controller'
+export * from './control-group.controller'

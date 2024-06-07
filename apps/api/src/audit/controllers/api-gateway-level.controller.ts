@@ -1,4 +1,4 @@
-/* import { ParamIdDto } from '@app/common'
+import { ParamIdDto } from '@app/common'
 import {
   CreateLevelDto,
   FilterLevelDto,
@@ -14,24 +14,24 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Levels')
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('levels')
-export class ProxyLevelController {
+export class ApiGatewayLevelController {
   constructor(
     @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({ summary: 'API para obtener el listado de niveles' })
   @Get()
-  async list(@Query() paginationQueryDto: FilterLevelDto) {
-    const result = this.auditService.send(
-      { cmd: 'get-levels' },
-      { paginationQueryDto },
-    )
+  async list(@Query() filter: FilterLevelDto) {
+    const result = this.auditService.send({ cmd: 'get-levels' }, { filter })
     return result
   }
 
@@ -41,8 +41,11 @@ export class ProxyLevelController {
     required: true,
   })
   @Post()
-  async create(@Body() levelDto: CreateLevelDto) {
-    const result = this.auditService.send({ cmd: 'create-level' }, { levelDto })
+  async create(@Body() createLevelDto: CreateLevelDto) {
+    const result = this.auditService.send(
+      { cmd: 'create-level' },
+      { createLevelDto },
+    )
     return result
   }
 
@@ -56,11 +59,10 @@ export class ProxyLevelController {
     required: true,
   })
   @Patch(':id')
-  async update(@Param() params: ParamIdDto, @Body() levelDto: UpdateLevelDto) {
-    const { id } = params
+  async update(@Param() param: ParamIdDto, @Body() levelDto: UpdateLevelDto) {
     const result = this.auditService.send(
       { cmd: 'update-level' },
-      { id, levelDto },
+      { param, levelDto },
     )
     return result
   }
@@ -70,11 +72,10 @@ export class ProxyLevelController {
     type: ParamIdDto,
   })
   @Patch('/:id/change-status')
-  async changeStatus(@Param() params: ParamIdDto) {
-    const { id: id } = params
+  async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService.send(
       { cmd: 'change-status-level' },
-      { id },
+      { param },
     )
     return result
   }
@@ -84,10 +85,8 @@ export class ProxyLevelController {
     type: ParamIdDto,
   })
   @Delete(':id')
-  async delete(@Param() params: ParamIdDto) {
-    const { id } = params
-    const result = this.auditService.send({ cmd: 'delete-level' }, { id })
+  async delete(@Param() param: ParamIdDto) {
+    const result = this.auditService.send({ cmd: 'remove-level' }, { param })
     return result
   }
 }
- */

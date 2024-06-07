@@ -14,11 +14,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
 import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Templates')
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('templates')
 export class ApiGatewayTemplateController {
   constructor(

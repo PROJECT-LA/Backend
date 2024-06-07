@@ -13,14 +13,14 @@ import { TemplateRepository } from './template/repository'
 import { Template } from './template/entities'
 import { TemplateController } from './template/controller'
 import { TemplateService } from './template/service'
-import { ControlRepository } from './control/repository/control.repository'
-import { ControlService } from './control/service'
-import { Control } from './control/entities'
-import { ControlController } from './control/controller'
 import { LevelRepository } from './level/repository/level.repository'
 import { LevelController } from './level/controller'
 import { MaturityLevel } from './level/entities'
 import { LevelService } from './level/service'
+import { ControlGroupController } from './group-control/controller'
+import { ControlGroupRepository } from './group-control/repository'
+import { ControlGroupService } from './group-control/service'
+import { Control } from './group-control/entities'
 
 @Module({
   imports: [
@@ -35,8 +35,8 @@ import { LevelService } from './level/service'
     AuditController,
     ParameterController,
     TemplateController,
-    ControlController,
     LevelController,
+    ControlGroupController,
   ],
   providers: [
     AuditService,
@@ -53,8 +53,8 @@ import { LevelService } from './level/service'
       useClass: TemplateRepository,
     },
     {
-      provide: 'IControlRepository',
-      useClass: ControlRepository,
+      provide: 'IControlGroupRepository',
+      useClass: ControlGroupRepository,
     },
     {
       provide: 'ILevelRepository',
@@ -62,7 +62,7 @@ import { LevelService } from './level/service'
     },
     ParameterService,
     TemplateService,
-    ControlService,
+    ControlGroupService,
     LevelService,
   ],
 })
