@@ -40,11 +40,11 @@ export enum Messages {
   EXCEPTION_REFRESH_TOKEN_EXPIRED = 'Token de refresco expirado.',
 
   //POLICIES
-  EXCEPTION_POLICY_NOT_FOUND = 'Política no encontrada.',
-  EXCEPTION_POLICY_NAME_EXISTS = 'El nombre de la política ya existe.',
-  EXCEPTION_POLICY_NOT_SEND = 'No se envió ninguna política.',
-  EXCEPTION_POLICY_NOT_FOUND_ROLES = 'No se encontraron roles para la política.',
-  EXCEPTION_POLICY_ERROR = 'No se encontraron módulos para la política.',
+  POLICY_NOT_FOUND = 'Política no encontrada.',
+  POLICY_NAME_EXISTS = 'El nombre de la política ya existe.',
+  EPOLICY_NOT_SEND = 'No se envió ninguna política.',
+  POLICY_NOT_FOUND_ROLES = 'No se encontraron roles para la política.',
+  POLICY_ERROR = 'No se encontraron módulos para la política.',
 
   //RESPONSES FOR MODULES
   MODULE_NOT_FOUND = 'Módulo no encontrado.',

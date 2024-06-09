@@ -19,7 +19,8 @@ import {
   UpdateRoleDto,
 } from '@app/common'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
+import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Roles')
 @ApiBearerAuth()
@@ -33,16 +34,25 @@ export class ApiGatewayRoleController {
   @ApiBody({ type: CreateRoleDto })
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
-    const result = this.authService.send(
-      { cmd: 'create-role' },
-      { createRoleDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'create-role' }, { createRoleDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
   @ApiOperation({ summary: 'API: para obtener el listado de roles' })
   @Get()
   async findAll(@Query() filter: FilterRoleDto) {
-    const result = this.authService.send({ cmd: 'get-roles' }, { filter })
+    const result = this.authService
+      .send({ cmd: 'get-roles' }, { filter })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -54,10 +64,13 @@ export class ApiGatewayRoleController {
     @Body() updateRoleDto: UpdateRoleDto,
   ) {
     const { id } = param
-    const result = this.authService.send(
-      { cmd: 'create-role' },
-      { id, updateRoleDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'create-role' }, { id, updateRoleDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -65,7 +78,13 @@ export class ApiGatewayRoleController {
   @Delete(':id')
   async remove(@Param() param: ParamIdDto) {
     const { id } = param
-    const result = this.authService.send({ cmd: 'remove-role' }, { id })
+    const result = this.authService
+      .send({ cmd: 'remove-role' }, { id })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -73,7 +92,13 @@ export class ApiGatewayRoleController {
   @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
     const { id } = param
-    const result = this.authService.send({ cmd: 'change-status-role' }, { id })
+    const result = this.authService
+      .send({ cmd: 'change-status-role' }, { id })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 }

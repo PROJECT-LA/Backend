@@ -69,14 +69,19 @@ export class ApiGatewayUserController {
           throwError(() => new RpcException(error.response)),
         ),
       )
-
     return result
   }
 
   @ApiOperation({ summary: 'API: para obtener el listado de usuarios' })
   @Get()
   async findAll(@Query() filter: FilterUserDto) {
-    const result = this.authService.send({ cmd: 'get-users' }, { filter })
+    const result = this.authService
+      .send({ cmd: 'get-users' }, { filter })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -86,7 +91,13 @@ export class ApiGatewayUserController {
   })
   @Get(':id')
   async getCurrentUser(@Param() param: ParamIdDto) {
-    const result = this.authService.send({ cmd: 'get-user' }, { param })
+    const result = this.authService
+      .send({ cmd: 'get-user' }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -100,10 +111,13 @@ export class ApiGatewayUserController {
     @Param() param: ParamIdDto,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    const result = this.authService.send(
-      { cmd: 'update-user' },
-      { param, updateUserDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'update-user' }, { param, updateUserDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -128,17 +142,26 @@ export class ApiGatewayUserController {
     @Body() updateProfileDto: UpdateProfileDto,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    const result = this.authService.send(
-      { cmd: 'update-profile' },
-      { param, updateProfileDto, image },
-    )
+    const result = this.authService
+      .send({ cmd: 'update-profile' }, { param, updateProfileDto, image })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
   @ApiOperation({ summary: 'API: para borrar un usuario' })
   @Delete(':id')
   remove(@Param() param: ParamIdDto) {
-    const result = this.authService.send({ cmd: 'remove-user' }, { param })
+    const result = this.authService
+      .send({ cmd: 'remove-user' }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -148,10 +171,13 @@ export class ApiGatewayUserController {
   })
   @Patch('/:id/change-status')
   async activar(@Param() param: ParamIdDto) {
-    const result = this.authService.send(
-      { cmd: 'change-status-user' },
-      { param },
-    )
+    const result = this.authService
+      .send({ cmd: 'change-status-user' }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -165,10 +191,13 @@ export class ApiGatewayUserController {
     @Param() param: ParamIdDto,
     @Body() changePaswwordDto: ChangePaswwordDto,
   ) {
-    const result = this.authService.send(
-      { cmd: 'change-password' },
-      { param, changePaswwordDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'change-password' }, { param, changePaswwordDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 }
