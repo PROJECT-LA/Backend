@@ -7,8 +7,9 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { Request } from 'express'
+import { catchError, throwError } from 'rxjs'
 
 @Injectable()
 export class CasbinGuard implements CanActivate {
@@ -35,7 +36,12 @@ export class CasbinGuard implements CanActivate {
           action,
         },
       )
-      .pipe()
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+
       .toPromise()
 
     if (result) return true

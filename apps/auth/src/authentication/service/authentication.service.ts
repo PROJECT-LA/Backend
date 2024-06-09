@@ -53,7 +53,7 @@ export class AuthenticationService {
     }
     if (user.roles.length === 0) {
       throw new RpcException(
-        new UnauthorizedException(Messages.EXCEPTION_NOT_EXIST_ROLES),
+        new UnauthorizedException(Messages.NOT_EXIST_ROLES),
       )
     }
     return await this.login(user)

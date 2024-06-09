@@ -20,7 +20,7 @@ import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('Controls')
 @Controller('controls')
-export class ProxyControlController {
+export class ApiGayewayControlGroupController {
   constructor(
     @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
   ) {}

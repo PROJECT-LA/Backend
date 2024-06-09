@@ -1,4 +1,4 @@
-import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import {
   CreateRoleDto,
   FilterRoleDto,
@@ -8,6 +8,7 @@ import {
 } from '@app/common'
 import { IRoleRepository } from '../interface/iRole-repository'
 import { PolicyService } from '../../policies/service'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class RoleService {
@@ -20,7 +21,7 @@ export class RoleService {
   async getRoleById(id: string) {
     const role = await this.roleRepository.findOneById(id)
     if (!role)
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+      throw new RpcException(new NotFoundException(Messages.ROLE_NOT_FOUND))
     return role
   }
 
@@ -48,7 +49,7 @@ export class RoleService {
       where: { name },
     })
     if (role && (idRole === undefined || role.id !== idRole)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NAME_EXISTS)
+      throw new RpcException(new NotFoundException(Messages.ROLE_NAME_EXISTS))
     }
   }
 
@@ -64,7 +65,7 @@ export class RoleService {
       await this.roleRepository.update(idRole, { status: newStatus })
       await this.policyService.changeRoleState(idRole, newStatus)
     } catch (error) {
-      throw new Error(Messages.EXCEPTION_UPDATE_ERROR)
+      throw new RpcException(Error(Messages.EXCEPTION_UPDATE_ERROR))
     }
     return {
       id: idRole,

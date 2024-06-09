@@ -1,4 +1,6 @@
 import {
+  BadRequestException,
+  ConflictException,
   HttpStatus,
   Inject,
   Injectable,
@@ -202,27 +204,31 @@ export class UserService {
     if (id) await this.getUserProfile(id)
     const userExists = await this.findOneByUsername(username)
     if (userExists && (id === undefined || userExists.id !== id)) {
-      throw new RpcException({
-        status: HttpStatus.BAD_REQUEST,
-        message: 's',
-      })
+      throw new RpcException(
+        new NotFoundException(
+          'El nombre de usuario proporcionado ya esta registrado',
+        ),
+      )
     }
 
     const userExistsEmail = await this.findOneByEmail(email)
     if (userExistsEmail && (id === undefined || userExistsEmail.id !== id)) {
-      throw new RpcException({
-        status: HttpStatus.BAD_REQUEST,
-        message: 'no',
-      })
+      throw new RpcException(
+        new ConflictException('El email proporcionado ya esta registrado'),
+      )
     }
 
     const ciAlreadyExists = await this.findOneByCi(ci)
     if (ciAlreadyExists && (id === undefined || ciAlreadyExists.id !== id)) {
-      throw new RpcException(new NotFoundException('no'))
+      throw new RpcException(
+        new NotFoundException('El ci proporcionado ya esta registrado'),
+      )
     }
 
     if (data.roles.length === 0) {
-      throw new RpcException(Messages.EXCEPTION_ROLE_NOT_SEND)
+      throw new RpcException(
+        new BadRequestException('Debe seleccionar al menos un rol'),
+      )
     }
 
     const foundRoles = await this.rolesRepository.findManyByConditions({
@@ -233,7 +239,9 @@ export class UserService {
       ],
     })
     if (foundRoles.length < 1) {
-      throw new RpcException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+      throw new RpcException(
+        new NotFoundException('No se encontraron los roles seleccionados'),
+      )
     }
     return foundRoles
   }

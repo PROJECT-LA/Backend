@@ -5,8 +5,8 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common'
-import { Observable, of } from 'rxjs'
-import { ClientProxy } from '@nestjs/microservices'
+import { Observable, throwError } from 'rxjs'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { catchError, map, tap } from 'rxjs/operators'
 import { AUTH_SERVICE } from '@app/common'
 
@@ -34,7 +34,7 @@ export class JwtAuthGuard implements CanActivate {
         request.user = res
       }),
       map(() => true),
-      catchError(() => of(false)),
+      catchError((error) => throwError(() => new RpcException(error.response))),
     )
   }
 }

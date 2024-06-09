@@ -19,10 +19,10 @@ export enum Messages {
   EXCEPTION_ROLE_NOT_ALLOWED = 'El usuario no cuenta posee el rol selecionado.',
 
   //AUTHORIZATION
-  EXCEPTION_ROLE_NOT_FOUND = 'Rol no encontrado.',
-  EXCEPTION_ROLE_NAME_EXISTS = 'El nombre del rol ya existe.',
-  EXCEPTION_ROLE_NOT_SEND = 'No se envió ningún rol.',
-  EXCEPTION_NOT_EXIST_ROLES = 'No se cuentan con roles en el sistema',
+  ROLE_NOT_FOUND = 'Rol no encontrado.',
+  ROLE_NAME_EXISTS = 'El nombre del rol ya existe.',
+  ROLE_NOT_SEND = 'No se envió ningún rol.',
+  NOT_EXIST_ROLES = 'No se cuentan con roles en el sistema',
 
   //RESPONSES FROM CONTROLLER
   REPONSE_SUCCESS = 'Se completo con exito',
