@@ -39,6 +39,9 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/admin/controles': {
         [RoleEnum.GERENTE]: 'read|update|create|delete',
       },
+      '/admin/levels': {
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
+      },
     }
 
     const backendRoutes: CasbinValue = {
@@ -117,6 +120,28 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       },
       '/api/modules/change/order': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH',
+      },
+
+      //Templates
+      '/api/templates': {
+        [RoleEnum.GERENTE]: 'POST|GET|PATCH',
+      },
+      '/api/templates/:id': {
+        [RoleEnum.GERENTE]: 'PATCH|GET|DELETE',
+      },
+      '/api/templates/:id/status': {
+        [RoleEnum.GERENTE]: 'PATCH|GET',
+      },
+
+      //Levels
+      '/api/levels': {
+        [RoleEnum.GERENTE]: 'POST|GET|PATCH',
+      },
+      '/api/levels/:id': {
+        [RoleEnum.GERENTE]: 'PATCH|GET|DELETE',
+      },
+      '/api/levels/:id/status': {
+        [RoleEnum.GERENTE]: 'PATCH|GET',
       },
     }
 

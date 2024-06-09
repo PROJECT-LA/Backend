@@ -41,7 +41,6 @@ export class CasbinGuard implements CanActivate {
           throwError(() => new RpcException(error.response)),
         ),
       )
-
       .toPromise()
 
     if (result) return true

@@ -198,7 +198,9 @@ export class AuthenticationService {
   }
 
   async validateRole(idRole: string, rosource: string, action: string) {
-    return await this.enforcer.enforce(idRole, rosource, action)
+    const cal = await this.enforcer.enforce(idRole, rosource, action)
+    console.log(cal)
+    return cal
   }
 
   private __getCurrentRole(

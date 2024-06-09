@@ -17,10 +17,17 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Templates')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('templates')
 export class ApiGatewayTemplateController {
