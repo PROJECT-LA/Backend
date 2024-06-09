@@ -21,7 +21,7 @@ export class RoleService {
   async getRoleById(id: string) {
     const role = await this.roleRepository.findOneById(id)
     if (!role)
-      throw new RpcException(new NotFoundException(Messages.ROLE_NOT_FOUND))
+      throw new RpcException(new NotFoundException('Rol no encontrado'))
     return role
   }
 
@@ -49,7 +49,9 @@ export class RoleService {
       where: { name },
     })
     if (role && (idRole === undefined || role.id !== idRole)) {
-      throw new RpcException(new NotFoundException(Messages.ROLE_NAME_EXISTS))
+      throw new RpcException(
+        new NotFoundException('El nombre del rol ya se encuentra registrado'),
+      )
     }
   }
 

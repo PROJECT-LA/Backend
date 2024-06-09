@@ -11,7 +11,6 @@ import {
   FilterUserDto,
   UpdateProfileDto,
   UpdateUserDto,
-  Messages,
   STATUS,
   TextService,
 } from '@app/common'
@@ -106,7 +105,7 @@ export class UserService {
 
     const userExistsEmail = await this.findOneByEmail(updateUserDto.email)
     if (userExistsEmail && userExistsEmail.id !== id) {
-      throw new RpcException(Messages.EXCEPTION_SAME_EMAIL)
+      throw new RpcException('El email proporcionado ya esta registrado')
     }
 
     const updateUser = this.usersRepository.create({
@@ -140,11 +139,11 @@ export class UserService {
       select: ['id', 'password'],
     })
     if (!user) {
-      throw new RpcException(Messages.EXCEPTION_USER_NOT_FOUND)
+      throw new RpcException('Usuario no encontrado')
     }
     const passwordIsValid = await TextService.compare(password, user.password)
     if (!passwordIsValid) {
-      throw new RpcException(Messages.EXCEPTION_PASSWORD_NOT_VALID)
+      throw new RpcException('Las contraseñas no coinciden')
     }
     //    const hashedPassword = await TextService.validateLevelPassword(newPassword)
     const hashedPassword = await TextService.encrypt(newPassword)
@@ -184,7 +183,7 @@ export class UserService {
         image: true,
       },
     })
-    if (!user) throw new RpcException(Messages.EXCEPTION_USER_NOT_FOUND)
+    if (!user) throw new RpcException('Usuario no encontrado')
     if (user.image) {
       const result = this.fileService
         .send({ cmd: 'get-avatar' }, { name: user.image })

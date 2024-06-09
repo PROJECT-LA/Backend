@@ -1,5 +1,5 @@
 import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
-import { FilterTemplateDto, Messages, STATUS } from '@app/common'
+import { FilterTemplateDto, STATUS } from '@app/common'
 import { ILevelRepository } from '../interfaces'
 import { CreateLevelDto, UpdateLevelDto } from '@app/common/dto/audit/level'
 
@@ -12,7 +12,7 @@ export class LevelService {
 
   async getLevelById(id: string) {
     const level = await this.levelRepository.findOneById(id)
-    if (!level) throw new PreconditionFailedException(Messages.ROLE_NOT_FOUND)
+    if (!level) throw new PreconditionFailedException('Level no encontrado')
     return level
   }
 

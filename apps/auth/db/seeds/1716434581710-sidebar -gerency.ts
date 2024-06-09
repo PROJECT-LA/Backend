@@ -47,13 +47,6 @@ export class SidebarGerency1716434581710 implements MigrationInterface {
             order: 2,
           },
           {
-            url: '/admin/templates',
-            title: 'Plantillas',
-            icono: 'file-sliders',
-            description: 'Parámetros generales del sistema',
-            order: 3,
-          },
-          {
             url: '/admin/controls',
             title: 'Controles',
             icono: 'file-sliders',

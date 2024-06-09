@@ -7,7 +7,6 @@ import {
   TextService,
   AuthDto,
   UserPayload,
-  Messages,
 } from '@app/common'
 import { Cron } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
@@ -41,19 +40,17 @@ export class AuthenticationService {
     const { password, username } = authDto
     const user = await this.usersRepository.validateCredentials(username)
     if (!user) {
-      throw new RpcException(
-        new UnauthorizedException(Messages.INVALID_CREDENTIALS),
-      )
+      throw new RpcException(new UnauthorizedException('No existe el usuario'))
     }
     const passwordIsValid = await TextService.compare(password, user.password)
     if (!passwordIsValid) {
       throw new RpcException(
-        new UnauthorizedException(Messages.INVALID_CREDENTIALS),
+        new UnauthorizedException('Credenciales Invalidas'),
       )
     }
     if (user.roles.length === 0) {
       throw new RpcException(
-        new UnauthorizedException(Messages.NOT_EXIST_ROLES),
+        new UnauthorizedException('Usuario sin roles asignados'),
       )
     }
     return await this.login(user)
@@ -163,15 +160,11 @@ export class AuthenticationService {
       where: { id: idRefreshToken },
     })
     if (!ExistingRefreshToken) {
-      throw new RpcException(
-        new UnauthorizedException(Messages.EXCEPTION_INVALID_REFRESH_TOKEN),
-      )
+      throw new RpcException(new UnauthorizedException('Sesion Expirada'))
     }
 
     if (ExistingRefreshToken.token !== oldToken) {
-      throw new RpcException(
-        new UnauthorizedException(Messages.EXCEPTION_INVALID_REFRESH_TOKEN),
-      )
+      throw new RpcException(new UnauthorizedException('Sesion Expirada'))
     }
     const { refreshToken, token } = await this.signIn(user)
     await this.deleteToken(idRefreshToken)
@@ -193,7 +186,9 @@ export class AuthenticationService {
       })
       return user
     } catch (e) {
-      throw new RpcException(new UnauthorizedException(Messages.TOKEN_INVALID))
+      throw new RpcException(
+        new UnauthorizedException('Token de Sesión Invalido'),
+      )
     }
   }
 
@@ -209,7 +204,7 @@ export class AuthenticationService {
   ) {
     if (roles.length < 1) {
       throw new RpcException(
-        new UnauthorizedException(Messages.EXCEPTION_USER_WITHOUT_ROLES),
+        new UnauthorizedException('Usuario sin roles asignados'),
       )
     }
     if (!idRol) {
@@ -217,9 +212,7 @@ export class AuthenticationService {
     }
     const role = roles.find((item) => item.id === idRol)
     if (!role) {
-      throw new RpcException(
-        new UnauthorizedException(Messages.EXCEPTION_ROLE_NOT_ALLOWED),
-      )
+      throw new RpcException(new UnauthorizedException('Rol no permitido'))
     }
     return role
   }

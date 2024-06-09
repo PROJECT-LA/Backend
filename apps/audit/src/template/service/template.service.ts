@@ -2,7 +2,6 @@ import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
 import {
   CreateTemplateDto,
   FilterTemplateDto,
-  Messages,
   STATUS,
   UpdateTemplateDto,
 } from '@app/common'
@@ -18,7 +17,7 @@ export class TemplateService {
   async getTemplateById(id: string) {
     const template = await this.templateRepository.findOneById(id)
     if (!template)
-      throw new PreconditionFailedException(Messages.ROLE_NOT_FOUND)
+      throw new PreconditionFailedException('Plantilla no encontrada')
     return template
   }
 

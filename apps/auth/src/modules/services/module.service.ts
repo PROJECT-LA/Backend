@@ -5,7 +5,6 @@ import {
   NewOrderDto,
   UpdateModuleDto,
   STATUS,
-  Messages,
 } from '@app/common'
 import { ModuleEntity } from '../entities'
 import { RpcException } from '@nestjs/microservices'
@@ -23,7 +22,7 @@ export class ModuleService {
       relations: ['subModule'],
     })
     if (!module) {
-      throw new RpcException(new NotFoundException(Messages.MODULE_NOT_FOUND))
+      throw new RpcException(new NotFoundException('Modulo no encontrado'))
     }
     return module
   }
