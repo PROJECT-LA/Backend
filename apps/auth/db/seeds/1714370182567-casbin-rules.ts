@@ -15,11 +15,9 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       },
       '/admin/users': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
-        [RoleEnum.GERENTE]: 'read',
       },
       '/admin/roles': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
-        [RoleEnum.GERENTE]: 'read',
       },
       '/admin/parameters': {
         [RoleEnum.ADMINISTRADOR]: 'read|update|create|delete',
@@ -107,6 +105,9 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       },
       '/api/policies/change-status': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH',
+      },
+      '/api/policies/:id/frontend': {
+        [RoleEnum.ADMINISTRADOR]: 'GET',
       },
       //modules
       '/api/modules': {

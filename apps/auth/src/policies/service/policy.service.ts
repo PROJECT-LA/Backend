@@ -1,6 +1,7 @@
 import { Inject, Injectable, NotFoundException, Query } from '@nestjs/common'
 import { AuthZManagementService } from 'nest-authz'
 import {
+  APP,
   CreatePolicyDto,
   FilterPoliciesDto,
   PassportUser,
@@ -209,6 +210,22 @@ export class PolicyService {
       action,
       app,
       status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE,
+    )
+  }
+
+  async getPoliciesByRouteFrontend(idRole: string) {
+    const policies = await this.authZManagerService.getFilteredPolicy(0, idRole)
+    const result = policies.map((item) => ({
+      subject: item[0],
+      object: item[1],
+      action: item[2],
+      app: item[3],
+      status: item[4],
+    }))
+
+    return result.filter(
+      (policie) =>
+        policie.app === APP.FRONTEND && policie.status === STATUS.ACTIVE,
     )
   }
 }

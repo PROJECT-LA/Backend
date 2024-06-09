@@ -6,6 +6,7 @@ import {
   CreatePolicyDto,
   FilterPoliciesDto,
   RouteDto,
+  ParamIdDto,
 } from '@app/common'
 import { PolicyService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
@@ -84,5 +85,15 @@ export class PolicyController extends BaseController {
     this.sharedService.acknowledgeMessage(context)
     const result = await this.policyService.changeStatusPolicy(policy)
     return this.successUpdate(result)
+  }
+
+  @MessagePattern({ cmd: 'get-policies-role-frontend' })
+  async getPoliciesFrontenByRoute(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.policyService.getPoliciesByRouteFrontend(param.id)
+    return this.successList(result)
   }
 }

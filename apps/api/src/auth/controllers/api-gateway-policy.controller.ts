@@ -3,6 +3,7 @@ import {
   CreatePolicyDto,
   CurrentUser,
   FilterPoliciesDto,
+  ParamIdDto,
   PassportUser,
   RouteDto,
 } from '@app/common'
@@ -12,6 +13,7 @@ import {
   Delete,
   Get,
   Inject,
+  Param,
   Patch,
   Post,
   Query,
@@ -116,10 +118,26 @@ export class ApiGatewayPolicyController {
   }
 
   @ApiOperation({ summary: 'API para cambiar el estado de una política' })
-  @Patch('status')
+  @Patch('change-status')
   async changeStatusPolicy(@Body() policy: CreatePolicyDto) {
     const result = this.authService
       .send({ cmd: 'change-status-policy' }, { policy })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+    return result
+  }
+
+  @ApiOperation({
+    summary:
+      'API para obtener el listado de politicas frontend en base a un rol',
+  })
+  @Get(':id/frontend')
+  async getPoliciesByRoleFrontend(@Param() param: ParamIdDto) {
+    const result = this.authService
+      .send({ cmd: 'get-policies-role-frontend' }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
