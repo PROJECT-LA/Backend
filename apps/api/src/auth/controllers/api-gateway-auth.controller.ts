@@ -22,8 +22,9 @@ import {
 } from '@app/common'
 import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { JwtAuthGuard } from '../../guards/auth.guard'
+import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -41,6 +42,11 @@ export class ApiGatewayAuthController extends BaseController {
   async login(@Res() res: Response, @Body() authDto: AuthDto) {
     const result = await this.authService
       .send({ cmd: 'login' }, { authDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
       .toPromise()
 
     const { refreshToken, token, info } = result
@@ -69,7 +75,14 @@ export class ApiGatewayAuthController extends BaseController {
   async logout(@Req() req: Request, @Res() res: Response) {
     const id = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (id === undefined) return res.sendStatus(401)
-    await this.authService.send({ cmd: 'logout' }, { id }).pipe().toPromise()
+    await this.authService
+      .send({ cmd: 'logout' }, { id })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+      .toPromise()
     return res.clearCookie('token').clearCookie('rft').sendStatus(200)
   }
 
@@ -88,6 +101,11 @@ export class ApiGatewayAuthController extends BaseController {
     if (idRefreshToken === undefined) return res.sendStatus(401)
     const result = await this.authService
       .send({ cmd: 'change-role' }, { user, roleDto, idRefreshToken })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
       .toPromise()
     const { info, refreshToken, token } = result
     return res
@@ -117,6 +135,11 @@ export class ApiGatewayAuthController extends BaseController {
       throw new UnauthorizedException('Tokens Expirados')
     const result = await this.authService
       .send({ cmd: 'refresh-token' }, { clientToken, clientRft })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
       .toPromise()
     const { token, refreshToken } = result
     return res

@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Inject,
   Injectable,
 } from '@nestjs/common'
@@ -18,14 +19,14 @@ export class JwtAuthGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest()
     const authHeader = request.headers['authorization']
-    if (!authHeader) return false
+    if (!authHeader) throw new ForbiddenException('sin token')
 
     const authHeaderParts = (authHeader as string).split(' ')
-    if (authHeaderParts.length !== 2) return false
+    if (authHeaderParts.length !== 2) throw new ForbiddenException('sin token')
     const [, jwt] = authHeaderParts
 
     if (!jwt) {
-      return false
+      throw new ForbiddenException('sin token')
     }
 
     return this.authClient.send({ cmd: 'verify-jwt' }, { jwt }).pipe(

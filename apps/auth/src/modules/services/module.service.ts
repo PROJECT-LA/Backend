@@ -5,8 +5,10 @@ import {
   NewOrderDto,
   UpdateModuleDto,
   STATUS,
+  Messages,
 } from '@app/common'
 import { ModuleEntity } from '../entities'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class ModuleService {
@@ -20,7 +22,9 @@ export class ModuleService {
       where: { id },
       relations: ['subModule'],
     })
-    if (!module) throw new NotFoundException('Modulo no encontrado')
+    if (!module) {
+      throw new RpcException(new NotFoundException(Messages.MODULE_NOT_FOUND))
+    }
     return module
   }
 

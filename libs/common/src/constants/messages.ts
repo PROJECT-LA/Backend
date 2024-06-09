@@ -14,9 +14,11 @@ export enum Messages {
   EXCEPTION_SAME_EMAIL = 'El correo electrónico ya está en uso.',
   EXCEPTION_USER_NOT_FOUND = 'Usuario no encontrado.',
   EXCEPTION_PASSWORD_NOT_VALID = 'La contraseña no es válida.',
+  EXCEPTION_INVALID_REFRESH_TOKEN = 'Token de refresco inválido.',
+  EXCEPTION_USER_WITHOUT_ROLES = 'El usuario no cuenta con roles asignados.',
+  EXCEPTION_ROLE_NOT_ALLOWED = 'El usuario no cuenta posee el rol selecionado.',
 
   //AUTHORIZATION
-
   EXCEPTION_ROLE_NOT_FOUND = 'Rol no encontrado.',
   EXCEPTION_ROLE_NAME_EXISTS = 'El nombre del rol ya existe.',
   EXCEPTION_ROLE_NOT_SEND = 'No se envió ningún rol.',
@@ -43,4 +45,7 @@ export enum Messages {
   EXCEPTION_POLICY_NOT_SEND = 'No se envió ninguna política.',
   EXCEPTION_POLICY_NOT_FOUND_ROLES = 'No se encontraron roles para la política.',
   EXCEPTION_POLICY_ERROR = 'No se encontraron módulos para la política.',
+
+  //RESPONSES FOR MODULES
+  MODULE_NOT_FOUND = 'Módulo no encontrado.',
 }

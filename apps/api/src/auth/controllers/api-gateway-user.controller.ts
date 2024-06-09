@@ -32,8 +32,9 @@ import {
   AUTH_SERVICE,
 } from '@app/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
+import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -61,10 +62,14 @@ export class ApiGatewayUserController {
     @UploadedFile() image: Express.Multer.File,
     @Body() createUserDto: CreateUserDto,
   ) {
-    const result = this.authService.send(
-      { cmd: 'create-user' },
-      { createUserDto, image },
-    )
+    const result = this.authService
+      .send({ cmd: 'create-user' }, { createUserDto, image })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+
     return result
   }
 

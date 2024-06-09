@@ -7,13 +7,14 @@ import {
   TextService,
   AuthDto,
   UserPayload,
+  Messages,
 } from '@app/common'
 import { Cron } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
 import dotenv from 'dotenv'
 import { IModuleRepository } from '../../modules/interfaces'
 import { User } from '../../users/entities'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { lastValueFrom, timeout } from 'rxjs'
 import { IUserRepository } from '../../users/interface'
 import { Enforcer } from 'casbin'
@@ -39,10 +40,22 @@ export class AuthenticationService {
   async validateCredentials(authDto: AuthDto) {
     const { password, username } = authDto
     const user = await this.usersRepository.validateCredentials(username)
-    if (!user) throw new UnauthorizedException()
+    if (!user) {
+      throw new RpcException(
+        new UnauthorizedException(Messages.INVALID_CREDENTIALS),
+      )
+    }
     const passwordIsValid = await TextService.compare(password, user.password)
-    if (!passwordIsValid) throw new UnauthorizedException()
-    if (user.roles.length === 0) throw new UnauthorizedException()
+    if (!passwordIsValid) {
+      throw new RpcException(
+        new UnauthorizedException(Messages.INVALID_CREDENTIALS),
+      )
+    }
+    if (user.roles.length === 0) {
+      throw new RpcException(
+        new UnauthorizedException(Messages.EXCEPTION_NOT_EXIST_ROLES),
+      )
+    }
     return await this.login(user)
   }
 
@@ -149,12 +162,17 @@ export class AuthenticationService {
     const ExistingRefreshToken = await this.tokenRepository.findOneByCondition({
       where: { id: idRefreshToken },
     })
-    if (!ExistingRefreshToken)
-      throw new UnauthorizedException('Refresh token expirado')
+    if (!ExistingRefreshToken) {
+      throw new RpcException(
+        new UnauthorizedException(Messages.EXCEPTION_INVALID_REFRESH_TOKEN),
+      )
+    }
 
-    if (ExistingRefreshToken.token !== oldToken)
-      throw new UnauthorizedException('Token invalido')
-
+    if (ExistingRefreshToken.token !== oldToken) {
+      throw new RpcException(
+        new UnauthorizedException(Messages.EXCEPTION_INVALID_REFRESH_TOKEN),
+      )
+    }
     const { refreshToken, token } = await this.signIn(user)
     await this.deleteToken(idRefreshToken)
     return {
@@ -168,11 +186,15 @@ export class AuthenticationService {
   }
 
   async validateToken(jwt: string) {
-    const user = await this.jwtService.verifyAsync(jwt, {
-      ignoreExpiration: false,
-      secret: this.configService.get('JWT_SECRET'),
-    })
-    return user
+    try {
+      const user = await this.jwtService.verifyAsync(jwt, {
+        ignoreExpiration: false,
+        secret: this.configService.get('JWT_SECRET'),
+      })
+      return user
+    } catch (e) {
+      throw new RpcException(new UnauthorizedException(Messages.TOKEN_INVALID))
+    }
   }
 
   async validateRole(idRole: string, rosource: string, action: string) {
@@ -184,14 +206,18 @@ export class AuthenticationService {
     idRol: string | null | undefined,
   ) {
     if (roles.length < 1) {
-      throw new UnauthorizedException(`El user no cuenta con roles.`)
+      throw new RpcException(
+        new UnauthorizedException(Messages.EXCEPTION_USER_WITHOUT_ROLES),
+      )
     }
     if (!idRol) {
       return roles[0]
     }
     const role = roles.find((item) => item.id === idRol)
     if (!role) {
-      throw new UnauthorizedException(`Rol no permitido.`)
+      throw new RpcException(
+        new UnauthorizedException(Messages.EXCEPTION_ROLE_NOT_ALLOWED),
+      )
     }
     return role
   }

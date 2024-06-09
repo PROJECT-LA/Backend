@@ -1,4 +1,9 @@
-import { Inject, Injectable, PreconditionFailedException } from '@nestjs/common'
+import {
+  HttpStatus,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import {
   ChangePaswwordDto,
   CreateUserDto,
@@ -12,7 +17,7 @@ import {
 import { IUserRepository } from '../interface'
 import { In } from 'typeorm'
 import { IRoleRepository } from '../../roles/interface'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { lastValueFrom, timeout } from 'rxjs'
 
 @Injectable()
@@ -100,7 +105,7 @@ export class UserService {
 
     const userExistsEmail = await this.findOneByEmail(updateUserDto.email)
     if (userExistsEmail && userExistsEmail.id !== id) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
+      throw new RpcException(Messages.EXCEPTION_SAME_EMAIL)
     }
 
     const updateUser = this.usersRepository.create({
@@ -122,9 +127,7 @@ export class UserService {
         updateUser.image = imageRoute
       }
     } catch (error) {
-      throw new PreconditionFailedException(
-        'Ocurrio un error al subir la imagen',
-      )
+      throw new RpcException('Ocurrio un error al subir la imagen')
     }
     return await this.usersRepository.update(id, updateUser)
   }
@@ -136,13 +139,11 @@ export class UserService {
       select: ['id', 'password'],
     })
     if (!user) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
+      throw new RpcException(Messages.EXCEPTION_USER_NOT_FOUND)
     }
     const passwordIsValid = await TextService.compare(password, user.password)
     if (!passwordIsValid) {
-      throw new PreconditionFailedException(
-        Messages.EXCEPTION_PASSWORD_NOT_VALID,
-      )
+      throw new RpcException(Messages.EXCEPTION_PASSWORD_NOT_VALID)
     }
     //    const hashedPassword = await TextService.validateLevelPassword(newPassword)
     const hashedPassword = await TextService.encrypt(newPassword)
@@ -182,8 +183,7 @@ export class UserService {
         image: true,
       },
     })
-    if (!user)
-      throw new PreconditionFailedException(Messages.EXCEPTION_USER_NOT_FOUND)
+    if (!user) throw new RpcException(Messages.EXCEPTION_USER_NOT_FOUND)
     if (user.image) {
       const result = this.fileService
         .send({ cmd: 'get-avatar' }, { name: user.image })
@@ -202,21 +202,27 @@ export class UserService {
     if (id) await this.getUserProfile(id)
     const userExists = await this.findOneByUsername(username)
     if (userExists && (id === undefined || userExists.id !== id)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_USERNAME)
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 's',
+      })
     }
 
     const userExistsEmail = await this.findOneByEmail(email)
     if (userExistsEmail && (id === undefined || userExistsEmail.id !== id)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
+      throw new RpcException({
+        status: HttpStatus.BAD_REQUEST,
+        message: 'no',
+      })
     }
 
     const ciAlreadyExists = await this.findOneByCi(ci)
     if (ciAlreadyExists && (id === undefined || ciAlreadyExists.id !== id)) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_SAME_EMAIL)
+      throw new RpcException(new NotFoundException('no'))
     }
 
     if (data.roles.length === 0) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_SEND)
+      throw new RpcException(Messages.EXCEPTION_ROLE_NOT_SEND)
     }
 
     const foundRoles = await this.rolesRepository.findManyByConditions({
@@ -227,7 +233,7 @@ export class UserService {
       ],
     })
     if (foundRoles.length < 1) {
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+      throw new RpcException(Messages.EXCEPTION_ROLE_NOT_FOUND)
     }
     return foundRoles
   }

@@ -5,7 +5,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import cookieParser from 'cookie-parser'
 import { ApiModule } from './api.module'
-import { CORS, SWAGGER_DEFAULT_CONFIG } from '@app/common'
+import { CORS, RpcExceptionFilter, SWAGGER_DEFAULT_CONFIG } from '@app/common'
 /**
  * Bootstrap the application
  */
@@ -16,6 +16,7 @@ async function bootstrap() {
   app.setGlobalPrefix(configService.get('API_PREFIX'))
   app.enableCors(CORS)
   app.use(cookieParser())
+  app.useGlobalFilters(new RpcExceptionFilter())
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   if (configService.get('NODE_ENV') !== 'production') {
     createSwagger(app)

@@ -23,8 +23,9 @@ import {
   ParamIdDto,
   AUTH_SERVICE,
 } from '@app/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
+import { catchError, throwError } from 'rxjs'
 
 @ApiBearerAuth()
 @ApiTags('Modules')
@@ -40,7 +41,13 @@ export class ApiGatewayModuleController {
   })
   @Get(':id')
   async list(@Param() param: ParamIdDto) {
-    const result = this.authService.send({ cmd: 'get-modules' }, { param })
+    const result = this.authService
+      .send({ cmd: 'get-modules' }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -51,10 +58,13 @@ export class ApiGatewayModuleController {
   })
   @Post()
   async create(@Body() createModuleDto: CreateModuleDto) {
-    const result = this.authService.send(
-      { cmd: 'create-module' },
-      { createModuleDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'create-module' }, { createModuleDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -71,10 +81,13 @@ export class ApiGatewayModuleController {
     @Param() param: ParamIdDto,
     @Body() updateModuleDto: UpdateModuleDto,
   ) {
-    const result = this.authService.send(
-      { cmd: 'update-module' },
-      { param, updateModuleDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'update-module' }, { param, updateModuleDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -84,7 +97,13 @@ export class ApiGatewayModuleController {
   })
   @Delete(':id')
   async delete(@Param() param: ParamIdDto) {
-    const result = this.authService.send({ cmd: 'remove-module' }, { param })
+    const result = this.authService
+      .send({ cmd: 'remove-module' }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -94,10 +113,13 @@ export class ApiGatewayModuleController {
   })
   @Patch(':id/status')
   async changeStatus(@Param() param: ParamIdDto) {
-    const result = this.authService.send(
-      { cmd: 'change-status-module' },
-      { param },
-    )
+    const result = this.authService
+      .send({ cmd: 'change-status-module' }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -108,10 +130,13 @@ export class ApiGatewayModuleController {
   })
   @Patch('change/order')
   async updateSidebar(@Body() orderDto: NewOrderDto) {
-    const result = this.authService.send(
-      { cmd: 'update-order-module' },
-      { orderDto },
-    )
+    const result = this.authService
+      .send({ cmd: 'update-order-module' }, { orderDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 }
