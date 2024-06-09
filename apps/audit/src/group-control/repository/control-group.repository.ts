@@ -19,7 +19,7 @@ export class ControlGroupRepository
   }
 
   async list(filterDto: FilterControlGroupDto) {
-    const { limit, order, sense, skip, filter, idTemplate } = filterDto
+    const { limit, skip, filter, idTemplate } = filterDto
     console.log(filterDto)
     const query = this.control
       .createQueryBuilder('control_group')
@@ -37,32 +37,20 @@ export class ControlGroupRepository
         'controls.eDescription',
         'controls.eControl',
       ])
-      .where('control.idTemplate = :idTemplate', { idTemplate })
+      .where('control_group.idTemplate = :idTemplate', { idTemplate })
       .take(limit)
       .skip(skip)
-
-    switch (order) {
-      case 'oControl':
-        query.addOrderBy('control.oControl', sense)
-        break
-      case 'gControl':
-        query.addOrderBy('control.gControl', sense)
-        break
-      case 'eControl':
-        query.addOrderBy('control.eControl', sense)
-        break
-      default:
-        query.orderBy('control.id', 'ASC')
-    }
 
     if (filter) {
       query.andWhere(
         new Brackets((qb) => {
-          qb.orWhere('control.oControl like :filter', { filter: `%${filter}%` })
-          qb.orWhere('control.gControl like :filter', {
+          qb.orWhere('control_group.objectiveControl like :filter', {
             filter: `%${filter}%`,
           })
-          qb.orWhere('control.eControl like :filter', {
+          qb.orWhere('control_group.objectiveDescription like :filter', {
+            filter: `%${filter}%`,
+          })
+          qb.orWhere('control_group.groupDescription like :filter', {
             filter: `%${filter}%`,
           })
         }),

@@ -1,9 +1,10 @@
-import { AUDIT_SERVICE, ParamIdDto } from '@app/common'
 import {
-  CreateControlDto,
-  FilterControlDto,
-  UpdateControlDto,
-} from '@app/common/dto/audit/control'
+  AUDIT_SERVICE,
+  CreateControlGroupDto,
+  FilterControlGroupDto,
+  ParamIdDto,
+  UpdateControlGroupDto,
+} from '@app/common'
 import {
   Body,
   Controller,
@@ -16,8 +17,15 @@ import {
   Query,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 
+@ApiBearerAuth()
 @ApiTags('Controls')
 @Controller('controls')
 export class ApiGayewayControlGroupController {
@@ -29,25 +37,24 @@ export class ApiGayewayControlGroupController {
     summary: 'API para obtener el listado de controles de una plantilla',
   })
   @Get()
-  async list(@Query() paginationQueryDto: FilterControlDto) {
-    console.log(paginationQueryDto)
+  async list(@Query() filter: FilterControlGroupDto) {
     const result = this.auditService.send(
-      { cmd: 'get-controls' },
-      { paginationQueryDto },
+      { cmd: 'get-control-group' },
+      { filter },
     )
     return result
   }
 
   @ApiOperation({ summary: 'API para crear un nuevo control' })
   @ApiBody({
-    type: CreateControlDto,
+    type: CreateControlGroupDto,
     required: true,
   })
   @Post()
-  async create(@Body() controlDto: CreateControlDto) {
+  async create(@Body() controlGroupDto: CreateControlGroupDto) {
     const result = this.auditService.send(
       { cmd: 'create-control' },
-      { controlDto },
+      { controlGroupDto },
     )
     return result
   }
@@ -57,18 +64,17 @@ export class ApiGayewayControlGroupController {
     type: ParamIdDto,
   })
   @ApiBody({
-    type: UpdateControlDto,
+    type: UpdateControlGroupDto,
     required: true,
   })
   @Patch(':id')
   async update(
-    @Param() params: ParamIdDto,
-    @Body() controlDto: UpdateControlDto,
+    @Param() param: ParamIdDto,
+    @Body() updateControlGroupDto: UpdateControlGroupDto,
   ) {
-    const { id } = params
     const result = this.auditService.send(
-      { cmd: 'update-control' },
-      { id, controlDto },
+      { cmd: 'update-control-group' },
+      { param, updateControlGroupDto },
     )
     return result
   }
@@ -77,12 +83,11 @@ export class ApiGayewayControlGroupController {
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch('/:id/change-status')
-  async changeStatus(@Param() params: ParamIdDto) {
-    const { id: id } = params
+  @Patch('/:id/change-status-control-group')
+  async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService.send(
-      { cmd: 'change-status-control' },
-      { id },
+      { cmd: 'change-status-control-group' },
+      { param },
     )
     return result
   }
@@ -92,9 +97,11 @@ export class ApiGayewayControlGroupController {
     type: ParamIdDto,
   })
   @Delete(':id')
-  async delete(@Param() params: ParamIdDto) {
-    const { id } = params
-    const result = this.auditService.send({ cmd: 'delete-control' }, { id })
+  async delete(@Param() param: ParamIdDto) {
+    const result = this.auditService.send(
+      { cmd: 'remove-control-group' },
+      { param },
+    )
     return result
   }
 }
