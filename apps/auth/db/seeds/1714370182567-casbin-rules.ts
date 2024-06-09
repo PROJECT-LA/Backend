@@ -82,11 +82,11 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       //Crud de Parametros
       '/api/parameters': {
         [RoleEnum.ADMINISTRADOR]: 'GET|POST',
-        [RoleEnum.GERENTE]: 'GET',
+        [RoleEnum.GERENTE]: 'GET|POST',
       },
       '/api/parameters/:id:': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH|GET|DELETE',
-        [RoleEnum.CLIENTE]: 'PATCH',
+        [RoleEnum.GERENTE]: 'PATCH|GET|DELETE',
       },
       '/api/parameters/:id/change-status': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH',
@@ -105,7 +105,7 @@ export class CasbinRules1714370182567 implements MigrationInterface {
         [RoleEnum.ADMINISTRADOR]: 'POST',
         [RoleEnum.GERENTE]: 'POST',
       },
-      '/api/policies/status': {
+      '/api/policies/change-status': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH',
       },
       //modules
@@ -129,7 +129,7 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/api/templates/:id': {
         [RoleEnum.GERENTE]: 'PATCH|GET|DELETE',
       },
-      '/api/templates/:id/status': {
+      '/api/templates/:id/change-status': {
         [RoleEnum.GERENTE]: 'PATCH|GET',
       },
 
@@ -140,7 +140,7 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/api/levels/:id': {
         [RoleEnum.GERENTE]: 'PATCH|GET|DELETE',
       },
-      '/api/levels/:id/status': {
+      '/api/levels/:id/change-status': {
         [RoleEnum.GERENTE]: 'PATCH|GET',
       },
     }

@@ -90,7 +90,7 @@ export class ApiGatewayTemplateController {
     return result
   }
 
-  @ApiOperation({ summary: 'API para eliminar un plantillas' })
+  @ApiOperation({ summary: 'API para eliminar una plantilla' })
   @ApiProperty({
     type: ParamIdDto,
   })
