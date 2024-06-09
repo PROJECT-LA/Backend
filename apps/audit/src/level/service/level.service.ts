@@ -12,8 +12,7 @@ export class LevelService {
 
   async getLevelById(id: string) {
     const level = await this.levelRepository.findOneById(id)
-    if (!level)
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+    if (!level) throw new PreconditionFailedException(Messages.ROLE_NOT_FOUND)
     return level
   }
 

@@ -18,7 +18,7 @@ export class TemplateService {
   async getTemplateById(id: string) {
     const template = await this.templateRepository.findOneById(id)
     if (!template)
-      throw new PreconditionFailedException(Messages.EXCEPTION_ROLE_NOT_FOUND)
+      throw new PreconditionFailedException(Messages.ROLE_NOT_FOUND)
     return template
   }
 
