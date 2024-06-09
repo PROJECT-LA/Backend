@@ -1,4 +1,4 @@
-import { ParamIdDto } from '@app/common'
+import { AUDIT_SERVICE, ParamIdDto } from '@app/common'
 import {
   CreateControlDto,
   FilterControlDto,
@@ -22,7 +22,7 @@ import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
 @Controller('controls')
 export class ApiGayewayControlGroupController {
   constructor(
-    @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
+    @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({

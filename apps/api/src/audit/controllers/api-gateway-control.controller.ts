@@ -22,7 +22,7 @@ import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
 @Controller('controls')
 export class ProxyControlController {
   constructor(
-    @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
+    @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({

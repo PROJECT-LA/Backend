@@ -1,4 +1,5 @@
 import {
+  AUDIT_SERVICE,
   CreateParameterDto,
   PaginationQueryDto,
   ParamGroupDto,
@@ -18,15 +19,22 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Parameters')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('parameters')
 export class ApiGatewayParameterController {
   constructor(
-    @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
+    @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({ summary: 'API para obtener el listado de parámetros' })

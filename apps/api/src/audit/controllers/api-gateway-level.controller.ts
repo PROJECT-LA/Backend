@@ -1,4 +1,4 @@
-import { ParamIdDto } from '@app/common'
+import { AUDIT_SERVICE, ParamIdDto } from '@app/common'
 import {
   CreateLevelDto,
   FilterLevelDto,
@@ -17,15 +17,22 @@ import {
   UseGuards,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Levels')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('levels')
 export class ApiGatewayLevelController {
   constructor(
-    @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
+    @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({ summary: 'API para obtener el listado de niveles' })

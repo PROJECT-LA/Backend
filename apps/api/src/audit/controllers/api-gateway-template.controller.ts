@@ -1,4 +1,5 @@
 import {
+  AUDIT_SERVICE,
   CreateTemplateDto,
   FilterTemplateDto,
   ParamIdDto,
@@ -32,7 +33,7 @@ import { CasbinGuard, JwtAuthGuard } from '../../guards'
 @Controller('templates')
 export class ApiGatewayTemplateController {
   constructor(
-    @Inject('AUDIT_SERVICE') private readonly auditService: ClientProxy,
+    @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({ summary: 'API para obtener el listado de plantillas' })
