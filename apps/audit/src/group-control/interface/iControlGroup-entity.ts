@@ -1,8 +1,8 @@
 export interface IControlGroup {
-  objectiveControl: string
+  objective: string
   objectiveDescription: string
   objectiveCode: string
-  groupControl: string
+  group: string
   groupDescription: string
   groupCode: string
 }

@@ -14,13 +14,13 @@ import { ControlGroup } from './control-group.entity'
 @Check(UtilService.buildStatusCheck(STATUS))
 export class Control extends BaseEntity implements IControl {
   @Column({ length: 200, type: 'varchar' })
-  eControl: string
+  name: string
 
   @Column({ length: 200, type: 'varchar' })
-  eDescription: string
+  description: string
 
   @Column({ length: 5, type: 'varchar' })
-  eCode: string
+  code: string
 
   @Column({ name: 'id_control_group' })
   idControlGroup: string

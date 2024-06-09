@@ -1,5 +1,5 @@
 export interface IControl {
-  eControl: string
-  eDescription: string
-  eCode: string
+  name: string
+  description: string
+  code: string
 }

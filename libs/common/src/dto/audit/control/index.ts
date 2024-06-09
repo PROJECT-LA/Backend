@@ -1,3 +1,3 @@
-export { CreateControlDto } from './create-control.dto'
-export { UpdateControlDto } from './update-control.dto'
-export { FilterControlDto } from './filter-control.dto'
+export * from './create-control.dto'
+export * from './update-control.dto'
+export * from './filter-control.dto'

@@ -2,18 +2,21 @@ import { IsNotEmpty, MaxLength } from '../../../validation'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UpdateControlDto {
-  @ApiProperty({ example: 'ECONTROL' })
+  @ApiProperty({ example: 'Seguridad de Respaldos' })
   @IsNotEmpty()
   @MaxLength(200)
-  eControl: string
+  name: string
 
-  @ApiProperty({ example: 'ECONTROL-DESCRIPTION' })
+  @ApiProperty({
+    example:
+      'El sistema posee los mecanismos para garantizar la seguridad en lso repsoalds de infromacion',
+  })
   @IsNotEmpty()
   @MaxLength(200)
-  eDescription: string
+  description: string
 
-  @ApiProperty({ example: 'E-123' })
+  @ApiProperty({ example: 'SR-1' })
   @IsNotEmpty()
   @MaxLength(5)
-  eCode: string
+  code: string
 }

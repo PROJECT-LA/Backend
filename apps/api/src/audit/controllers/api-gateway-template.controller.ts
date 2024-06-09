@@ -29,7 +29,7 @@ import { CasbinGuard, JwtAuthGuard } from '../../guards'
 
 @ApiTags('Templates')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, CasbinGuard)
+//@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('templates')
 export class ApiGatewayTemplateController {
   constructor(

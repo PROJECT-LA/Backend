@@ -16,7 +16,7 @@ import { Control } from './control.entity'
 @Check(UtilService.buildStatusCheck(STATUS))
 export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ length: 200, type: 'varchar' })
-  objectiveControl: string
+  objective: string
 
   @Column({ length: 200, type: 'varchar' })
   objectiveDescription: string
@@ -25,7 +25,7 @@ export class ControlGroup extends BaseEntity implements IControlGroup {
   objectiveCode: string
 
   @Column({ length: 200, type: 'varchar' })
-  groupControl: string
+  group: string
 
   @Column({ length: 200, type: 'varchar' })
   groupDescription: string

@@ -22,35 +22,38 @@ export class ControlGroupRepository
     const { limit, skip, filter, idTemplate } = filterDto
     console.log(filterDto)
     const query = this.control
-      .createQueryBuilder('control_group')
-      .leftJoinAndSelect('control_group.controls', 'controls')
+      .createQueryBuilder('controlGroup')
+      .leftJoinAndSelect('controlGroup.controls', 'controls')
       .select([
-        'control_group.id',
-        'control_group.objectiveControl',
-        'control_group.objectiveDescription',
-        'control_group.objectiveCode',
-        'control_group.groupControl',
-        'control_group.groupDescription',
-        'control_group.groupCode',
-        'control_group.status',
+        'controlGroup.id',
+        'controlGroup.objective',
+        'controlGroup.objectiveDescription',
+        'controlGroup.objectiveCode',
+        'controlGroup.group',
+        'controlGroup.groupDescription',
+        'controlGroup.groupCode',
+        'controlGroup.status',
         'controls.eCode',
         'controls.eDescription',
         'controls.eControl',
       ])
-      .where('control_group.idTemplate = :idTemplate', { idTemplate })
+      .where('controlGroup.idTemplate = :idTemplate', { idTemplate })
       .take(limit)
       .skip(skip)
 
     if (filter) {
       query.andWhere(
         new Brackets((qb) => {
-          qb.orWhere('control_group.objectiveControl like :filter', {
+          qb.orWhere('controlGroup.objective like :filter', {
             filter: `%${filter}%`,
           })
-          qb.orWhere('control_group.objectiveDescription like :filter', {
+          qb.orWhere('controlGroup.group like :filter', {
             filter: `%${filter}%`,
           })
-          qb.orWhere('control_group.groupDescription like :filter', {
+          qb.orWhere('controlGroup.groupDescription like :filter', {
+            filter: `%${filter}%`,
+          })
+          qb.orWhere('controlGroup.objectiveDescription like :filter', {
             filter: `%${filter}%`,
           })
         }),
