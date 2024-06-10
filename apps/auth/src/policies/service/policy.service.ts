@@ -223,9 +223,15 @@ export class PolicyService {
       status: item[4],
     }))
 
-    return result.filter(
+    const routes = result.filter(
       (policie) =>
         policie.app === APP.FRONTEND && policie.status === STATUS.ACTIVE,
     )
+
+    return routes.map(({ subject, object, action }) => ({
+      subject,
+      object,
+      action,
+    }))
   }
 }
