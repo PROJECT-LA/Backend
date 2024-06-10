@@ -3,10 +3,10 @@ import { Injectable } from '@nestjs/common'
 import { BaseRepository, FilterControlDto } from '@app/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Control } from '../entities'
-import { IControlRepository } from '../../group-control/interface'
+import { IControlRepository } from '../interface'
 
 @Injectable()
-export class ControlGroupRepository
+export class ControlRepository
   extends BaseRepository<Control>
   implements IControlRepository
 {

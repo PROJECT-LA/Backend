@@ -11,7 +11,7 @@ import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { ControlService } from '../service'
 
 @Controller('controls')
-export class ControlGroupController extends BaseController {
+export class ControlController extends BaseController {
   constructor(
     private controlService: ControlService,
     @Inject('SharedServiceInterface')
@@ -34,10 +34,10 @@ export class ControlGroupController extends BaseController {
   @MessagePattern({ cmd: 'create-control' })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { createControDto }: { createControDto: CreateControlDto },
+    @Payload() { createControlDto }: { createControlDto: CreateControlDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.create(createControDto)
+    const result = await this.controlService.create(createControlDto)
     return this.successCreate(result)
   }
 

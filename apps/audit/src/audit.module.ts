@@ -20,7 +20,11 @@ import { LevelService } from './level/service'
 import { ControlGroupController } from './group-control/controller'
 import { ControlGroupRepository } from './group-control/repository'
 import { ControlGroupService } from './group-control/service'
-import { Control, ControlGroup } from './group-control/entities'
+import { ControlGroup } from './group-control/entities'
+import { Control } from './control/entities'
+import { ControlController } from './control/controller'
+import { ControlRepository } from './control/repository'
+import { ControlService } from './control/service'
 
 @Module({
   imports: [
@@ -43,6 +47,7 @@ import { Control, ControlGroup } from './group-control/entities'
     TemplateController,
     LevelController,
     ControlGroupController,
+    ControlController,
   ],
   providers: [
     AuditService,
@@ -63,6 +68,10 @@ import { Control, ControlGroup } from './group-control/entities'
       useClass: ControlGroupRepository,
     },
     {
+      provide: 'IControlRepository',
+      useClass: ControlRepository,
+    },
+    {
       provide: 'ILevelRepository',
       useClass: LevelRepository,
     },
@@ -70,6 +79,7 @@ import { Control, ControlGroup } from './group-control/entities'
     TemplateService,
     ControlGroupService,
     LevelService,
+    ControlService,
   ],
 })
 export class AuditModule {}

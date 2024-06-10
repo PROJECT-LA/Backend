@@ -26,9 +26,9 @@ import {
 } from '@nestjs/swagger'
 
 @ApiBearerAuth()
-@ApiTags('Controls')
-@Controller('controls')
-export class ApiGayewayControlGroupController {
+@ApiTags('Controls Groups')
+@Controller('control-groups')
+export class ApiGatewayControlGroupController {
   constructor(
     @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
@@ -53,7 +53,7 @@ export class ApiGayewayControlGroupController {
   @Post()
   async create(@Body() controlGroupDto: CreateControlGroupDto) {
     const result = this.auditService.send(
-      { cmd: 'create-control' },
+      { cmd: 'create-control-group' },
       { controlGroupDto },
     )
     return result
@@ -83,7 +83,7 @@ export class ApiGayewayControlGroupController {
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch('/:id/change-status-control-group')
+  @Patch(':id/change-status-control-group')
   async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService.send(
       { cmd: 'change-status-control-group' },

@@ -33,9 +33,9 @@ export class ControlGroupRepository
         'controlGroup.groupDescription',
         'controlGroup.groupCode',
         'controlGroup.status',
-        'controls.eCode',
-        'controls.eDescription',
-        'controls.eControl',
+        'controls.name',
+        'controls.description',
+        'controls.code',
       ])
       .where('controlGroup.idTemplate = :idTemplate', { idTemplate })
       .take(limit)

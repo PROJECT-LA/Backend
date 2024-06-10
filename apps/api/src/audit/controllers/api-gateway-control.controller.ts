@@ -1,4 +1,4 @@
-/* import { ParamIdDto } from '@app/common'
+import { AUDIT_SERVICE, ParamIdDto } from '@app/common'
 import {
   CreateControlDto,
   FilterControlDto,
@@ -16,25 +16,28 @@ import {
   Query,
 } from '@nestjs/common'
 import { ClientProxy } from '@nestjs/microservices'
-import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger'
 
+@ApiBearerAuth()
 @ApiTags('Controls')
 @Controller('controls')
-export class ProxyControlController {
+export class ApiGatewayControlController {
   constructor(
     @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
   @ApiOperation({
-    summary: 'API para obtener el listado de controles de una plantilla',
+    summary: 'API para obtener el listado de controles de un grupo de control',
   })
   @Get()
-  async list(@Query() paginationQueryDto: FilterControlDto) {
-    console.log(paginationQueryDto)
-    const result = this.auditService.send(
-      { cmd: 'get-controls' },
-      { paginationQueryDto },
-    )
+  async list(@Query() filter: FilterControlDto) {
+    const result = this.auditService.send({ cmd: 'get-controls' }, { filter })
     return result
   }
 
@@ -45,10 +48,10 @@ export class ProxyControlController {
     required: true,
   })
   @Post()
-  async create(@Body() controlDto: CreateControlDto) {
+  async create(@Body() createControlDto: CreateControlDto) {
     const result = this.auditService.send(
       { cmd: 'create-control' },
-      { controlDto },
+      { createControlDto },
     )
     return result
   }
@@ -64,13 +67,12 @@ export class ProxyControlController {
   })
   @Patch(':id')
   async update(
-    @Param() params: ParamIdDto,
-    @Body() controlDto: UpdateControlDto,
+    @Param() param: ParamIdDto,
+    @Body() updateControlDto: UpdateControlDto,
   ) {
-    const { id } = params
     const result = this.auditService.send(
       { cmd: 'update-control' },
-      { id, controlDto },
+      { param, updateControlDto },
     )
     return result
   }
@@ -79,12 +81,11 @@ export class ProxyControlController {
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch('/:id/change-status')
-  async changeStatus(@Param() params: ParamIdDto) {
-    const { id: id } = params
+  @Patch(':id/change-status')
+  async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService.send(
       { cmd: 'change-status-control' },
-      { id },
+      { param },
     )
     return result
   }
@@ -94,10 +95,8 @@ export class ProxyControlController {
     type: ParamIdDto,
   })
   @Delete(':id')
-  async delete(@Param() params: ParamIdDto) {
-    const { id } = params
-    const result = this.auditService.send({ cmd: 'delete-control' }, { id })
+  async delete(@Param() param: ParamIdDto) {
+    const result = this.auditService.send({ cmd: 'delete-control' }, { param })
     return result
   }
 }
- */

@@ -10,7 +10,7 @@ import {
 } from 'typeorm'
 import { IControlGroup } from '../interface'
 import { Template } from '../../template/entities'
-import { Control } from './control.entity'
+import { Control } from '../../control/entities'
 
 @Entity('control_groups')
 @Check(UtilService.buildStatusCheck(STATUS))
