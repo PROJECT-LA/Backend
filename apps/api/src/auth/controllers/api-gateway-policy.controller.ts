@@ -1,11 +1,18 @@
 import {
   AUTH_SERVICE,
+  CHANGE_STATUS_POLICY,
+  CREATE_POLICY,
   CreatePolicyDto,
   CurrentUser,
   FilterPoliciesDto,
+  GET_POLICIES,
+  GET_POLICIES_ROLE_FRONTEND,
+  GET_ROUTE_POLICY,
   ParamIdDto,
   PassportUser,
+  REMOVE_POLICY,
   RouteDto,
+  UPDATE_POLICY,
 } from '@app/common'
 import {
   Body,
@@ -34,6 +41,19 @@ export class ApiGatewayPolicyController {
     @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,
   ) {}
 
+  @ApiOperation({ summary: 'API para obtener el listado de politicas' })
+  @Get()
+  async getPolicies(@Query() filter: FilterPoliciesDto) {
+    const result = this.authService
+      .send({ cmd: GET_POLICIES }, { filter })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+    return result
+  }
+
   @ApiOperation({ summary: 'API para crear una nueva política' })
   @ApiBody({
     type: CreatePolicyDto,
@@ -43,7 +63,7 @@ export class ApiGatewayPolicyController {
   @Post()
   async createPolicy(@Body() policy: CreatePolicyDto) {
     const result = this.authService
-      .send({ cmd: 'create-policy' }, { policy })
+      .send({ cmd: CREATE_POLICY }, { policy })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -64,20 +84,7 @@ export class ApiGatewayPolicyController {
     @Query() oldPolicy: CreatePolicyDto,
   ) {
     const result = this.authService
-      .send({ cmd: 'update-policy' }, { oldPolicy, newPolicy })
-      .pipe(
-        catchError((error) =>
-          throwError(() => new RpcException(error.response)),
-        ),
-      )
-    return result
-  }
-
-  @ApiOperation({ summary: 'API para obtener el listado de politicas' })
-  @Get()
-  async getPolicies(@Query() filter: FilterPoliciesDto) {
-    const result = this.authService
-      .send({ cmd: 'get-policies' }, { filter })
+      .send({ cmd: UPDATE_POLICY }, { oldPolicy, newPolicy })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -90,7 +97,7 @@ export class ApiGatewayPolicyController {
   @Delete()
   async eliminarPolitica(@Query() query: CreatePolicyDto) {
     const result = this.authService
-      .send({ cmd: 'remove-policy' }, { query })
+      .send({ cmd: REMOVE_POLICY }, { query })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -108,7 +115,7 @@ export class ApiGatewayPolicyController {
     @CurrentUser() user: PassportUser,
   ) {
     const result = this.authService
-      .send({ cmd: 'get-route-policy' }, { routeDto, user })
+      .send({ cmd: GET_ROUTE_POLICY }, { routeDto, user })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -121,7 +128,7 @@ export class ApiGatewayPolicyController {
   @Patch('change-status')
   async changeStatusPolicy(@Body() policy: CreatePolicyDto) {
     const result = this.authService
-      .send({ cmd: 'change-status-policy' }, { policy })
+      .send({ cmd: CHANGE_STATUS_POLICY }, { policy })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -137,7 +144,7 @@ export class ApiGatewayPolicyController {
   @Get(':id/frontend')
   async getPoliciesByRoleFrontend(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: 'get-policies-role-frontend' }, { param })
+      .send({ cmd: GET_POLICIES_ROLE_FRONTEND }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

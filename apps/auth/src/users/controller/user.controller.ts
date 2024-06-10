@@ -8,6 +8,14 @@ import {
   BaseController,
   ParamIdDto,
   SharedService,
+  GET_USERS,
+  CREATE_USER,
+  GET_USER,
+  UPDATE_USER,
+  UPDATE_PROFILE,
+  REMOVE_USER,
+  CHANGE_STATUS_USER,
+  CHANGE_PASSWORD,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { UserService } from '../service'
@@ -21,7 +29,7 @@ export class UserController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-users' })
+  @MessagePattern({ cmd: GET_USERS })
   async getUsers(
     @Ctx() context: RmqContext,
     @Payload() { filter }: { filter: FilterUserDto },
@@ -31,7 +39,7 @@ export class UserController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: 'create-user' })
+  @MessagePattern({ cmd: CREATE_USER })
   async createUser(
     @Ctx() context: RmqContext,
     @Payload()
@@ -46,12 +54,12 @@ export class UserController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'get-user' })
+  @MessagePattern({ cmd: GET_USER })
   async getCurrentUser(@Payload() { param }: { param: ParamIdDto }) {
     return await this.usersService.getUserProfile(param.id)
   }
 
-  @MessagePattern({ cmd: 'update-user' })
+  @MessagePattern({ cmd: UPDATE_USER })
   async updateUser(
     @Ctx() context: RmqContext,
     @Payload()
@@ -74,7 +82,7 @@ export class UserController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'update-profile' })
+  @MessagePattern({ cmd: UPDATE_PROFILE })
   async updateProfile(
     @Ctx() context: RmqContext,
     @Payload()
@@ -97,7 +105,7 @@ export class UserController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'remove-user' })
+  @MessagePattern({ cmd: REMOVE_USER })
   removeUser(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -107,7 +115,7 @@ export class UserController extends BaseController {
     return this.successDelete(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-user' })
+  @MessagePattern({ cmd: CHANGE_STATUS_USER })
   async changeStatusUser(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -117,7 +125,7 @@ export class UserController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'change-password' })
+  @MessagePattern({ cmd: CHANGE_PASSWORD })
   async changePassword(
     @Ctx() context: RmqContext,
     @Payload()

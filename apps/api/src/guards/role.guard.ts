@@ -1,4 +1,4 @@
-import { AUTH_SERVICE } from '@app/common'
+import { AUTH_SERVICE, VERIFY_CASBIN } from '@app/common'
 import {
   CanActivate,
   ExecutionContext,
@@ -29,7 +29,7 @@ export class CasbinGuard implements CanActivate {
 
     const result = await this.authClient
       .send(
-        { cmd: 'casbin' },
+        { cmd: VERIFY_CASBIN },
         {
           idRole: user.idRole,
           resource,

@@ -19,6 +19,10 @@ import {
   AuthDto,
   CurrentUser,
   ChangeRoleDto,
+  LOGIN,
+  LOGOUT,
+  CHANGE_ROLE,
+  REFRESH_TOKEN,
 } from '@app/common'
 import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
@@ -41,7 +45,7 @@ export class ApiGatewayAuthController extends BaseController {
   @Post('login')
   async login(@Res() res: Response, @Body() authDto: AuthDto) {
     const result = await this.authService
-      .send({ cmd: 'login' }, { authDto })
+      .send({ cmd: LOGIN }, { authDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -76,7 +80,7 @@ export class ApiGatewayAuthController extends BaseController {
     const id = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (id === undefined) return res.sendStatus(401)
     await this.authService
-      .send({ cmd: 'logout' }, { id })
+      .send({ cmd: LOGOUT }, { id })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -100,7 +104,7 @@ export class ApiGatewayAuthController extends BaseController {
       req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (idRefreshToken === undefined) return res.sendStatus(401)
     const result = await this.authService
-      .send({ cmd: 'change-role' }, { user, roleDto, idRefreshToken })
+      .send({ cmd: CHANGE_ROLE }, { user, roleDto, idRefreshToken })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -134,7 +138,7 @@ export class ApiGatewayAuthController extends BaseController {
     if (!clientToken || !clientRft)
       throw new UnauthorizedException('Tokens Expirados')
     const result = await this.authService
-      .send({ cmd: 'refresh-token' }, { clientToken, clientRft })
+      .send({ cmd: REFRESH_TOKEN }, { clientToken, clientRft })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

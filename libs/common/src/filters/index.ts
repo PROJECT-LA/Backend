@@ -1,2 +1,2 @@
-export * from './file-upload'
+export * from './file-filter'
 export * from './rpc-exception'

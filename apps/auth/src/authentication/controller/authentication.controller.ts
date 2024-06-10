@@ -6,6 +6,11 @@ import {
   PassportUser,
   BaseController,
   SharedService,
+  VERIFY_CASBIN,
+  LOGIN,
+  VERIFY_TOKEN,
+  REFRESH_TOKEN,
+  CHANGE_ROLE,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
@@ -25,7 +30,7 @@ export class AuthenticationController extends BaseController {
     await this.authenticationService.deleteToken(id)
   }
 
-  @MessagePattern({ cmd: 'change-role' })
+  @MessagePattern({ cmd: CHANGE_ROLE })
   async changeRol(
     @Ctx() context: RmqContext,
     @Payload()
@@ -43,7 +48,7 @@ export class AuthenticationController extends BaseController {
     )
   }
 
-  @MessagePattern({ cmd: 'refresh-token' })
+  @MessagePattern({ cmd: REFRESH_TOKEN })
   async refreshToken(
     @Ctx() context: RmqContext,
     @Payload()
@@ -56,7 +61,7 @@ export class AuthenticationController extends BaseController {
     )
   }
 
-  @MessagePattern({ cmd: 'verify-jwt' })
+  @MessagePattern({ cmd: VERIFY_TOKEN })
   async validateToken(
     @Ctx() context: RmqContext,
     @Payload() { jwt }: { jwt: string },
@@ -65,7 +70,7 @@ export class AuthenticationController extends BaseController {
     return await this.authenticationService.validateToken(jwt)
   }
 
-  @MessagePattern({ cmd: 'login' })
+  @MessagePattern({ cmd: LOGIN })
   async Login(
     @Ctx() context: RmqContext,
     @Payload() { authDto }: { authDto: AuthDto },
@@ -74,7 +79,7 @@ export class AuthenticationController extends BaseController {
     return await this.authenticationService.validateCredentials(authDto)
   }
 
-  @MessagePattern({ cmd: 'casbin' })
+  @MessagePattern({ cmd: VERIFY_CASBIN })
   async validateRole(
     @Ctx() context: RmqContext,
     @Payload()

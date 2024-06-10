@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common'
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common'
 import {
   CreateRoleDto,
   FilterRoleDto,
@@ -50,7 +55,7 @@ export class RoleService {
     })
     if (role && (idRole === undefined || role.id !== idRole)) {
       throw new RpcException(
-        new NotFoundException('El nombre del rol ya se encuentra registrado'),
+        new ConflictException('El nombre del rol ya se encuentra registrado'),
       )
     }
   }

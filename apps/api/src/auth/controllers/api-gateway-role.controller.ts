@@ -13,9 +13,14 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
   AUTH_SERVICE,
+  CHANGE_STATUS_ROLE,
+  CREATE_ROLE,
   CreateRoleDto,
   FilterRoleDto,
+  GET_ROLES,
   ParamIdDto,
+  REMOVE_ROLE,
+  UPDATE_ROLE,
   UpdateRoleDto,
 } from '@app/common'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
@@ -35,7 +40,7 @@ export class ApiGatewayRoleController {
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
     const result = this.authService
-      .send({ cmd: 'create-role' }, { createRoleDto })
+      .send({ cmd: CREATE_ROLE }, { createRoleDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -48,7 +53,7 @@ export class ApiGatewayRoleController {
   @Get()
   async findAll(@Query() filter: FilterRoleDto) {
     const result = this.authService
-      .send({ cmd: 'get-roles' }, { filter })
+      .send({ cmd: GET_ROLES }, { filter })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -64,9 +69,8 @@ export class ApiGatewayRoleController {
     @Param() param: ParamIdDto,
     @Body() updateRoleDto: UpdateRoleDto,
   ) {
-    const { id } = param
     const result = this.authService
-      .send({ cmd: 'create-role' }, { id, updateRoleDto })
+      .send({ cmd: UPDATE_ROLE }, { param, updateRoleDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -78,9 +82,8 @@ export class ApiGatewayRoleController {
   @ApiOperation({ summary: 'API: para eliminar un rol' })
   @Delete(':id')
   async remove(@Param() param: ParamIdDto) {
-    const { id } = param
     const result = this.authService
-      .send({ cmd: 'remove-role' }, { id })
+      .send({ cmd: REMOVE_ROLE }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -92,9 +95,8 @@ export class ApiGatewayRoleController {
   @ApiOperation({ summary: 'API: para cambiar el estado de un rol' })
   @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
-    const { id } = param
     const result = this.authService
-      .send({ cmd: 'change-status-role' }, { id })
+      .send({ cmd: CHANGE_STATUS_ROLE }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
