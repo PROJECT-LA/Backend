@@ -8,6 +8,7 @@ import {
   STATUS,
 } from '@app/common'
 import { IRoleRepository } from '../../roles/interface'
+import { RpcException } from '@nestjs/microservices'
 
 type politicasResultType = [Array<CreatePolicyDto>, number]
 
@@ -188,7 +189,9 @@ export class PolicyService {
         politic.app === policie.app,
     )
     if (!exists) {
-      throw new NotFoundException('No se encontro la politica')
+      throw new RpcException(
+        new NotFoundException('No se encontro la politica'),
+      )
     }
     return exists
   }

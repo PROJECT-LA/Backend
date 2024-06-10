@@ -95,9 +95,9 @@ export class ApiGatewayPolicyController {
 
   @ApiOperation({ summary: 'API para eliminar una política' })
   @Delete()
-  async eliminarPolitica(@Query() query: CreatePolicyDto) {
+  async eliminarPolitica(@Query() policy: CreatePolicyDto) {
     const result = this.authService
-      .send({ cmd: REMOVE_POLICY }, { query })
+      .send({ cmd: REMOVE_POLICY }, { policy })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
