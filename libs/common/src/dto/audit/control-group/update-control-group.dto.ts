@@ -2,12 +2,15 @@ import { IsNotEmpty, MaxLength } from '../../../validation'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UpdateControlGroupDto {
-  @ApiProperty({ example: 'OCONTROL' })
+  @ApiProperty({ example: 'GARANTIZAR RESPALDO DE INFORMACION' })
   @IsNotEmpty()
   @MaxLength(200)
-  objectiveControl: string
+  objective: string
 
-  @ApiProperty({ example: 'OCONTROL-DESCRIPTION' })
+  @ApiProperty({
+    example:
+      'CONTROLES PARA GARANTIZAR LA SEGURIDAD EN LOS RESPALDOS DE INFORMACION',
+  })
   @IsNotEmpty()
   @MaxLength(200)
   objectiveDescription: string
@@ -17,14 +20,16 @@ export class UpdateControlGroupDto {
   @MaxLength(5)
   objectiveCode: string
 
-  @ApiProperty({ example: 'GCONTROL' })
+  @ApiProperty({ example: 'RESPALDOS DE INFORMACION' })
   @IsNotEmpty()
   @MaxLength(200)
-  groupControl: string
+  group: string
 
-  @ApiProperty({ example: 'GCONTROL-DESCRIPTION' })
+  @ApiProperty({
+    example:
+      'LOS CONTROLES DE RESPALDOS DE INFROMACION TIENE COMO FINALIDAD EL MEDIR EL NIVEL GENERAL EN LOS ACCESO A INFROMACION DE REPALDO',
+  })
   @IsNotEmpty()
-  @MaxLength(200)
   groupDescription: string
 
   @ApiProperty({ example: 'G-123' })

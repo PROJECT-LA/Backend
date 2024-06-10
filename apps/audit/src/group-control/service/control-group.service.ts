@@ -6,6 +6,7 @@ import {
   UpdateControlGroupDto,
 } from '@app/common'
 import { ControlGroupRepositoryInterface } from '../interface'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class ControlGroupService {
@@ -18,7 +19,8 @@ export class ControlGroupService {
     const control = await this.controlRepository.findOneByCondition({
       where: { id },
     })
-    if (!control) throw new NotFoundException('Control no encontrado')
+    if (!control)
+      throw new RpcException(new NotFoundException('Control no encontrado'))
     return control
   }
 
@@ -43,12 +45,10 @@ export class ControlGroupService {
   }
 
   async changeStatus(id: string) {
-    const module = await this.controlRepository.findOneByCondition({
-      where: { id },
-    })
-    module.status =
-      module.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
+    const controlGroup = await this.getControlById(id)
+    controlGroup.status =
+      controlGroup.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
 
-    return await this.controlRepository.save(module)
+    return await this.controlRepository.update(id, controlGroup)
   }
 }

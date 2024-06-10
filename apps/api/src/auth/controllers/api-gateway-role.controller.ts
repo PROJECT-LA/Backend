@@ -43,6 +43,7 @@ export class ApiGatewayRoleController {
       )
     return result
   }
+
   @ApiOperation({ summary: 'API: para obtener el listado de roles' })
   @Get()
   async findAll(@Query() filter: FilterRoleDto) {

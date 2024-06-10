@@ -39,7 +39,7 @@ import { catchError, throwError } from 'rxjs'
 @ApiTags('Users')
 @ApiBearerAuth()
 @Controller('users')
-@UseGuards(JwtAuthGuard, CasbinGuard)
+//@UseGuards(JwtAuthGuard, CasbinGuard)
 export class ApiGatewayUserController {
   constructor(
     @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,

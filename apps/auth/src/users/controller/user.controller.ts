@@ -40,6 +40,7 @@ export class UserController extends BaseController {
       image,
     }: { createUserDto: CreateUserDto; image: Express.Multer.File },
   ) {
+    console.log(image)
     this.sharedService.acknowledgeMessage(context)
     const result = await this.usersService.create(createUserDto, image)
     return this.successCreate(result)

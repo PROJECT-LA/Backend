@@ -31,7 +31,7 @@ export class ControlGroupController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: 'create-control' })
+  @MessagePattern({ cmd: 'create-control-group' })
   async create(
     @Ctx() context: RmqContext,
     @Payload() { controlGroupDto }: { controlGroupDto: CreateControlGroupDto },
