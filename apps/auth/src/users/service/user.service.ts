@@ -18,7 +18,6 @@ import { IUserRepository } from '../interface'
 import { In } from 'typeorm'
 import { IRoleRepository } from '../../roles/interface'
 import { RpcException } from '@nestjs/microservices'
-import { lastValueFrom, timeout } from 'rxjs'
 import { ExternalFileService } from '../../healtcheck/service/fileCheckService'
 
 @Injectable()
@@ -129,6 +128,18 @@ export class UserService {
     return await this.usersRepository.update(id, updateUser)
   }
 
+  /*   async updateImage(id: string, image: Express.Multer.File) {
+    const user = await this.getUserProfile(id)
+    if (user.image) {
+      await this.externalFileService.deleteImage(user.image)
+    }
+    const imageRoute = await this.externalFileService.writteImage(image, user.ci)
+    if (imageRoute) {
+      await this.usersRepository.update(id, { image: imageRoute })
+    }
+    return id
+  } */
+
   async updatePassword(id: string, changePaswwordDto: ChangePaswwordDto) {
     const { newPassword, password } = changePaswwordDto
     const user = await this.usersRepository.findOneByCondition({
@@ -172,11 +183,10 @@ export class UserService {
         names: true,
         lastNames: true,
         email: true,
+        username: true,
+        phone: true,
         ci: true,
         address: true,
-        phone: true,
-        username: true,
-        status: true,
         image: true,
       },
     })

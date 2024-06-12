@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common'
-import { AuditController } from './audit.controller'
-import { AuditService } from './audit.service'
 import { ConfigModule } from '@nestjs/config'
 import { SharedModule, SharedService } from '@app/common'
 import { ParameterController } from './parameter/controller'
@@ -42,7 +40,6 @@ import { ControlService } from './control/service'
     ]),
   ],
   controllers: [
-    AuditController,
     ParameterController,
     TemplateController,
     LevelController,
@@ -50,7 +47,6 @@ import { ControlService } from './control/service'
     ControlController,
   ],
   providers: [
-    AuditService,
     {
       provide: 'SharedServiceInterface',
       useClass: SharedService,

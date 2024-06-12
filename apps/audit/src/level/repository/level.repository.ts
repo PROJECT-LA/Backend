@@ -26,6 +26,7 @@ export class LevelRepository
         'maturity_level.id',
         'maturity_level.level',
         'maturity_level.description',
+        'maturity_level.status',
       ])
       .take(limit)
       .skip(skip)

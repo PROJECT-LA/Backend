@@ -7,20 +7,17 @@ import {
   TextService,
   AuthDto,
   UserPayload,
-  FILE_SERVICE,
 } from '@app/common'
 import { Cron } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
-import dotenv from 'dotenv'
 import { IModuleRepository } from '../../modules/interfaces'
 import { User } from '../../users/entities'
-import { ClientProxy, RpcException } from '@nestjs/microservices'
-import { lastValueFrom, timeout } from 'rxjs'
+import { RpcException } from '@nestjs/microservices'
 import { IUserRepository } from '../../users/interface'
 import { Enforcer } from 'casbin'
 import { AUTHZ_ENFORCER } from 'nest-authz'
+import { ExternalFileService } from '../../healtcheck/service/fileCheckService'
 
-dotenv.config()
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -33,8 +30,7 @@ export class AuthenticationService {
     @Inject('IModuleRepository')
     private readonly moduleRepository: IModuleRepository,
     @Inject(AUTHZ_ENFORCER) private enforcer: Enforcer,
-    @Inject(FILE_SERVICE)
-    private readonly fileService: ClientProxy,
+    private readonly externalFileService: ExternalFileService,
   ) {}
 
   async validateCredentials(authDto: AuthDto) {
@@ -144,11 +140,8 @@ export class AuthenticationService {
       sidebarData,
     }
     if (data.image) {
-      const result = this.fileService
-        .send({ cmd: 'get-avatar' }, { name: data.image })
-        .pipe(timeout(5000))
-      const imageFile = await lastValueFrom(result)
-      info.userData.image = imageFile
+      const result = this.externalFileService.getImage(data.image)
+      info.userData.image = result
     }
     return info
   }
