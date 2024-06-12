@@ -7,13 +7,7 @@ import {
   FilterPoliciesDto,
   RouteDto,
   ParamIdDto,
-  CREATE_POLICY,
-  UPDATE_POLICY,
-  GET_POLICIES,
-  REMOVE_POLICY,
-  GET_ROUTE_POLICY,
-  CHANGE_STATUS_POLICY,
-  GET_POLICIES_ROLE_FRONTEND,
+  PolicyMessages,
 } from '@app/common'
 import { PolicyService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
@@ -27,7 +21,7 @@ export class PolicyController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: CREATE_POLICY })
+  @MessagePattern({ cmd: PolicyMessages.CREATE_POLICY })
   async createPolicy(
     @Ctx() context: RmqContext,
     @Payload() { policy }: { policy: CreatePolicyDto },
@@ -37,7 +31,7 @@ export class PolicyController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: UPDATE_POLICY })
+  @MessagePattern({ cmd: PolicyMessages.UPDATE_POLICY })
   async updatePolicy(
     @Ctx() context: RmqContext,
     @Payload()
@@ -51,7 +45,7 @@ export class PolicyController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: GET_POLICIES })
+  @MessagePattern({ cmd: PolicyMessages.GET_POLICIES })
   async getPolicies(
     @Ctx() context: RmqContext,
     @Payload() { filter }: { filter: FilterPoliciesDto },
@@ -61,7 +55,7 @@ export class PolicyController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: REMOVE_POLICY })
+  @MessagePattern({ cmd: PolicyMessages.REMOVE_POLICY })
   async removePolicy(
     @Ctx() context: RmqContext,
     @Payload() { policy }: { policy: CreatePolicyDto },
@@ -71,7 +65,7 @@ export class PolicyController extends BaseController {
     return this.successDelete(result)
   }
 
-  @MessagePattern({ cmd: GET_ROUTE_POLICY })
+  @MessagePattern({ cmd: PolicyMessages.GET_ROUTE_POLICY })
   async getPoliciesByRoute(
     @Ctx() context: RmqContext,
     @Payload() { user, routeDto }: { routeDto: RouteDto; user: PassportUser },
@@ -84,7 +78,7 @@ export class PolicyController extends BaseController {
     return this.successList(result)
   }
 
-  @MessagePattern({ cmd: CHANGE_STATUS_POLICY })
+  @MessagePattern({ cmd: PolicyMessages.CHANGE_STATUS_POLICY })
   async changeStatusPolicy(
     @Ctx() context: RmqContext,
     @Payload() { policy }: { policy: CreatePolicyDto },
@@ -94,7 +88,7 @@ export class PolicyController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: GET_POLICIES_ROLE_FRONTEND })
+  @MessagePattern({ cmd: PolicyMessages.GET_POLICIES_ROLE_FRONTEND })
   async getPoliciesFrontenByRoute(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },

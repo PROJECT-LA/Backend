@@ -7,6 +7,7 @@ import {
   TextService,
   AuthDto,
   UserPayload,
+  FILE_SERVICE,
 } from '@app/common'
 import { Cron } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
@@ -32,7 +33,7 @@ export class AuthenticationService {
     @Inject('IModuleRepository')
     private readonly moduleRepository: IModuleRepository,
     @Inject(AUTHZ_ENFORCER) private enforcer: Enforcer,
-    @Inject('FILE_SERVICE')
+    @Inject(FILE_SERVICE)
     private readonly fileService: ClientProxy,
   ) {}
 
@@ -193,9 +194,7 @@ export class AuthenticationService {
   }
 
   async validateRole(idRole: string, rosource: string, action: string) {
-    const cal = await this.enforcer.enforce(idRole, rosource, action)
-    console.log(cal)
-    return cal
+    return await this.enforcer.enforce(idRole, rosource, action)
   }
 
   private __getCurrentRole(

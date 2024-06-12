@@ -30,14 +30,7 @@ import {
   imageFileFilter,
   AVATAR_UPLOAD_CONFIG,
   AUTH_SERVICE,
-  CREATE_USER,
-  GET_USERS,
-  GET_USER,
-  UPDATE_USER,
-  UPDATE_PROFILE,
-  REMOVE_USER,
-  CHANGE_STATUS_USER,
-  CHANGE_PASSWORD,
+  UserMessages,
 } from '@app/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
@@ -71,7 +64,7 @@ export class ApiGatewayUserController {
     @Body() createUserDto: CreateUserDto,
   ) {
     const result = this.authService
-      .send({ cmd: CREATE_USER }, { createUserDto, image })
+      .send({ cmd: UserMessages.CREATE_USER }, { createUserDto, image })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -84,7 +77,7 @@ export class ApiGatewayUserController {
   @Get()
   async findAll(@Query() filter: FilterUserDto) {
     const result = this.authService
-      .send({ cmd: GET_USERS }, { filter })
+      .send({ cmd: UserMessages.GET_USERS }, { filter })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -100,7 +93,7 @@ export class ApiGatewayUserController {
   @Get(':id')
   async getCurrentUser(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: GET_USER }, { param })
+      .send({ cmd: UserMessages.GET_USER }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -120,7 +113,7 @@ export class ApiGatewayUserController {
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const result = this.authService
-      .send({ cmd: UPDATE_USER }, { param, updateUserDto })
+      .send({ cmd: UserMessages.UPDATE_USER }, { param, updateUserDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -151,7 +144,10 @@ export class ApiGatewayUserController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     const result = this.authService
-      .send({ cmd: UPDATE_PROFILE }, { param, updateProfileDto, image })
+      .send(
+        { cmd: UserMessages.UPDATE_PROFILE },
+        { param, updateProfileDto, image },
+      )
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -164,7 +160,7 @@ export class ApiGatewayUserController {
   @Delete(':id')
   remove(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: REMOVE_USER }, { param })
+      .send({ cmd: UserMessages.REMOVE_USER }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -180,7 +176,7 @@ export class ApiGatewayUserController {
   @Patch('/:id/change-status')
   async activar(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: CHANGE_STATUS_USER }, { param })
+      .send({ cmd: UserMessages.CHANGE_STATUS_USER }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -200,7 +196,7 @@ export class ApiGatewayUserController {
     @Body() changePaswwordDto: ChangePaswwordDto,
   ) {
     const result = this.authService
-      .send({ cmd: CHANGE_PASSWORD }, { param, changePaswwordDto })
+      .send({ cmd: UserMessages.CHANGE_PASSWORD }, { param, changePaswwordDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

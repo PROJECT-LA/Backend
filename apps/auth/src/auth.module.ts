@@ -9,7 +9,7 @@ import { Role } from './roles/entities'
 import { RefreshToken } from './authentication/entities'
 import { ModuleEntity } from './modules/entities'
 import { CasbinModule } from './policies/config'
-import { SharedModule, SharedService } from '@app/common'
+import { FILE_SERVICE, SharedModule, SharedService } from '@app/common'
 import { ScheduleModule } from '@nestjs/schedule'
 import { RoleController } from './roles/controller'
 import { UserController } from './users/controller'
@@ -25,6 +25,8 @@ import { PolicyService } from './policies/service'
 import { PolicyController } from './policies/controller'
 import { AuthenticationController } from './authentication/controller'
 import { AuthenticationService } from './authentication/service'
+import { HealthCheckController } from './healtcheck/healthCheck.controller'
+import { ExternalFileService } from './healtcheck/service/fileCheckService'
 
 @Module({
   imports: [
@@ -44,8 +46,7 @@ import { AuthenticationService } from './authentication/service'
     }),
     PassportModule,
     CasbinModule,
-    SharedModule,
-    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
+    SharedModule.registerRmq(FILE_SERVICE, process.env.RABBITMQ_FILE_QUEUE),
   ],
   controllers: [
     UserController,
@@ -53,6 +54,7 @@ import { AuthenticationService } from './authentication/service'
     ModuleController,
     PolicyController,
     AuthenticationController,
+    HealthCheckController,
   ],
   providers: [
     ConfigService,
@@ -76,6 +78,7 @@ import { AuthenticationService } from './authentication/service'
     UserService,
     RoleService,
     ModuleService,
+    ExternalFileService,
     PolicyService,
     AuthenticationService,
   ],

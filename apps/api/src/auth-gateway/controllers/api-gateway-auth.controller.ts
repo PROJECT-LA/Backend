@@ -14,15 +14,11 @@ import {
   RefreshTokenCookieService,
   PassportUser,
   JwtCookieService,
-  BaseController,
   AUTH_SERVICE,
   AuthDto,
   CurrentUser,
   ChangeRoleDto,
-  LOGIN,
-  LOGOUT,
-  CHANGE_ROLE,
-  REFRESH_TOKEN,
+  AuthMessages,
 } from '@app/common'
 import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
@@ -32,20 +28,18 @@ import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Auth')
 @Controller('auth')
-export class ApiGatewayAuthController extends BaseController {
+export class ApiGatewayAuthController {
   constructor(
     @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,
     @Inject(ConfigService) private configService: ConfigService,
-  ) {
-    super()
-  }
+  ) {}
 
   @ApiOperation({ summary: 'API para autenticación con usuario y contraseña' })
   @ApiBody({ description: 'Autenticación de usuarios', type: AuthDto })
   @Post('login')
   async login(@Res() res: Response, @Body() authDto: AuthDto) {
     const result = await this.authService
-      .send({ cmd: LOGIN }, { authDto })
+      .send({ cmd: AuthMessages.LOGIN }, { authDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -80,7 +74,7 @@ export class ApiGatewayAuthController extends BaseController {
     const id = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (id === undefined) return res.sendStatus(401)
     await this.authService
-      .send({ cmd: LOGOUT }, { id })
+      .send({ cmd: AuthMessages.LOGOUT }, { id })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -104,7 +98,10 @@ export class ApiGatewayAuthController extends BaseController {
       req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (idRefreshToken === undefined) return res.sendStatus(401)
     const result = await this.authService
-      .send({ cmd: CHANGE_ROLE }, { user, roleDto, idRefreshToken })
+      .send(
+        { cmd: AuthMessages.CHANGE_ROLE },
+        { user, roleDto, idRefreshToken },
+      )
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -138,7 +135,7 @@ export class ApiGatewayAuthController extends BaseController {
     if (!clientToken || !clientRft)
       throw new UnauthorizedException('Tokens Expirados')
     const result = await this.authService
-      .send({ cmd: REFRESH_TOKEN }, { clientToken, clientRft })
+      .send({ cmd: AuthMessages.REFRESH_TOKEN }, { clientToken, clientRft })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

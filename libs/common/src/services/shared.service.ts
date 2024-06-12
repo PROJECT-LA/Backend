@@ -20,7 +20,7 @@ export class SharedService implements SharedServiceInterface {
         noAck: false,
         queue,
         queueOptions: {
-          durable: true,
+          durable: false,
         },
       },
     }

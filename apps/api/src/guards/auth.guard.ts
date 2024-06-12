@@ -8,7 +8,7 @@ import {
 import { Observable, throwError } from 'rxjs'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { catchError, map, tap } from 'rxjs/operators'
-import { AUTH_SERVICE, VERIFY_TOKEN } from '@app/common'
+import { AUTH_SERVICE, AuthMessages } from '@app/common'
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -29,12 +29,16 @@ export class JwtAuthGuard implements CanActivate {
       throw new ForbiddenException('No autorizado')
     }
 
-    return this.authClient.send({ cmd: VERIFY_TOKEN }, { jwt }).pipe(
-      tap((res) => {
-        request.user = res
-      }),
-      map(() => true),
-      catchError((error) => throwError(() => new RpcException(error.response))),
-    )
+    return this.authClient
+      .send({ cmd: AuthMessages.VERIFY_TOKEN }, { jwt })
+      .pipe(
+        tap((res) => {
+          request.user = res
+        }),
+        map(() => true),
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
   }
 }

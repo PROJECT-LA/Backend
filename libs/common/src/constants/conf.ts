@@ -31,8 +31,8 @@ export const AVATAR_UPLOAD_CONFIG = {
   FILE_PATH: process.env.AVATARS_PATH || 'uploads/avatars/',
 }
 
-export const AUTH_SERVICE = 'auth'
+export const AUTH_SERVICE = 'auth_service'
 
-export const FILE_SERVICE = 'file'
+export const FILE_SERVICE = 'file_service'
 
-export const AUDIT_SERVICE = 'audit'
+export const AUDIT_SERVICE = 'audit_service'

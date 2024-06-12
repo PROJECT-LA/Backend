@@ -22,12 +22,7 @@ import {
   UpdateModuleDto,
   ParamIdDto,
   AUTH_SERVICE,
-  GET_MODULES,
-  CREATE_MODULE,
-  UPDATE_MODULE,
-  REMOVE_MODULE,
-  CHANGE_STATUS_MODULE,
-  UPDATE_ORDER_MODULES,
+  ModuleMessages,
 } from '@app/common'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
@@ -48,7 +43,7 @@ export class ApiGatewayModuleController {
   @Get(':id')
   async list(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: GET_MODULES }, { param })
+      .send({ cmd: ModuleMessages.GET_MODULES }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -65,7 +60,7 @@ export class ApiGatewayModuleController {
   @Post()
   async create(@Body() createModuleDto: CreateModuleDto) {
     const result = this.authService
-      .send({ cmd: CREATE_MODULE }, { createModuleDto })
+      .send({ cmd: ModuleMessages.CREATE_MODULE }, { createModuleDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -88,7 +83,7 @@ export class ApiGatewayModuleController {
     @Body() updateModuleDto: UpdateModuleDto,
   ) {
     const result = this.authService
-      .send({ cmd: UPDATE_MODULE }, { param, updateModuleDto })
+      .send({ cmd: ModuleMessages.UPDATE_MODULE }, { param, updateModuleDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -104,7 +99,7 @@ export class ApiGatewayModuleController {
   @Delete(':id')
   async delete(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: REMOVE_MODULE }, { param })
+      .send({ cmd: ModuleMessages.REMOVE_MODULE }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -120,7 +115,7 @@ export class ApiGatewayModuleController {
   @Patch(':id/status')
   async changeStatus(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: CHANGE_STATUS_MODULE }, { param })
+      .send({ cmd: ModuleMessages.CHANGE_STATUS_MODULE }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -137,7 +132,7 @@ export class ApiGatewayModuleController {
   @Patch('change/order')
   async updateSidebar(@Body() orderDto: NewOrderDto) {
     const result = this.authService
-      .send({ cmd: UPDATE_ORDER_MODULES }, { orderDto })
+      .send({ cmd: ModuleMessages.UPDATE_ORDER_MODULES }, { orderDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

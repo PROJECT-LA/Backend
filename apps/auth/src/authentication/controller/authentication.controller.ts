@@ -6,11 +6,7 @@ import {
   PassportUser,
   BaseController,
   SharedService,
-  VERIFY_CASBIN,
-  LOGIN,
-  VERIFY_TOKEN,
-  REFRESH_TOKEN,
-  CHANGE_ROLE,
+  AuthMessages,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 
@@ -24,13 +20,13 @@ export class AuthenticationController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'logout' })
+  @MessagePattern({ cmd: AuthMessages.LOGOUT })
   async logout(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
     this.sharedService.acknowledgeMessage(context)
     await this.authenticationService.deleteToken(id)
   }
 
-  @MessagePattern({ cmd: CHANGE_ROLE })
+  @MessagePattern({ cmd: AuthMessages.CHANGE_ROLE })
   async changeRol(
     @Ctx() context: RmqContext,
     @Payload()
@@ -48,7 +44,7 @@ export class AuthenticationController extends BaseController {
     )
   }
 
-  @MessagePattern({ cmd: REFRESH_TOKEN })
+  @MessagePattern({ cmd: AuthMessages.REFRESH_TOKEN })
   async refreshToken(
     @Ctx() context: RmqContext,
     @Payload()
@@ -61,7 +57,7 @@ export class AuthenticationController extends BaseController {
     )
   }
 
-  @MessagePattern({ cmd: VERIFY_TOKEN })
+  @MessagePattern({ cmd: AuthMessages.VERIFY_TOKEN })
   async validateToken(
     @Ctx() context: RmqContext,
     @Payload() { jwt }: { jwt: string },
@@ -70,7 +66,7 @@ export class AuthenticationController extends BaseController {
     return await this.authenticationService.validateToken(jwt)
   }
 
-  @MessagePattern({ cmd: LOGIN })
+  @MessagePattern({ cmd: AuthMessages.LOGIN })
   async Login(
     @Ctx() context: RmqContext,
     @Payload() { authDto }: { authDto: AuthDto },
@@ -79,7 +75,7 @@ export class AuthenticationController extends BaseController {
     return await this.authenticationService.validateCredentials(authDto)
   }
 
-  @MessagePattern({ cmd: VERIFY_CASBIN })
+  @MessagePattern({ cmd: AuthMessages.VERIFY_CASBIN })
   async validateRole(
     @Ctx() context: RmqContext,
     @Payload()

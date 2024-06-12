@@ -29,7 +29,7 @@ export class SharedModule {
               urls: [`amqp://${USER}:${PASSWORD}@${HOST}`],
               queue,
               queueOptions: {
-                durable: true,
+                durable: false,
               },
             },
           })

@@ -6,11 +6,7 @@ import {
   BaseController,
   ParamIdDto,
   SharedService,
-  CHANGE_STATUS_ROLE,
-  REMOVE_ROLE,
-  UPDATE_ROLE,
-  GET_ROLES,
-  CREATE_ROLE,
+  RoleMessages,
 } from '@app/common'
 import { RoleService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
@@ -24,7 +20,7 @@ export class RoleController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: CREATE_ROLE })
+  @MessagePattern({ cmd: RoleMessages.CREATE_ROLE })
   async create(
     @Ctx() context: RmqContext,
     @Payload() { createRoleDto }: { createRoleDto: CreateRoleDto },
@@ -34,7 +30,7 @@ export class RoleController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: GET_ROLES })
+  @MessagePattern({ cmd: RoleMessages.GET_ROLES })
   async findAll(
     @Ctx() context: RmqContext,
     @Payload() { filter }: { filter: FilterRoleDto },
@@ -44,7 +40,7 @@ export class RoleController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: UPDATE_ROLE })
+  @MessagePattern({ cmd: RoleMessages.UPDATE_ROLE })
   async update(
     @Ctx() context: RmqContext,
     @Payload()
@@ -58,7 +54,7 @@ export class RoleController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: REMOVE_ROLE })
+  @MessagePattern({ cmd: RoleMessages.REMOVE_ROLE })
   async remove(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -68,7 +64,7 @@ export class RoleController extends BaseController {
     return this.successDelete(result)
   }
 
-  @MessagePattern({ cmd: CHANGE_STATUS_ROLE })
+  @MessagePattern({ cmd: RoleMessages.CHANGE_STATUS_ROLE })
   async changeStatus(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },

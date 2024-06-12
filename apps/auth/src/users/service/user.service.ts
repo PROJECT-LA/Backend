@@ -17,8 +17,9 @@ import {
 import { IUserRepository } from '../interface'
 import { In } from 'typeorm'
 import { IRoleRepository } from '../../roles/interface'
-import { ClientProxy, RpcException } from '@nestjs/microservices'
+import { RpcException } from '@nestjs/microservices'
 import { lastValueFrom, timeout } from 'rxjs'
+import { ExternalFileService } from '../../healtcheck/service/fileCheckService'
 
 @Injectable()
 export class UserService {
@@ -27,8 +28,7 @@ export class UserService {
     private readonly usersRepository: IUserRepository,
     @Inject('IRoleRepository')
     private readonly rolesRepository: IRoleRepository,
-    @Inject('FILE_SERVICE')
-    private readonly fileService: ClientProxy,
+    private readonly externalFileService: ExternalFileService,
   ) {}
 
   async list(paginationQueryDto: FilterUserDto) {
@@ -117,17 +117,14 @@ export class UserService {
       ci: updateUserDto.ci,
       address: updateUserDto.address,
     })
-    try {
-      if (image) {
-        const result = this.fileService.send(
-          { cmd: 'writte-avatar' },
-          { file: image, fileName: updateUser.ci },
-        )
-        const imageRoute = await lastValueFrom(result)
+    if (image) {
+      const imageRoute = await this.externalFileService.writteImage(
+        image,
+        updateUserDto.ci,
+      )
+      if (imageRoute) {
         updateUser.image = imageRoute
       }
-    } catch (error) {
-      throw new RpcException('Ocurrio un error al subir la imagen')
     }
     return await this.usersRepository.update(id, updateUser)
   }
@@ -185,11 +182,8 @@ export class UserService {
     })
     if (!user) throw new RpcException('Usuario no encontrado')
     if (user.image) {
-      const result = this.fileService
-        .send({ cmd: 'get-avatar' }, { name: user.image })
-        .pipe(timeout(5000))
-      const imageFile = await lastValueFrom(result)
-      user.image = imageFile
+      const result = await this.externalFileService.getImage(user.image)
+      user.image = result
     }
     return user
   }

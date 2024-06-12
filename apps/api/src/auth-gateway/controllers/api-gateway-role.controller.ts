@@ -13,15 +13,11 @@ import {
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
   AUTH_SERVICE,
-  CHANGE_STATUS_ROLE,
-  CREATE_ROLE,
   CreateRoleDto,
   FilterRoleDto,
-  GET_ROLES,
   ParamIdDto,
-  REMOVE_ROLE,
-  UPDATE_ROLE,
   UpdateRoleDto,
+  RoleMessages,
 } from '@app/common'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
@@ -40,7 +36,7 @@ export class ApiGatewayRoleController {
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
     const result = this.authService
-      .send({ cmd: CREATE_ROLE }, { createRoleDto })
+      .send({ cmd: RoleMessages.CREATE_ROLE }, { createRoleDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -53,7 +49,7 @@ export class ApiGatewayRoleController {
   @Get()
   async findAll(@Query() filter: FilterRoleDto) {
     const result = this.authService
-      .send({ cmd: GET_ROLES }, { filter })
+      .send({ cmd: RoleMessages.GET_ROLES }, { filter })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -70,7 +66,7 @@ export class ApiGatewayRoleController {
     @Body() updateRoleDto: UpdateRoleDto,
   ) {
     const result = this.authService
-      .send({ cmd: UPDATE_ROLE }, { param, updateRoleDto })
+      .send({ cmd: RoleMessages.UPDATE_ROLE }, { param, updateRoleDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -83,7 +79,7 @@ export class ApiGatewayRoleController {
   @Delete(':id')
   async remove(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: REMOVE_ROLE }, { param })
+      .send({ cmd: RoleMessages.REMOVE_ROLE }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -96,7 +92,7 @@ export class ApiGatewayRoleController {
   @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: CHANGE_STATUS_ROLE }, { param })
+      .send({ cmd: RoleMessages.CHANGE_STATUS_ROLE }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
