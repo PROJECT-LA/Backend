@@ -5,6 +5,7 @@ import {
   FilterTemplateDto,
   ParamIdDto,
   SharedService,
+  TemplateMessages,
   UpdateTemplateDto,
 } from '@app/common'
 import { TemplateService } from '../service'
@@ -20,7 +21,7 @@ export class TemplateController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-templates' })
+  @MessagePattern({ cmd: TemplateMessages.GET_TEMPLATES })
   async list(
     @Ctx() context: RmqContext,
     @Payload()
@@ -31,7 +32,7 @@ export class TemplateController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: 'create-template' })
+  @MessagePattern({ cmd: TemplateMessages.CREATE_TEMPLATE })
   async create(
     @Ctx() context: RmqContext,
     @Payload() { createTemplateDto }: { createTemplateDto: CreateTemplateDto },
@@ -41,7 +42,7 @@ export class TemplateController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'update-template' })
+  @MessagePattern({ cmd: TemplateMessages.UPDATE_TEMPLATE })
   async update(
     @Ctx() context: RmqContext,
     @Payload()
@@ -58,7 +59,7 @@ export class TemplateController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-template' })
+  @MessagePattern({ cmd: TemplateMessages.CHANGE_STATUS_TEMPLATE })
   async changeStatus(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -68,7 +69,7 @@ export class TemplateController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'remove-template' })
+  @MessagePattern({ cmd: TemplateMessages.REMOVE_TEMPLATE })
   async delete(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },

@@ -1,4 +1,4 @@
-import { AUDIT_SERVICE, ParamIdDto } from '@app/common'
+import { AUDIT_SERVICE, LevelMessages, ParamIdDto } from '@app/common'
 import {
   CreateLevelDto,
   FilterLevelDto,
@@ -16,7 +16,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import {
   ApiBearerAuth,
   ApiBody,
@@ -25,6 +25,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
+import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Levels')
 @ApiBearerAuth()
@@ -49,10 +50,13 @@ export class ApiGatewayLevelController {
   })
   @Post()
   async create(@Body() createLevelDto: CreateLevelDto) {
-    const result = this.auditService.send(
-      { cmd: 'create-level' },
-      { createLevelDto },
-    )
+    const result = this.auditService
+      .send({ cmd: LevelMessages.CREATE_LEVEL }, { createLevelDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -62,15 +66,18 @@ export class ApiGatewayLevelController {
   })
   @ApiBody({
     type: UpdateLevelDto,
-    description: 'Update template',
     required: true,
   })
   @Patch(':id')
   async update(@Param() param: ParamIdDto, @Body() levelDto: UpdateLevelDto) {
-    const result = this.auditService.send(
-      { cmd: 'update-level' },
-      { param, levelDto },
-    )
+    const result = this.auditService
+      .send({ cmd: LevelMessages.UPDATE_LEVEL }, { param, levelDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+
     return result
   }
 
@@ -80,10 +87,13 @@ export class ApiGatewayLevelController {
   })
   @Patch('/:id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
-    const result = this.auditService.send(
-      { cmd: 'change-status-level' },
-      { param },
-    )
+    const result = this.auditService
+      .send({ cmd: LevelMessages.CHANGE_STATUS_LEVEL }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -93,7 +103,10 @@ export class ApiGatewayLevelController {
   })
   @Delete(':id')
   async delete(@Param() param: ParamIdDto) {
-    const result = this.auditService.send({ cmd: 'remove-level' }, { param })
+    const result = this.auditService.send(
+      { cmd: LevelMessages.CHANGE_STATUS_LEVEL },
+      { param },
+    )
     return result
   }
 }

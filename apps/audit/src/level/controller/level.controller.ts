@@ -1,5 +1,10 @@
 import { Controller, Delete, Inject } from '@nestjs/common'
-import { BaseController, ParamIdDto, SharedService } from '@app/common'
+import {
+  BaseController,
+  LevelMessages,
+  ParamIdDto,
+  SharedService,
+} from '@app/common'
 import { LevelService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import {
@@ -18,7 +23,7 @@ export class LevelController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-levels' })
+  @MessagePattern({ cmd: LevelMessages.GET_LEVELS })
   async list(
     @Ctx() context: RmqContext,
     @Payload()
@@ -29,7 +34,7 @@ export class LevelController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: 'create-level' })
+  @MessagePattern({ cmd: LevelMessages.CREATE_LEVEL })
   async create(
     @Ctx() context: RmqContext,
     @Payload() { createLevelDto }: { createLevelDto: CreateLevelDto },
@@ -39,7 +44,7 @@ export class LevelController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'update-level' })
+  @MessagePattern({ cmd: LevelMessages.UPDATE_LEVEL })
   async update(
     @Ctx() context: RmqContext,
     @Payload()
@@ -50,7 +55,7 @@ export class LevelController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-level' })
+  @MessagePattern({ cmd: LevelMessages.CHANGE_STATUS_LEVEL })
   async changeStatus(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -60,7 +65,7 @@ export class LevelController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'remove-level' })
+  @MessagePattern({ cmd: LevelMessages.REMOVE_LEVEL })
   @Delete(':id')
   async delete(
     @Ctx() context: RmqContext,

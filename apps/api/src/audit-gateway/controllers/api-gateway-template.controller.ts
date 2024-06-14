@@ -2,7 +2,9 @@ import {
   AUDIT_SERVICE,
   CreateTemplateDto,
   FilterTemplateDto,
+  LevelMessages,
   ParamIdDto,
+  TemplateMessages,
   UpdateTemplateDto,
 } from '@app/common'
 import {
@@ -17,7 +19,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import {
   ApiBearerAuth,
   ApiBody,
@@ -26,10 +28,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger'
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
+import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Templates')
 @ApiBearerAuth()
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('templates')
 export class ApiGatewayTemplateController {
   constructor(
@@ -39,31 +42,39 @@ export class ApiGatewayTemplateController {
   @ApiOperation({ summary: 'API para obtener el listado de plantillas' })
   @Get()
   async list(@Query() filter: FilterTemplateDto) {
-    const result = this.auditService.send({ cmd: 'get-templates' }, { filter })
+    const result = this.auditService
+      .send({ cmd: TemplateMessages.GET_TEMPLATES }, { filter })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
-  @ApiOperation({ summary: 'API para crear un nuevo plantillas' })
+  @ApiOperation({ summary: 'API para crear una nueva plantilla' })
   @ApiBody({
     type: CreateTemplateDto,
     required: true,
   })
   @Post()
   async create(@Body() createTemplateDto: CreateTemplateDto) {
-    const result = this.auditService.send(
-      { cmd: 'create-template' },
-      { createTemplateDto },
-    )
+    const result = this.auditService
+      .send({ cmd: TemplateMessages.CREATE_TEMPLATE }, { createTemplateDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
-  @ApiOperation({ summary: 'API para actualizar un plantillas' })
+  @ApiOperation({ summary: 'API para actualizar un plantilla' })
   @ApiProperty({
     type: ParamIdDto,
   })
   @ApiBody({
     type: UpdateTemplateDto,
-    description: 'Update template',
     required: true,
   })
   @Patch(':id')
@@ -71,23 +82,29 @@ export class ApiGatewayTemplateController {
     @Param() param: ParamIdDto,
     @Body() updateTemplateDto: UpdateTemplateDto,
   ) {
-    const result = this.auditService.send(
-      { cmd: 'update-template' },
-      { param, updateTemplateDto },
-    )
+    const result = this.auditService
+      .send({ cmd: LevelMessages.UPDATE_LEVEL }, { param, updateTemplateDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
-  @ApiOperation({ summary: 'API para cambiae el estado de plantilla' })
+  @ApiOperation({ summary: 'API para cambiar el estado de plantilla' })
   @ApiProperty({
     type: ParamIdDto,
   })
   @Patch('/:id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
-    const result = this.auditService.send(
-      { cmd: 'change-status-template' },
-      { param },
-    )
+    const result = this.auditService
+      .send({ cmd: TemplateMessages.CHANGE_STATUS_TEMPLATE }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -97,7 +114,13 @@ export class ApiGatewayTemplateController {
   })
   @Delete(':id')
   async delete(@Param() param: ParamIdDto) {
-    const result = this.auditService.send({ cmd: 'remove-template' }, { param })
+    const result = this.auditService
+      .send({ cmd: TemplateMessages.REMOVE_TEMPLATE }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 }

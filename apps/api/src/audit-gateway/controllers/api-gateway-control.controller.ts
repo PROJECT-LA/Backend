@@ -1,4 +1,4 @@
-import { AUDIT_SERVICE, ParamIdDto } from '@app/common'
+import { AUDIT_SERVICE, ControlMessages, ParamIdDto } from '@app/common'
 import {
   CreateControlDto,
   FilterControlDto,
@@ -14,8 +14,9 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import {
   ApiBearerAuth,
   ApiBody,
@@ -23,9 +24,12 @@ import {
   ApiProperty,
   ApiTags,
 } from '@nestjs/swagger'
+import { CasbinGuard, JwtAuthGuard } from '../../guards'
+import { catchError, throwError } from 'rxjs'
 
 @ApiBearerAuth()
 @ApiTags('Controls')
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('controls')
 export class ApiGatewayControlController {
   constructor(
@@ -37,32 +41,39 @@ export class ApiGatewayControlController {
   })
   @Get()
   async list(@Query() filter: FilterControlDto) {
-    const result = this.auditService.send({ cmd: 'get-controls' }, { filter })
+    const result = this.auditService
+      .send({ cmd: ControlMessages.GET_CONTROLS }, { filter })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
   @ApiOperation({ summary: 'API para crear un nuevo control' })
   @ApiBody({
     type: CreateControlDto,
-    description: 'Create control',
     required: true,
   })
   @Post()
   async create(@Body() createControlDto: CreateControlDto) {
-    const result = this.auditService.send(
-      { cmd: 'create-control' },
-      { createControlDto },
-    )
+    const result = this.auditService
+      .send({ cmd: ControlMessages.CREATE_CONTROL }, { createControlDto })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
-  @ApiOperation({ summary: 'API para actualizar un plantillas' })
+  @ApiOperation({ summary: 'API para actualizar un control' })
   @ApiProperty({
     type: ParamIdDto,
   })
   @ApiBody({
     type: UpdateControlDto,
-    description: 'Update Control',
     required: true,
   })
   @Patch(':id')
@@ -70,10 +81,16 @@ export class ApiGatewayControlController {
     @Param() param: ParamIdDto,
     @Body() updateControlDto: UpdateControlDto,
   ) {
-    const result = this.auditService.send(
-      { cmd: 'update-control' },
-      { param, updateControlDto },
-    )
+    const result = this.auditService
+      .send(
+        { cmd: ControlMessages.UPDATE_CONTROL },
+        { param, updateControlDto },
+      )
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -83,10 +100,13 @@ export class ApiGatewayControlController {
   })
   @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
-    const result = this.auditService.send(
-      { cmd: 'change-status-control' },
-      { param },
-    )
+    const result = this.auditService
+      .send({ cmd: ControlMessages.CHANGE_STATUS_CONTROL }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 
@@ -95,8 +115,14 @@ export class ApiGatewayControlController {
     type: ParamIdDto,
   })
   @Delete(':id')
-  async delete(@Param() param: ParamIdDto) {
-    const result = this.auditService.send({ cmd: 'delete-control' }, { param })
+  async remove(@Param() param: ParamIdDto) {
+    const result = this.auditService
+      .send({ cmd: ControlMessages.REMOVE_CONTROL }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
     return result
   }
 }

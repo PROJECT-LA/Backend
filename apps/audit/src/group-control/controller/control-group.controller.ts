@@ -1,6 +1,7 @@
 import { Controller, Inject } from '@nestjs/common'
 import {
   BaseController,
+  ControlGroupMessages,
   CreateControlGroupDto,
   FilterControlGroupDto,
   ParamIdDto,
@@ -20,7 +21,7 @@ export class ControlGroupController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-control-group' })
+  @MessagePattern({ cmd: ControlGroupMessages.GET_CONTROL_GROUPS })
   async list(
     @Ctx() context: RmqContext,
     @Payload()
@@ -31,7 +32,7 @@ export class ControlGroupController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: 'create-control-group' })
+  @MessagePattern({ cmd: ControlGroupMessages.CREATE_CONTROL_GROUP })
   async create(
     @Ctx() context: RmqContext,
     @Payload() { controlGroupDto }: { controlGroupDto: CreateControlGroupDto },
@@ -41,7 +42,7 @@ export class ControlGroupController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'update-control-group' })
+  @MessagePattern({ cmd: ControlGroupMessages.UPDATE_CONTROL_GROUP })
   async update(
     @Ctx() context: RmqContext,
     @Payload()
@@ -58,7 +59,7 @@ export class ControlGroupController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-control-group' })
+  @MessagePattern({ cmd: ControlGroupMessages.CHANGE_STATUS_CONTROL_GROUP })
   async changeStatus(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -68,7 +69,7 @@ export class ControlGroupController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'remove-control-group' })
+  @MessagePattern({ cmd: ControlGroupMessages.REMOVE_CONTROL_GROUP })
   async remove(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },

@@ -1,6 +1,7 @@
 import { Controller, Inject } from '@nestjs/common'
 import {
   BaseController,
+  ControlMessages,
   CreateControlDto,
   FilterControlDto,
   ParamIdDto,
@@ -20,7 +21,7 @@ export class ControlController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: 'get-controls' })
+  @MessagePattern({ cmd: ControlMessages.GET_CONTROLS })
   async list(
     @Ctx() context: RmqContext,
     @Payload()
@@ -31,7 +32,7 @@ export class ControlController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: 'create-control' })
+  @MessagePattern({ cmd: ControlMessages.CREATE_CONTROL })
   async create(
     @Ctx() context: RmqContext,
     @Payload() { createControlDto }: { createControlDto: CreateControlDto },
@@ -41,7 +42,7 @@ export class ControlController extends BaseController {
     return this.successCreate(result)
   }
 
-  @MessagePattern({ cmd: 'update-control' })
+  @MessagePattern({ cmd: ControlMessages.UPDATE_CONTROL })
   async update(
     @Ctx() context: RmqContext,
     @Payload()
@@ -55,7 +56,7 @@ export class ControlController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'change-status-control' })
+  @MessagePattern({ cmd: ControlMessages.CHANGE_STATUS_CONTROL })
   async changeStatus(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
@@ -65,7 +66,7 @@ export class ControlController extends BaseController {
     return this.successUpdate(result)
   }
 
-  @MessagePattern({ cmd: 'remove-control' })
+  @MessagePattern({ cmd: ControlMessages.REMOVE_CONTROL })
   async remove(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
