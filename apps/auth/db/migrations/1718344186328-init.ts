@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Init1718341136759 implements MigrationInterface {
-    name = 'Init1718341136759'
+export class Init1718344186328 implements MigrationInterface {
+    name = 'Init1718344186328'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE \`modules\` (\`id\` bigint NOT NULL AUTO_INCREMENT, \`status\` varchar(30) NOT NULL, \`created_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), \`updated_at\` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), \`title\` varchar(50) NOT NULL COMMENT 'Etiqueta del módulo para el Sidebar del proyecto', \`description\` varchar(250) NULL COMMENT 'Ruta para acceder al módulo', \`icon\` varchar(50) NULL COMMENT 'Icono del módulo', \`order\` int NOT NULL COMMENT 'Orden del modulo en el sidebar', \`url\` varchar(50) NULL COMMENT 'Ruta para acceder al módulo', \`id_role\` bigint NOT NULL COMMENT 'Clave foránea de la reacion con el rol', \`id_module\` bigint NULL COMMENT 'Clave foránea del módulo padre', PRIMARY KEY (\`id\`)) ENGINE=InnoDB`);

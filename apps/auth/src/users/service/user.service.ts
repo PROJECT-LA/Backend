@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -15,6 +16,7 @@ import {
   STATUS,
   TextService,
   Configurations,
+  PassportUser,
 } from '@app/common'
 import { IUserRepository } from '../interface'
 import { In } from 'typeorm'
@@ -59,7 +61,18 @@ export class UserService {
     return await this.usersRepository.save(newUser)
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(
+    idUser: string,
+    updateUserDto: UpdateUserDto,
+    currentUser: PassportUser,
+  ) {
+    await this.getUserProfile(idUser)
+    if (currentUser.id === idUser) {
+      throw new RpcException(
+        new ForbiddenException('No puedes editar tu perfil'),
+      )
+    }
+
     const roles = await this.__validateUser(
       {
         username: updateUserDto.username,
@@ -67,10 +80,10 @@ export class UserService {
         ci: updateUserDto.ci,
         roles: updateUserDto.roles,
       },
-      id,
+      idUser,
     )
     const updateUser = this.usersRepository.create({
-      id: id,
+      id: idUser,
       email: updateUserDto.email,
       lastNames: updateUserDto.lastNames,
       phone: updateUserDto.phone,
@@ -83,9 +96,15 @@ export class UserService {
     return await this.usersRepository.save(updateUser)
   }
 
-  async delete(id: string) {
-    await this.getUserProfile(id)
-    return await this.usersRepository.delete(id)
+  async delete(idUser: string, currentUser: PassportUser) {
+    console.log(currentUser)
+    await this.getUserProfile(idUser)
+    if (currentUser.id === idUser) {
+      throw new RpcException(
+        new ForbiddenException('No puedes eliminar tu cuenta'),
+      )
+    }
+    return await this.usersRepository.delete(idUser)
   }
 
   async updateProfile(id: string, updateUserDto: UpdateProfileDto) {
@@ -170,8 +189,13 @@ export class UserService {
     return id
   }
 
-  async changeStatus(idUser: string) {
+  async changeStatus(idUser: string, currentUser: PassportUser) {
     const user = await this.getUserProfile(idUser)
+    if (currentUser.id === idUser) {
+      throw new RpcException(
+        new ForbiddenException('No puedes cambiar el estado de tu perfil'),
+      )
+    }
     const newStatus =
       user.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
     await this.usersRepository.update(idUser, { status: newStatus })

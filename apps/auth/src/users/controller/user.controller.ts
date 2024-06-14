@@ -9,6 +9,7 @@ import {
   ParamIdDto,
   SharedService,
   UserMessages,
+  PassportUser,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { UserService } from '../service'
@@ -55,13 +56,15 @@ export class UserController extends BaseController {
     {
       param,
       updateUserDto,
+      user,
     }: {
       param: ParamIdDto
       updateUserDto: UpdateUserDto
+      user: PassportUser
     },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.usersService.update(param.id, updateUserDto)
+    const result = await this.usersService.update(param.id, updateUserDto, user)
     return this.successUpdate(result)
   }
 
@@ -86,22 +89,22 @@ export class UserController extends BaseController {
   }
 
   @MessagePattern({ cmd: UserMessages.REMOVE_USER })
-  removeUser(
+  async removeUser(
     @Ctx() context: RmqContext,
-    @Payload() { param }: { param: ParamIdDto },
+    @Payload() { param, user }: { param: ParamIdDto; user: PassportUser },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = this.usersService.delete(param.id)
+    const result = await this.usersService.delete(param.id, user)
     return this.successDelete(result)
   }
 
   @MessagePattern({ cmd: UserMessages.CHANGE_STATUS_USER })
   async changeStatusUser(
     @Ctx() context: RmqContext,
-    @Payload() { param }: { param: ParamIdDto },
+    @Payload() { param, user }: { param: ParamIdDto; user: PassportUser },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.usersService.changeStatus(param.id)
+    const result = await this.usersService.changeStatus(param.id, user)
     return this.successUpdate(result)
   }
 

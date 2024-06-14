@@ -31,6 +31,8 @@ import {
   AVATAR_UPLOAD_CONFIG,
   AUTH_SERVICE,
   UserMessages,
+  CurrentUser,
+  PassportUser,
 } from '@app/common'
 import { FileInterceptor } from '@nestjs/platform-express'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
@@ -109,11 +111,12 @@ export class ApiGatewayUserController {
   })
   @Patch(':id')
   async update(
+    @CurrentUser() user: PassportUser,
     @Param() param: ParamIdDto,
     @Body() updateUserDto: UpdateUserDto,
   ) {
     const result = this.authService
-      .send({ cmd: UserMessages.UPDATE_USER }, { param, updateUserDto })
+      .send({ cmd: UserMessages.UPDATE_USER }, { param, updateUserDto, user })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -158,9 +161,9 @@ export class ApiGatewayUserController {
 
   @ApiOperation({ summary: 'API: para borrar un usuario' })
   @Delete(':id')
-  remove(@Param() param: ParamIdDto) {
+  remove(@CurrentUser() user: PassportUser, @Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: UserMessages.REMOVE_USER }, { param })
+      .send({ cmd: UserMessages.REMOVE_USER }, { param, user })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -174,9 +177,9 @@ export class ApiGatewayUserController {
     type: ParamIdDto,
   })
   @Patch('/:id/change-status')
-  async activar(@Param() param: ParamIdDto) {
+  async activar(@CurrentUser() user: PassportUser, @Param() param: ParamIdDto) {
     const result = this.authService
-      .send({ cmd: UserMessages.CHANGE_STATUS_USER }, { param })
+      .send({ cmd: UserMessages.CHANGE_STATUS_USER }, { param, user })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
