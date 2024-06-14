@@ -39,6 +39,7 @@ export class UserRepository
         'user.id',
         'user.names',
         'user.lastNames',
+        'user.username',
         'user.email',
         'user.phone',
         'user.ci',

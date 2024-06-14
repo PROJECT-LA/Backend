@@ -2,9 +2,10 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
-export enum Configurations {
-  SCORE_PASSWORD = 3, // NIVEL MÍNIMO DE CALIFICACIÓN PASSWORD
-  SALT_ROUNDS = 10, // NUMERO DE SALTOS PARA GENERACIÓN DE HASH
+export const Configurations = {
+  SCORE_PASSWORD: +process.env.DEFAULT_PASSWORD || 3, // NIVEL MÍNIMO DE CALIFICACIÓN PASSWORD
+  SALT_ROUNDS: 10, // NUMERO DE SALTOS PARA GENERACIÓN DE HASH
+  DEFAULT_PASSWORD: process.env.DEFAULT_PASSWORD || 'p4ssw0rd@bC',
 }
 
 // Configuración para la carga de archivos

@@ -204,4 +204,21 @@ export class ApiGatewayUserController {
       )
     return result
   }
+
+  @ApiOperation({ summary: 'API para restablecer la contraseña de usuario' })
+  @ApiBody({ type: ChangePaswwordDto })
+  @ApiProperty({
+    type: ParamIdDto,
+  })
+  @Patch(':id/reset-password')
+  async resetPassword(@Param() param: ParamIdDto) {
+    const result = this.authService
+      .send({ cmd: UserMessages.RESET_PASSWORD }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+    return result
+  }
 }

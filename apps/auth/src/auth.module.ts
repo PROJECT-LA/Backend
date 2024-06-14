@@ -25,8 +25,8 @@ import { PolicyService } from './policies/service'
 import { PolicyController } from './policies/controller'
 import { AuthenticationController } from './authentication/controller'
 import { AuthenticationService } from './authentication/service'
-import { HealthCheckController } from './healtcheck/healthCheck.controller'
-import { ExternalFileService } from './healtcheck/service/fileCheckService'
+import { HealthCheckController } from './external/health-check.controller'
+import { ExternalFileService } from './external/external-file.service'
 
 @Module({
   imports: [

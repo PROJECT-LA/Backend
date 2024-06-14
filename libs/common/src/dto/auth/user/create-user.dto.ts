@@ -16,10 +16,6 @@ export class CreateUserDto {
   @MaxLength(50)
   email: string
 
-  @ApiProperty({ example: '123' })
-  @MaxLength(30)
-  password: string
-
   phone?: string
 
   @ApiProperty({ example: 'JPEREZ' })

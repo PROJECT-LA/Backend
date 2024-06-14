@@ -7,6 +7,7 @@ export const UserMessages = {
   REMOVE_USER: 'remove-user',
   CHANGE_STATUS_USER: 'change-status-user',
   CHANGE_PASSWORD: 'change-password',
+  RESET_PASSWORD: 'reset-password',
 }
 
 export const RoleMessages = {

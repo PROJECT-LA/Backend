@@ -4,6 +4,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  PreconditionFailedException,
 } from '@nestjs/common'
 import {
   ChangePaswwordDto,
@@ -13,12 +14,13 @@ import {
   UpdateUserDto,
   STATUS,
   TextService,
+  Configurations,
 } from '@app/common'
 import { IUserRepository } from '../interface'
 import { In } from 'typeorm'
 import { IRoleRepository } from '../../roles/interface'
 import { RpcException } from '@nestjs/microservices'
-import { ExternalFileService } from '../../healtcheck/service/fileCheckService'
+import { ExternalFileService } from '../../external/external-file.service'
 
 @Injectable()
 export class UserService {
@@ -34,10 +36,7 @@ export class UserService {
     return await this.usersRepository.list(paginationQueryDto)
   }
 
-  async create(
-    createUserDto: CreateUserDto,
-    image: Express.Multer.File | null | undefined,
-  ) {
+  async create(createUserDto: CreateUserDto) {
     const roles = await this.__validateUser({
       username: createUserDto.username,
       email: createUserDto.email,
@@ -48,7 +47,7 @@ export class UserService {
     const newUser = this.usersRepository.create({
       email: createUserDto.email,
       lastNames: createUserDto.lastNames,
-      password: await TextService.encrypt(createUserDto.password),
+      password: await TextService.encrypt(Configurations.DEFAULT_PASSWORD),
       phone: createUserDto.phone,
       ci: createUserDto.ci,
       address: createUserDto.address,
@@ -57,16 +56,10 @@ export class UserService {
       roles: roles,
     })
 
-    if (image) {
-    }
     return await this.usersRepository.save(newUser)
   }
 
-  async update(
-    id: string,
-    updateUserDto: UpdateUserDto,
-    image: Express.Multer.File,
-  ) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     const roles = await this.__validateUser(
       {
         username: updateUserDto.username,
@@ -95,12 +88,8 @@ export class UserService {
     return await this.usersRepository.delete(id)
   }
 
-  async updateProfile(
-    id: string,
-    updateUserDto: UpdateProfileDto,
-    image: Express.Multer.File | undefined | null,
-  ) {
-    if (id) await this.getUserProfile(id)
+  async updateProfile(id: string, updateUserDto: UpdateProfileDto) {
+    await this.getUserProfile(id)
 
     const userExistsEmail = await this.findOneByEmail(updateUserDto.email)
     if (userExistsEmail && userExistsEmail.id !== id) {
@@ -110,35 +99,44 @@ export class UserService {
     const updateUser = this.usersRepository.create({
       id: id,
       email: updateUserDto.email,
+      names: updateUserDto.names,
       lastNames: updateUserDto.lastNames,
       phone: updateUserDto.phone,
-      names: updateUserDto.names,
-      ci: updateUserDto.ci,
       address: updateUserDto.address,
     })
-    if (image) {
-      const imageRoute = await this.externalFileService.writteImage(
-        image,
-        updateUserDto.ci,
-      )
-      if (imageRoute) {
-        updateUser.image = imageRoute
-      }
-    }
+
     return await this.usersRepository.update(id, updateUser)
   }
 
-  /*   async updateImage(id: string, image: Express.Multer.File) {
+  async updateImageProfile(id: string, image: Express.Multer.File) {
     const user = await this.getUserProfile(id)
-    if (user.image) {
-      await this.externalFileService.deleteImage(user.image)
+    const isServiceAvaliable =
+      await this.externalFileService.isServiceAvaliable()
+    if (!isServiceAvaliable) {
+      throw new RpcException(
+        new PreconditionFailedException(
+          'Servicio de almacenamiento no disponible',
+        ),
+      )
     }
-    const imageRoute = await this.externalFileService.writteImage(image, user.ci)
-    if (imageRoute) {
-      await this.usersRepository.update(id, { image: imageRoute })
+    const updateUser = this.usersRepository.create({ image: '' })
+    try {
+      if (user.image) {
+        // await this.externalFileService.deleteImage(user.image)
+      }
+      const nameFile = await this.externalFileService.writteImage(
+        image,
+        user.id,
+      )
+      updateUser.image = nameFile
+    } catch (error) {
+      throw new RpcException(
+        new PreconditionFailedException('Error al guardar la imagen'),
+      )
     }
-    return id
-  } */
+
+    return await this.usersRepository.update(id, updateUser)
+  }
 
   async updatePassword(id: string, changePaswwordDto: ChangePaswwordDto) {
     const { newPassword, password } = changePaswwordDto
@@ -153,8 +151,21 @@ export class UserService {
     if (!passwordIsValid) {
       throw new RpcException('Las contraseñas no coinciden')
     }
-    //    const hashedPassword = await TextService.validateLevelPassword(newPassword)
+    //await TextService.validateLevelPassword(newPassword)
     const hashedPassword = await TextService.encrypt(newPassword)
+    await this.usersRepository.update(id, { password: hashedPassword })
+    return id
+  }
+
+  async resetPassword(id: string) {
+    await this.usersRepository.findOneByCondition({
+      where: { id },
+      select: ['id', 'password'],
+    })
+
+    const hashedPassword = await TextService.encrypt(
+      Configurations.DEFAULT_PASSWORD,
+    )
     await this.usersRepository.update(id, { password: hashedPassword })
     return id
   }
@@ -188,9 +199,11 @@ export class UserService {
         ci: true,
         address: true,
         image: true,
+        status: true,
       },
     })
-    if (!user) throw new RpcException('Usuario no encontrado')
+    if (!user)
+      throw new RpcException(new NotFoundException('Usuario no encontrado'))
     if (user.image) {
       const result = await this.externalFileService.getImage(user.image)
       user.image = result

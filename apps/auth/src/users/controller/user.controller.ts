@@ -36,14 +36,10 @@ export class UserController extends BaseController {
   async createUser(
     @Ctx() context: RmqContext,
     @Payload()
-    {
-      createUserDto,
-      image,
-    }: { createUserDto: CreateUserDto; image: Express.Multer.File },
+    { createUserDto }: { createUserDto: CreateUserDto },
   ) {
-    console.log(image)
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.usersService.create(createUserDto, image)
+    const result = await this.usersService.create(createUserDto)
     return this.successCreate(result)
   }
 
@@ -59,19 +55,13 @@ export class UserController extends BaseController {
     {
       param,
       updateUserDto,
-      image,
     }: {
       param: ParamIdDto
       updateUserDto: UpdateUserDto
-      image: Express.Multer.File
     },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.usersService.update(
-      param.id,
-      updateUserDto,
-      image,
-    )
+    const result = await this.usersService.update(param.id, updateUserDto)
     return this.successUpdate(result)
   }
 
@@ -82,18 +72,15 @@ export class UserController extends BaseController {
     {
       param,
       updateProfileDto,
-      image,
     }: {
       param: ParamIdDto
       updateProfileDto: UpdateProfileDto
-      image: Express.Multer.File
     },
   ) {
     this.sharedService.acknowledgeMessage(context)
     const result = await this.usersService.updateProfile(
       param.id,
       updateProfileDto,
-      image,
     )
     return this.successUpdate(result)
   }
@@ -132,6 +119,17 @@ export class UserController extends BaseController {
       param.id,
       changePaswwordDto,
     )
+    return this.successUpdate(result)
+  }
+
+  @MessagePattern({ cmd: UserMessages.RESET_PASSWORD })
+  async resetPassword(
+    @Ctx() context: RmqContext,
+    @Payload()
+    { param }: { param: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.usersService.resetPassword(param.id)
     return this.successUpdate(result)
   }
 }

@@ -6,6 +6,7 @@ export class UpdateUserDto {
   @IsOptional()
   @MaxLength(30)
   names?: string
+
   @ApiProperty({ example: 'Perez' })
   @IsOptional()
   @MaxLength(50)

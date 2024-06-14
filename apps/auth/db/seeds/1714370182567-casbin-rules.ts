@@ -64,6 +64,9 @@ export class CasbinRules1714370182567 implements MigrationInterface {
         [RoleEnum.ADMINISTRADOR]: 'PATCH',
         [RoleEnum.GERENTE]: 'PATCH',
       },
+      '/api/users/:id/reset-password': {
+        [RoleEnum.ADMINISTRADOR]: 'PATCH',
+      },
       //crud de Roles
       '/api/roles': {
         [RoleEnum.ADMINISTRADOR]: 'GET|POST',

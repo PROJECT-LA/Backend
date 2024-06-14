@@ -1,13 +1,13 @@
 import { AvatarMessagess, FilesMessages, SharedService } from '@app/common'
-import { Controller, Param, Inject } from '@nestjs/common'
+import { Controller, Inject } from '@nestjs/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { extname } from 'path'
-import { FileService } from './file.service'
+import { AvatarService } from './avatar.service'
 
 @Controller('files')
-export class FileController {
+export class AvatarController {
   constructor(
-    private readonly fileService: FileService,
+    private readonly avatarService: AvatarService,
     @Inject('SharedServiceInterface')
     private readonly sharedService: SharedService,
   ) {}
@@ -26,7 +26,7 @@ export class FileController {
   ) {
     this.sharedService.acknowledgeMessage(context)
     const extension = extname(file.originalname).slice(1)
-    return this.fileService.writteAvatars(`${fileName}.${extension}`, file)
+    return this.avatarService.writteAvatars(`${fileName}.${extension}`, file)
   }
 
   @MessagePattern({ cmd: AvatarMessagess.GET_AVATAR })
@@ -35,11 +35,15 @@ export class FileController {
     @Payload() { name }: { name: string },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    return this.fileService.getAvatar(name)
+    return this.avatarService.getAvatar(name)
   }
 
   @MessagePattern({ cmd: AvatarMessagess.DELETE_AVATAR })
-  deleteFile(@Param('name') name: string) {
-    this.fileService.removeFile('ruta/del/archivo', name)
+  async deleteFile(
+    @Ctx() context: RmqContext,
+    @Payload() { name }: { name: string },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    return await this.avatarService.removeAvatar(name)
   }
 }

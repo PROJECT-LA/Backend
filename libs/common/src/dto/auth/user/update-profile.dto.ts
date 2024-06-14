@@ -18,9 +18,5 @@ export class UpdateProfileDto {
 
   phone?: string
 
-  @ApiProperty({ example: '123456' })
-  @MaxLength(10)
-  ci: string
-
   address?: string
 }

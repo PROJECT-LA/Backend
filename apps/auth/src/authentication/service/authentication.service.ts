@@ -16,7 +16,7 @@ import { RpcException } from '@nestjs/microservices'
 import { IUserRepository } from '../../users/interface'
 import { Enforcer } from 'casbin'
 import { AUTHZ_ENFORCER } from 'nest-authz'
-import { ExternalFileService } from '../../healtcheck/service/fileCheckService'
+import { ExternalFileService } from '../../external/external-file.service'
 
 @Injectable()
 export class AuthenticationService {

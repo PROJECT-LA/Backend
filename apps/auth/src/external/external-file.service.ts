@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common'
-import { FILE_SERVICE, FilesMessages } from '@app/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { Inject, Injectable, ServiceUnavailableException } from '@nestjs/common'
+import { AvatarMessagess, FILE_SERVICE, FilesMessages } from '@app/common'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { catchError, lastValueFrom, of, timeout } from 'rxjs'
 
 @Injectable()
@@ -32,24 +32,29 @@ export class ExternalFileService {
   }
 
   async writteImage(image: Express.Multer.File, name: string) {
-    const res = await this.isServiceAvaliable()
-    if (res) {
-      const result = await lastValueFrom(
-        this.fileService.send(
-          { cmd: 'writte-avatar' },
-          { file: image, fileName: name },
+    const isAvailable = await this.isServiceAvaliable()
+    if (!isAvailable) {
+      throw new RpcException(
+        new ServiceUnavailableException(
+          'El servicio de archivos no está disponible en este momento.',
         ),
       )
-      return result
     }
-    return false
+
+    const result = await lastValueFrom(
+      this.fileService.send(
+        { cmd: AvatarMessagess.UPLOAD_AVATAR },
+        { file: image, fileName: name },
+      ),
+    )
+    return result
   }
 
   async getImage(name: string) {
     const res = await this.isServiceAvaliable()
     if (res) {
       const result = await lastValueFrom(
-        this.fileService.send({ cmd: 'writte-avatar' }, { name }),
+        this.fileService.send({ cmd: AvatarMessagess.GET_AVATAR }, { name }),
       )
       return result
     }
