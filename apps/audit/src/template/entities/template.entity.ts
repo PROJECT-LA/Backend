@@ -18,7 +18,7 @@ export class Template extends BaseEntity implements ITemplate {
   @OneToMany(() => ControlGroup, (controlGroup) => controlGroup.template)
   controlGroup: ControlGroup[]
 
-  constructor(data?: Partial<ControlGroup>) {
+  constructor(data?: Partial<Template>) {
     super(data)
   }
 

@@ -21,7 +21,7 @@ export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ length: 200, type: 'varchar' })
   objectiveDescription: string
 
-  @Column({ length: 5, type: 'varchar' })
+  @Column({ length: 10, type: 'varchar' })
   objectiveCode: string
 
   @Column({ length: 200, type: 'varchar' })
@@ -30,7 +30,7 @@ export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ length: 200, type: 'varchar' })
   groupDescription: string
 
-  @Column({ length: 5, type: 'varchar' })
+  @Column({ length: 10, type: 'varchar' })
   groupCode: string
 
   @Column({ name: 'id_template' })

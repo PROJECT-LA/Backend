@@ -19,7 +19,7 @@ export class Control extends BaseEntity implements IControl {
   @Column({ length: 200, type: 'varchar' })
   description: string
 
-  @Column({ length: 5, type: 'varchar' })
+  @Column({ length: 10, type: 'varchar' })
   code: string
 
   @Column({ name: 'id_control_group' })
