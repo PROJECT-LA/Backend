@@ -147,6 +147,27 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/api/levels/:id/change-status': {
         [RoleEnum.GERENTE]: 'PATCH|GET',
       },
+      //Control-Groups
+      '/api/control-groups': {
+        [RoleEnum.GERENTE]: 'GET|POST',
+      },
+      '/api/control-groups/:id': {
+        [RoleEnum.GERENTE]: 'PATCH/DELETE',
+      },
+      '/api/control-groups/:id/change-status': {
+        [RoleEnum.GERENTE]: 'PATCH',
+      },
+      //Controls
+
+      '/api/controls': {
+        [RoleEnum.GERENTE]: 'GET|POST',
+      },
+      '/api/controls/:id': {
+        [RoleEnum.GERENTE]: 'PATCH/DELETE',
+      },
+      '/api/controls/:id/change-status': {
+        [RoleEnum.GERENTE]: 'PATCH',
+      },
     }
 
     const registrarCasbin = async (

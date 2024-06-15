@@ -105,7 +105,7 @@ export class ApiGatewayControlGroupController {
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch(':id/change-status-control-group')
+  @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService
       .send(
