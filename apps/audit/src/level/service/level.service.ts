@@ -1,7 +1,7 @@
 import {
+  ConflictException,
   Inject,
   Injectable,
-  NotFoundException,
   PreconditionFailedException,
 } from '@nestjs/common'
 import { FilterTemplateDto, STATUS } from '@app/common'
@@ -57,7 +57,7 @@ export class LevelService {
     })
     if (level && (id === undefined || level.id !== id)) {
       throw new RpcException(
-        new NotFoundException('Ya existe un nivel con ese nombre'),
+        new ConflictException('Ya existe un nivel con ese nombre'),
       )
     }
     return true

@@ -104,7 +104,7 @@ export class ApiGatewayLevelController {
   @Delete(':id')
   async delete(@Param() param: ParamIdDto) {
     const result = this.auditService.send(
-      { cmd: LevelMessages.CHANGE_STATUS_LEVEL },
+      { cmd: LevelMessages.REMOVE_LEVEL },
       { param },
     )
     return result
