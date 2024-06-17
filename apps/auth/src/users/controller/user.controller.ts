@@ -33,7 +33,7 @@ export class UserController extends BaseController {
     return this.successListRows(result)
   }
 
-  @MessagePattern({ cmd: UserMessages.GET_USERS })
+  @MessagePattern({ cmd: UserMessages.GET_USERS_BY_ROLE })
   async getUsersByRole(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
