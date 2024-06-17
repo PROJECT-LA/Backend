@@ -19,7 +19,7 @@ export class Personal extends BaseEntity {
   @JoinColumn({ name: 'id_audit', referencedColumnName: 'id' })
   audit: Audit
 
-  @Column({ type: 'varchar', length: 255 })
+  @Column({ type: 'bigint', nullable: false })
   idUser: string
 
   constructor(data?: Partial<Personal>) {
