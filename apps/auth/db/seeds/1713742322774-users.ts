@@ -34,6 +34,19 @@ export class Users1713742322774 implements MigrationInterface {
         roles: ['2', '3', '4'],
         ci: '4231212',
       },
+      {
+        names: 'CLIENTE',
+        lastNames: 'CLIENE',
+        email: 'cliente@gmail.com',
+        password: pass,
+        username: 'CLIENTE',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        phone: '63201339',
+        status: STATUS.ACTIVE,
+        roles: ['3'],
+        ci: '9886123',
+      },
     ]
     const newUsers = users.map((user) => {
       return new User({

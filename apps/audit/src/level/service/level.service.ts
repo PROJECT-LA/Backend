@@ -31,7 +31,7 @@ export class LevelService {
   async update(id: string, updateLevelDto: UpdateLevelDto) {
     await this.getLevelById(id)
     const updateRole = this.levelRepository.create(updateLevelDto)
-    await this.Validate(updateRole.name)
+    await this.Validate(updateRole.name, id)
     return await this.levelRepository.update(id, updateLevelDto)
   }
 
