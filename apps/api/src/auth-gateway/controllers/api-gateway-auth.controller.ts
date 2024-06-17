@@ -118,7 +118,7 @@ export class ApiGatewayAuthController {
       .cookie(
         this.configService.getOrThrow('RFT_COOKIE'),
         refreshToken,
-        JwtCookieService.makeConfig(this.configService),
+        RefreshTokenCookieService.makeConfig(this.configService),
       )
       .status(200)
       .send({

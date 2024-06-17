@@ -29,3 +29,11 @@ export const ControlMessages = {
   REMOVE_CONTROL: 'remove-control',
   CHANGE_STATUS_CONTROL: 'change-status-control',
 }
+
+export const AuditMessages = {
+  GET_AUDIT: 'get-audits',
+  CREATE_AUDIT: 'create-audit',
+  UPDATE_AUDIT: 'update-audit',
+  REMOVE_AUDIT: 'remove-audit',
+  CHANGE_STATUS_AUDIT: 'change-status-audit',
+}

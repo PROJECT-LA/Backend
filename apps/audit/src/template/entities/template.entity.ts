@@ -2,6 +2,7 @@ import { BaseEntity, STATUS, UtilService } from '@app/common'
 import { Entity, Column, OneToMany, BeforeInsert, Check } from 'typeorm'
 import { ITemplate } from '../interface'
 import { ControlGroup } from '../../group-control/entities'
+import { Audit } from '../../audit/entities'
 
 @Entity('template')
 @Check(UtilService.buildStatusCheck(STATUS))
@@ -17,6 +18,9 @@ export class Template extends BaseEntity implements ITemplate {
 
   @OneToMany(() => ControlGroup, (controlGroup) => controlGroup.template)
   controlGroup: ControlGroup[]
+
+  @OneToMany(() => Audit, (audit) => audit.template)
+  audits: Audit[]
 
   constructor(data?: Partial<Template>) {
     super(data)

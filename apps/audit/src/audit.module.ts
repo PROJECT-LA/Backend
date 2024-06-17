@@ -23,6 +23,10 @@ import { Control } from './control/entities'
 import { ControlController } from './control/controller'
 import { ControlRepository } from './control/repository'
 import { ControlService } from './control/service'
+import { AuditController } from './audit/controller'
+import { Audit } from './audit/entities'
+import { AuditService } from './audit/service'
+import { AuditRepository } from './audit/repository'
 
 @Module({
   imports: [
@@ -37,6 +41,7 @@ import { ControlService } from './control/service'
       ControlGroup,
       MaturityLevel,
       Control,
+      Audit,
     ]),
   ],
   controllers: [
@@ -45,6 +50,7 @@ import { ControlService } from './control/service'
     LevelController,
     ControlGroupController,
     ControlController,
+    AuditController,
   ],
   providers: [
     {
@@ -71,11 +77,17 @@ import { ControlService } from './control/service'
       provide: 'ILevelRepository',
       useClass: LevelRepository,
     },
+    {
+      provide: 'IAuditRepository',
+      useClass: AuditRepository,
+    },
+
     ParameterService,
     TemplateService,
     ControlGroupService,
     LevelService,
     ControlService,
+    AuditService,
   ],
 })
 export class AuditModule {}
