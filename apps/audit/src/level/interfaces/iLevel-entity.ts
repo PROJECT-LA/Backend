@@ -1,4 +1,5 @@
-export interface Level {
-  nivel: number
-  descripcion: string
+export interface ILevel {
+  name: string
+  grade: number
+  description: string
 }

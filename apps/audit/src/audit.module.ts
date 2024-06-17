@@ -13,7 +13,7 @@ import { TemplateController } from './template/controller'
 import { TemplateService } from './template/service'
 import { LevelRepository } from './level/repository/level.repository'
 import { LevelController } from './level/controller'
-import { MaturityLevel } from './level/entities'
+import { Level } from './level/entities'
 import { LevelService } from './level/service'
 import { ControlGroupController } from './group-control/controller'
 import { ControlGroupRepository } from './group-control/repository'
@@ -41,7 +41,7 @@ import { HealthCheckAuditController } from './external/health-check.controller'
       Parameter,
       Template,
       ControlGroup,
-      MaturityLevel,
+      Level,
       Control,
       Audit,
     ]),

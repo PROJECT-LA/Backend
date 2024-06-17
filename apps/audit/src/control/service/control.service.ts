@@ -28,7 +28,6 @@ export class ControlService {
 
   async create(controlDto: CreateControlDto) {
     const newModule = this.controlRepository.create(controlDto)
-    console.log(newModule)
     return await this.controlRepository.save(newModule)
   }
 

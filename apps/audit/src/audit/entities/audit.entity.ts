@@ -11,6 +11,7 @@ import {
 import { IAudit } from '../interface/iAudit-entity'
 import { Template } from '../../template/entities'
 import { Personal } from '../../personal/entities'
+import { Level } from '../../level/entities'
 
 @Entity('audits')
 @Check(UtilService.buildStatusCheck(STATUS))
@@ -39,6 +40,13 @@ export class Audit extends BaseEntity implements IAudit {
 
   @OneToMany(() => Personal, (personal) => personal.audit)
   personal: Personal[]
+
+  @Column({ nullable: false })
+  idLevel: string
+
+  @ManyToOne(() => Template, (template) => template.audits)
+  @JoinColumn({ name: 'id_level', referencedColumnName: 'id' })
+  level: Level
 
   constructor(data?: Partial<Audit>) {
     super(data)

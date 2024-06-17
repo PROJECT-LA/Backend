@@ -1,1 +1,1 @@
-export { MaturityLevel } from './level.entity'
+export * from './level.entity'
