@@ -40,6 +40,9 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/admin/levels': {
         [RoleEnum.GERENTE]: 'read|update|create|delete',
       },
+      '/admin/audits': {
+        [RoleEnum.GERENTE]: 'read|update|create|delete',
+      },
     }
 
     const backendRoutes: CasbinValue = {
@@ -67,6 +70,10 @@ export class CasbinRules1714370182567 implements MigrationInterface {
       '/api/users/:id/reset-password': {
         [RoleEnum.ADMINISTRADOR]: 'PATCH',
       },
+      '/api/users/:id/role': {
+        [RoleEnum.ADMINISTRADOR]: 'PATCH',
+      },
+
       //crud de Roles
       '/api/roles': {
         [RoleEnum.ADMINISTRADOR]: 'GET|POST',
@@ -158,7 +165,6 @@ export class CasbinRules1714370182567 implements MigrationInterface {
         [RoleEnum.GERENTE]: 'PATCH',
       },
       //Controls
-
       '/api/controls': {
         [RoleEnum.GERENTE]: 'GET|POST',
       },

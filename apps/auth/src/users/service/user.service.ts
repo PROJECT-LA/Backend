@@ -38,6 +38,10 @@ export class UserService {
     return await this.usersRepository.list(paginationQueryDto)
   }
 
+  async getUsersByRole(idRole: string) {
+    return await this.usersRepository.getUsersByRole(idRole)
+  }
+
   async create(createUserDto: CreateUserDto) {
     const roles = await this.__validateUser({
       username: createUserDto.username,

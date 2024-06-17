@@ -33,6 +33,16 @@ export class UserController extends BaseController {
     return this.successListRows(result)
   }
 
+  @MessagePattern({ cmd: UserMessages.GET_USERS })
+  async getUsersByRole(
+    @Ctx() context: RmqContext,
+    @Payload() { param }: { param: ParamIdDto },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    const result = await this.usersService.getUsersByRole(param.id)
+    return this.successList(result)
+  }
+
   @MessagePattern({ cmd: UserMessages.CREATE_USER })
   async createUser(
     @Ctx() context: RmqContext,

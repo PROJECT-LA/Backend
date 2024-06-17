@@ -87,4 +87,24 @@ export class UserRepository
 
     return await query.getManyAndCount()
   }
+
+  async getUsersByRole(id: string): Promise<User[]> {
+    return this.user
+      .createQueryBuilder('user')
+      .select([
+        'user.id',
+        'user.names',
+        'user.lastNames',
+        'user.username',
+        'user.email',
+        'user.phone',
+        'user.ci',
+        'user.address',
+        'user.status',
+      ])
+      .leftJoinAndSelect('user.roles', 'roles')
+      .where('roles.id = :id', { id })
+      .andWhere('user.status = :status', { status: STATUS.ACTIVE })
+      .getMany()
+  }
 }

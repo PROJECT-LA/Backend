@@ -8,6 +8,7 @@ export const UserMessages = {
   CHANGE_STATUS_USER: 'change-status-user',
   CHANGE_PASSWORD: 'change-password',
   RESET_PASSWORD: 'reset-password',
+  GET_USERS_BY_ROLE: 'get-users-by-role',
 }
 
 export const RoleMessages = {

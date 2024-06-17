@@ -88,6 +88,21 @@ export class ApiGatewayUserController {
     return result
   }
 
+  @ApiOperation({
+    summary: 'API: para obtener el listado de usuarios por role',
+  })
+  @Get(':id/role')
+  async getUsersByRole(@Param() param: ParamIdDto) {
+    const result = this.authService
+      .send({ cmd: UserMessages.GET_USERS_BY_ROLE }, { param })
+      .pipe(
+        catchError((error) =>
+          throwError(() => new RpcException(error.response)),
+        ),
+      )
+    return result
+  }
+
   @ApiOperation({ summary: 'API: para obtener un usuario' })
   @ApiProperty({
     type: ParamIdDto,

@@ -51,6 +51,13 @@ export class SidebarGerency1716434581710 implements MigrationInterface {
             title: 'Controles',
             icono: 'file-sliders',
             description: 'Parámetros generales del sistema',
+            order: 3,
+          },
+          {
+            url: '/admin/audits',
+            title: 'Auditorías',
+            icono: 'file-stack',
+            description: 'Auditorias del sistemas',
             order: 4,
           },
         ],
