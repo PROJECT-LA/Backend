@@ -4,7 +4,7 @@ import { MessagePattern } from '@nestjs/microservices'
 import { cpus, totalmem, freemem } from 'os'
 
 @Controller('healthcheck')
-export class HealthCheckController {
+export class HealthCheckAuditController {
   @MessagePattern({ cmd: AuditMessages.PING })
   check() {
     const cpuCount = cpus().length

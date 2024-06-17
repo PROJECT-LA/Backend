@@ -1,4 +1,4 @@
-import { AvatarMessagess, FilesMessages, SharedService } from '@app/common'
+import { DocsMessages, FilesMessages, SharedService } from '@app/common'
 import { Controller, Inject } from '@nestjs/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { extname } from 'path'
@@ -18,7 +18,7 @@ export class DocsController {
     return 'pong'
   }
 
-  @MessagePattern({ cmd: AvatarMessagess.UPLOAD_AVATAR })
+  @MessagePattern({ cmd: DocsMessages.UPLOAD_DOC })
   async uploadAvatar(
     @Ctx() context: RmqContext,
     @Payload()
@@ -38,7 +38,7 @@ export class DocsController {
     return this.docService.getDoc(name)
   }
 
-  @MessagePattern({ cmd: AvatarMessagess.DELETE_AVATAR })
+  @MessagePattern({ cmd: DocsMessages.DELETE_DOC })
   async deleteFile(
     @Ctx() context: RmqContext,
     @Payload() { name }: { name: string },

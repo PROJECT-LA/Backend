@@ -28,6 +28,7 @@ import { Audit } from './audit/entities'
 import { AuditService } from './audit/service'
 import { AuditRepository } from './audit/repository'
 import { ExternalUserService } from './external/external-user.service'
+import { HealthCheckAuditController } from './external/health-check.controller'
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { ExternalUserService } from './external/external-user.service'
     ControlGroupController,
     ControlController,
     AuditController,
+    HealthCheckAuditController,
   ],
   providers: [
     {
