@@ -6,9 +6,11 @@ import {
   Check,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm'
 import { IAudit } from '../interface/iAudit-entity'
 import { Template } from '../../template/entities'
+import { Personal } from '../../personal/entities'
 
 @Entity('audits')
 @Check(UtilService.buildStatusCheck(STATUS))
@@ -34,6 +36,9 @@ export class Audit extends BaseEntity implements IAudit {
 
   @Column({ nullable: false })
   idClient: string
+
+  @OneToMany(() => Personal, (personal) => personal.audit)
+  personal: Personal[]
 
   constructor(data?: Partial<Audit>) {
     super(data)
