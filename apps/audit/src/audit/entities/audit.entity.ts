@@ -44,9 +44,12 @@ export class Audit extends BaseEntity implements IAudit {
   @Column({ nullable: false })
   idLevel: string
 
-  @ManyToOne(() => Template, (template) => template.audits)
+  @ManyToOne(() => Level, (level) => level.audits)
   @JoinColumn({ name: 'id_level', referencedColumnName: 'id' })
   level: Level
+
+  @Column({ nullable: false })
+  acceptanceLevel: number
 
   constructor(data?: Partial<Audit>) {
     super(data)

@@ -24,5 +24,13 @@ export class CreateAuditDto {
 
   @ApiProperty({ example: '1' })
   @IsNotEmpty()
+  idLevel: string
+
+  @ApiProperty({ example: 3 })
+  @IsNotEmpty()
+  acceptanceLevel: number
+
+  @ApiProperty({ example: '1' })
+  @IsNotEmpty()
   idTemplate: string
 }

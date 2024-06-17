@@ -1,6 +1,7 @@
 import { BaseEntity, STATUS } from '@app/common'
-import { Entity, Column, BeforeInsert } from 'typeorm'
+import { Entity, Column, BeforeInsert, OneToMany } from 'typeorm'
 import { ILevel } from '../interfaces/iLevel-entity'
+import { Audit } from '../../audit/entities'
 
 @Entity('maturity_levels')
 export class Level extends BaseEntity implements ILevel {
@@ -23,6 +24,9 @@ export class Level extends BaseEntity implements ILevel {
     comment: 'Level description',
   })
   description: string
+
+  @OneToMany(() => Audit, (audit) => audit.level)
+  audits: Audit[]
 
   constructor(data?: Partial<Level>) {
     super(data)

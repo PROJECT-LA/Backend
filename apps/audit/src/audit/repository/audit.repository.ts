@@ -29,6 +29,9 @@ export class AuditRepository
         'audit.idClient',
         'audit.idTemplate',
         'audit.status',
+        'audit.idLevel',
+        'audit.acceptanceLevel',
+        'audit.id',
       ])
       .take(limit)
       .skip(skip)

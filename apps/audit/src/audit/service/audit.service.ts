@@ -6,19 +6,25 @@ import {
   UpdateAuditDto,
 } from '@app/common'
 import { IAuditRepository } from '../interface'
+import { ILevelRepository } from '../../level/interfaces'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class AuditService {
   constructor(
     @Inject('IAuditRepository')
     private auditRepository: IAuditRepository,
+    @Inject('ILevelRepository')
+    private levelRepository: ILevelRepository,
   ) {}
 
   async getAuditById(id: string) {
     const audit = await this.auditRepository.findOneByCondition({
       where: { id },
     })
-    if (!audit) throw new NotFoundException('Auditoria no encontrado')
+    if (!audit) {
+      throw new RpcException(new NotFoundException('Auditoria no encontrado'))
+    }
     return audit
   }
 
@@ -27,13 +33,17 @@ export class AuditService {
   }
 
   async create(auditDto: CreateAuditDto) {
-    const newModule = this.auditRepository.create(auditDto)
-    console.log(newModule)
-    return await this.auditRepository.save(newModule)
+    console.log(auditDto)
+    const newAudit = this.auditRepository.create(auditDto)
+    console.log(newAudit)
+    await this.Validate(newAudit.idClient, newAudit.idLevel)
+    return await this.auditRepository.save(newAudit)
   }
 
   async update(id: string, auditDto: UpdateAuditDto) {
     await this.getAuditById(id)
+    const updateAudit = this.auditRepository.create(auditDto)
+    await this.Validate(updateAudit.idClient, updateAudit.idLevel)
     return await this.auditRepository.update(id, auditDto)
   }
 
@@ -43,12 +53,18 @@ export class AuditService {
   }
 
   async changeStatus(id: string) {
-    const audit = await this.auditRepository.findOneByCondition({
-      where: { id },
-    })
+    const audit = await this.getAuditById(id)
     audit.status =
       audit.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
+    return await this.auditRepository.update(id, audit)
+  }
 
-    return await this.auditRepository.save(audit)
+  async Validate(idClient: string, idLevel: string) {
+    const level = await this.levelRepository.findOneById(idLevel)
+    if (!level) {
+      throw new RpcException(
+        new NotFoundException('No existe el nivel selecionado'),
+      )
+    }
   }
 }

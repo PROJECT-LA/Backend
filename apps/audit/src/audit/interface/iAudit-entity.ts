@@ -4,5 +4,7 @@ export interface IAudit {
   beginDate: Date
   finalDate: Date
   idClient: string
+  idLevel: string
+  acceptanceLevel: number
   idTemplate: string
 }
