@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config'
 import { FileService } from './global/file.service'
 import { AvatarController } from './avatars/avatar.controller'
 import { AvatarService } from './avatars/avatar.service'
+import { HealthCheckFileController } from './external/health-check.controller'
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import { AvatarService } from './avatars/avatar.service'
     }),
     SharedModule,
   ],
-  controllers: [AvatarController],
+  controllers: [AvatarController, HealthCheckFileController],
   providers: [
     FileService,
     AvatarService,

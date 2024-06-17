@@ -1,4 +1,4 @@
-import { AvatarMessagess, FilesMessages, SharedService } from '@app/common'
+import { AvatarMessages, SharedService } from '@app/common'
 import { Controller, Inject } from '@nestjs/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { extname } from 'path'
@@ -12,13 +12,7 @@ export class AvatarController {
     private readonly sharedService: SharedService,
   ) {}
 
-  @MessagePattern({ cmd: FilesMessages.PING })
-  async serviceStatus(@Ctx() context: RmqContext) {
-    this.sharedService.acknowledgeMessage(context)
-    return 'pong'
-  }
-
-  @MessagePattern({ cmd: AvatarMessagess.UPLOAD_AVATAR })
+  @MessagePattern({ cmd: AvatarMessages.UPLOAD_AVATAR })
   async uploadAvatar(
     @Ctx() context: RmqContext,
     @Payload()
@@ -29,7 +23,7 @@ export class AvatarController {
     return this.avatarService.writteAvatars(`${fileName}.${extension}`, file)
   }
 
-  @MessagePattern({ cmd: AvatarMessagess.GET_AVATAR })
+  @MessagePattern({ cmd: AvatarMessages.GET_AVATAR })
   async getAvatarBase64(
     @Ctx() context: RmqContext,
     @Payload() { name }: { name: string },
@@ -38,7 +32,7 @@ export class AvatarController {
     return this.avatarService.getAvatar(name)
   }
 
-  @MessagePattern({ cmd: AvatarMessagess.DELETE_AVATAR })
+  @MessagePattern({ cmd: AvatarMessages.DELETE_AVATAR })
   async deleteFile(
     @Ctx() context: RmqContext,
     @Payload() { name }: { name: string },

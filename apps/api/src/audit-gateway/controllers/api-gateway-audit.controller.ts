@@ -29,7 +29,7 @@ import {
 
 @ApiBearerAuth()
 @ApiTags('Audits')
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('audits')
 export class ApiGatewayAuditController {
   constructor(

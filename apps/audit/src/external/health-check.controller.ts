@@ -1,11 +1,11 @@
-import { AuthMessages } from '@app/common'
+import { AuditMessages } from '@app/common'
 import { Controller } from '@nestjs/common'
 import { MessagePattern } from '@nestjs/microservices'
 import { cpus, totalmem, freemem } from 'os'
 
 @Controller('healthcheck')
 export class HealthCheckController {
-  @MessagePattern({ cmd: AuthMessages.PING })
+  @MessagePattern({ cmd: AuditMessages.PING })
   check() {
     const cpuCount = cpus().length
     const totalMemory = totalmem()

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
-import { SharedModule, SharedService } from '@app/common'
+import { AUTH_SERVICE, SharedModule, SharedService } from '@app/common'
 import { ParameterController } from './parameter/controller'
 import { ParameterRepository } from './parameter/repository'
 import { ParameterService } from './parameter/service'
@@ -27,6 +27,7 @@ import { AuditController } from './audit/controller'
 import { Audit } from './audit/entities'
 import { AuditService } from './audit/service'
 import { AuditRepository } from './audit/repository'
+import { ExternalUserService } from './external/external-user.service'
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AuditRepository } from './audit/repository'
       Control,
       Audit,
     ]),
+    SharedModule.registerRmq(AUTH_SERVICE, process.env.RABBITMQ_AUTH_QUEUE),
   ],
   controllers: [
     ParameterController,
@@ -81,13 +83,13 @@ import { AuditRepository } from './audit/repository'
       provide: 'IAuditRepository',
       useClass: AuditRepository,
     },
-
     ParameterService,
     TemplateService,
     ControlGroupService,
     LevelService,
     ControlService,
     AuditService,
+    ExternalUserService,
   ],
 })
 export class AuditModule {}

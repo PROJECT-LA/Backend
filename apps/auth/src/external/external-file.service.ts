@@ -1,5 +1,5 @@
 import { Inject, Injectable, ServiceUnavailableException } from '@nestjs/common'
-import { AvatarMessagess, FILE_SERVICE, FilesMessages } from '@app/common'
+import { AvatarMessages, FILE_SERVICE, FilesMessages } from '@app/common'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { catchError, lastValueFrom, of, timeout } from 'rxjs'
 
@@ -43,7 +43,7 @@ export class ExternalFileService {
 
     const result = await lastValueFrom(
       this.fileService.send(
-        { cmd: AvatarMessagess.UPLOAD_AVATAR },
+        { cmd: AvatarMessages.UPLOAD_AVATAR },
         { file: image, fileName: name },
       ),
     )
@@ -54,7 +54,7 @@ export class ExternalFileService {
     const res = await this.isServiceAvaliable()
     if (res) {
       const result = await lastValueFrom(
-        this.fileService.send({ cmd: AvatarMessagess.GET_AVATAR }, { name }),
+        this.fileService.send({ cmd: AvatarMessages.GET_AVATAR }, { name }),
       )
       return result
     }

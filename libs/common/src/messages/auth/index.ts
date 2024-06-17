@@ -45,8 +45,5 @@ export const AuthMessages = {
   REFRESH_TOKEN: 'refresh-token',
   VERIFY_TOKEN: 'verify-jwt',
   VERIFY_CASBIN: 'verify-casbin',
-}
-
-export const AuthConstants = {
   PING: 'ping-auth',
 }

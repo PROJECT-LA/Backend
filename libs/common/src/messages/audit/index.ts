@@ -36,4 +36,5 @@ export const AuditMessages = {
   UPDATE_AUDIT: 'update-audit',
   REMOVE_AUDIT: 'remove-audit',
   CHANGE_STATUS_AUDIT: 'change-status-audit',
+  PING: 'ping-audit',
 }
