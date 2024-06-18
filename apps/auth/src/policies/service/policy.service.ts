@@ -1,4 +1,10 @@
-import { Inject, Injectable, NotFoundException, Query } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  Query,
+} from '@nestjs/common'
 import { AuthZManagementService } from 'nest-authz'
 import {
   APP,
@@ -138,11 +144,15 @@ export class PolicyService {
   async getPoliciesByRoute(route: string, user: PassportUser) {
     const result = await this.authZManagerService.getFilteredPolicy(1, route)
     if (!result || result.length === 0) {
-      throw new NotFoundException('No se encontraron politicas asociadas')
+      throw new RpcException(
+        new NotFoundException('No se encontraron politicas asociadas'),
+      )
     }
     const policie = result.find((policie) => policie[0] === user.idRole)
     if (!policie)
-      throw new NotFoundException('No se encontro rol asociado a las politica')
+      throw new RpcException(
+        new ForbiddenException('El rol no tiene permisos para esta ruta'),
+      )
 
     return {
       route: policie[1],
