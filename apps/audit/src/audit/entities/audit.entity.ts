@@ -22,10 +22,10 @@ export class Audit extends BaseEntity implements IAudit {
   @Column({ length: 200, type: 'varchar' })
   description: string
 
-  @Column({ nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   beginDate: Date
 
-  @Column({ nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   finalDate: Date
 
   @Column({ nullable: false })

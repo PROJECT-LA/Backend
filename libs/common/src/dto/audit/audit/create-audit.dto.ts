@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { IsNotEmpty } from '../../../validation'
+import { IsDateString, IsNotEmpty, IsOptional } from '../../../validation'
 
 export class CreateAuditDto {
   @ApiProperty({ example: 'Obtener la certificacion de l anormativa 27001' })
@@ -11,11 +11,13 @@ export class CreateAuditDto {
   description: string
 
   @ApiProperty({ example: '2023-01-01' })
-  @IsNotEmpty()
+  @IsDateString()
+  @IsOptional()
   beginDate: Date
 
   @ApiProperty({ example: '2023-12-31' })
-  @IsNotEmpty()
+  @IsDateString()
+  @IsOptional()
   finalDate: Date
 
   @ApiProperty({ example: '3' })

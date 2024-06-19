@@ -8,7 +8,7 @@ import {
   AuthDto,
   UserPayload,
 } from '@app/common'
-import { Cron } from '@nestjs/schedule'
+import { Cron, CronExpression } from '@nestjs/schedule'
 import { TokenRepositoryInterface } from '../interface'
 import { IModuleRepository } from '../../modules/interfaces'
 import { User } from '../../users/entities'
@@ -75,6 +75,7 @@ export class AuthenticationService {
     const expiresIn = this.configService.get('RFT_EXPIRES')
     const now = new Date()
     const exp = new Date(now.getTime() + parseInt(expiresIn))
+    console.log('exp', exp)
     const refreshToken = this.tokenRepository.create({
       id: TextService.generateNanoId(),
       grantId: user.id,
@@ -209,8 +210,9 @@ export class AuthenticationService {
     return role
   }
 
-  @Cron(process.env.RFT_REVISIONS || '0')
-  deleteTokenExpireds() {
-    return this.tokenRepository.removeExpiredTokens()
+  @Cron(CronExpression.EVERY_5_SECONDS)
+  async deleteTokenExpireds() {
+    console.log('renovar')
+    return await this.tokenRepository.removeExpiredTokens()
   }
 }

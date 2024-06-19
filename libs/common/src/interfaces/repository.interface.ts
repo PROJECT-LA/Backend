@@ -15,6 +15,7 @@ export interface BaseInterfaceRepository<T> {
   findOneById(id: string): Promise<T>
   findOneByCondition(filterCondition: FindOneOptions<T>): Promise<T>
   findAll(options?: FindManyOptions<T>): Promise<T[]>
+  getPaginateItems(options: FindManyOptions): Promise<[T[], number]>
   remove(data: T): Promise<T>
   findManyByConditions(relations: FindManyOptions<T>): Promise<T[]>
   preload(entityLike: DeepPartial<T>): Promise<T>

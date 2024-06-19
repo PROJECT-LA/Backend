@@ -35,6 +35,7 @@ export class RoleController extends BaseController {
     @Ctx() context: RmqContext,
     @Payload() { filter }: { filter: FilterRoleDto },
   ) {
+    console.log(filter)
     this.sharedService.acknowledgeMessage(context)
     const result = await this.roleService.list(filter)
     return this.successListRows(result)

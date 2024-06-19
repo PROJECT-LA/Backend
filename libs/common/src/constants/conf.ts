@@ -37,3 +37,5 @@ export const AUTH_SERVICE = 'auth_service'
 export const FILE_SERVICE = 'file_service'
 
 export const AUDIT_SERVICE = 'audit_service'
+
+export const REFRESH_TOKEN_REVISIONS = process.env.RFT_REVISIONS || '0'

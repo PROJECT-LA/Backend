@@ -4,7 +4,7 @@ services:
     platform: linux/x86_64
     image: mysql:latest
     environment:
-      TZ: UTC
+      TZ: 'America/La_Paz'
       MYSQL_DATABASE: ${DB_NAME_AUTH}
       MYSQL_USER: ${DB_USERNAME_AUTH}
       MYSQL_PASSWORD: ${DB_PASSWORD_AUTH}
@@ -20,7 +20,7 @@ services:
     platform: linux/x86_64
     image: mysql:latest
     environment:
-      TZ: UTC
+      TZ: 'America/La_Paz'
       MYSQL_DATABASE: ${DB_NAME_AUDIT}
       MYSQL_USER: ${DB_USERNAME_AUDIT}
       MYSQL_PASSWORD: ${DB_PASSWORD_AUDIT}

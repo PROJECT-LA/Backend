@@ -19,6 +19,7 @@ export class RefreshTokenRepository
   }
   async removeExpiredTokens(): Promise<DeleteResult> {
     const now: Date = new Date()
+    console.log('now')
     return await this.refreshToken
       .createQueryBuilder('RefreshTokens')
       .delete()

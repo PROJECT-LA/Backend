@@ -9,6 +9,8 @@ import {
 } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 import { BaseInterfaceRepository } from '../interfaces/repository.interface'
+import { InternalServerErrorException } from '@nestjs/common'
+import { RpcException } from '@nestjs/microservices'
 
 interface HasId {
   id: string
@@ -23,11 +25,19 @@ export abstract class BaseRepository<T extends HasId>
   }
 
   public async save(data: DeepPartial<T>): Promise<T> {
-    return await this.entity.save(data)
+    try {
+      return await this.entity.save(data)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 
   public async saveMany(data: DeepPartial<T>[]): Promise<T[]> {
-    return await this.entity.save(data)
+    try {
+      return await this.entity.save(data)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 
   public create(data: DeepPartial<T>): T {
@@ -54,15 +64,37 @@ export abstract class BaseRepository<T extends HasId>
   public async findManyByConditions(
     relations: FindManyOptions<T>,
   ): Promise<T[]> {
-    return await this.entity.find(relations)
+    try {
+      return await this.entity.find(relations)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 
   public async findAll(options?: FindManyOptions<T>): Promise<T[]> {
-    return await this.entity.find(options)
+    try {
+      return await this.entity.find(options)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
+  }
+
+  public async getPaginateItems(
+    options: FindManyOptions<T>,
+  ): Promise<[T[], number]> {
+    try {
+      return await this.entity.findAndCount(options)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 
   public async remove(data: T): Promise<T> {
-    return await this.entity.remove(data)
+    try {
+      return await this.entity.remove(data)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 
   public async preload(entityLike: DeepPartial<T>): Promise<T> {
@@ -70,13 +102,21 @@ export abstract class BaseRepository<T extends HasId>
   }
 
   public async delete(id: string): Promise<DeleteResult> {
-    return await this.entity.delete(id)
+    try {
+      return await this.entity.delete(id)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 
   public async update(
     id: string,
     entityLike: QueryDeepPartialEntity<T>,
   ): Promise<UpdateResult> {
-    return await this.entity.update(id, entityLike)
+    try {
+      return await this.entity.update(id, entityLike)
+    } catch (error) {
+      throw new RpcException(new InternalServerErrorException(error))
+    }
   }
 }

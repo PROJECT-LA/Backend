@@ -1,5 +1,6 @@
 import * as validator from 'class-validator'
 import { ValidationMessageEnum } from './i18n/es.enum'
+import { Transform } from 'class-transformer'
 
 const make =
   (_function, _message) =>
@@ -297,3 +298,28 @@ export const ValidateNested = validator.ValidateNested
 // OTHER DECORATORS
 
 // CUSTOM VALIDATION
+
+export function ToUtcDate(): PropertyDecorator {
+  return Transform(({ value }) => {
+    if (!value) return value
+    const date = new Date(value)
+    return new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes(),
+        date.getSeconds(),
+      ),
+    )
+  })
+}
+
+export function ToUtcDateString(): PropertyDecorator {
+  return Transform(({ value }) => {
+    if (!value) return value
+    const date = new Date(value)
+    return date.toISOString()
+  })
+}
