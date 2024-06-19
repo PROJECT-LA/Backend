@@ -11,5 +11,5 @@ export class FilterAuditDto extends PaginationQueryDto {
   @ApiProperty({ example: '1' })
   @IsString()
   @IsOptional()
-  readonly idClient?: string
+  readonly idClient: string
 }

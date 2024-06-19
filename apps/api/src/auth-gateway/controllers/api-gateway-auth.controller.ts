@@ -93,7 +93,6 @@ export class ApiGatewayAuthController {
     @CurrentUser() user: PassportUser,
     @Body() roleDto: ChangeRoleDto,
   ) {
-    console.log(user)
     const idRefreshToken =
       req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (idRefreshToken === undefined) return res.sendStatus(401)

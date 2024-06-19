@@ -1,6 +1,6 @@
 import { Brackets, Repository } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { BaseRepository, FilterControlDto } from '@app/common'
+import { BaseRepository, FilterAuditDto } from '@app/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Audit } from '../entities'
 import { IAuditRepository } from '../interface'
@@ -17,8 +17,8 @@ export class AuditRepository
     super(audit)
   }
 
-  async list(filterDto: FilterControlDto) {
-    const { limit, skip, filter } = filterDto
+  async list(filterDto: FilterAuditDto) {
+    const { limit, skip, filter, idClient } = filterDto
     const query = this.audit
       .createQueryBuilder('audit')
       .select([
@@ -33,6 +33,7 @@ export class AuditRepository
         'audit.acceptanceLevel',
         'audit.id',
       ])
+      .where('audit.idClient = :idClient', { idClient })
       .take(limit)
       .skip(skip)
 

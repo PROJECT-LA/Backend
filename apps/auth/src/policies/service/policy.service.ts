@@ -29,7 +29,7 @@ export class PolicyService {
   async findAll(
     @Query() paginationQueryDto: FilterPoliciesDto,
   ): Promise<politicasResultType> {
-    const { limit, page, filter, aplication, order, sense } = paginationQueryDto
+    const { limit, page, filter, aplication } = paginationQueryDto
     const roles = await this.roleRepository.findAll({ select: ['id', 'name'] })
     const policie = await this.authZManagerService.getPolicy()
 
@@ -41,33 +41,6 @@ export class PolicyService {
       status: policie[4],
       subjectName: roles.find((role) => role.id === policie[0])?.name || '',
     }))
-
-    switch (order) {
-      case 'subject':
-        result = result.sort((a, b) => {
-          const compareResult = a.subject.localeCompare(b.subject)
-          return sense ? -compareResult : compareResult
-        })
-        break
-      case 'object':
-        result = result.sort((a, b) => {
-          const compareResult = a.object.localeCompare(b.object)
-          return sense ? -compareResult : compareResult
-        })
-        break
-      case 'action':
-        result = result.sort((a, b) => {
-          const compareResult = a.action.localeCompare(b.action)
-          return sense ? -compareResult : compareResult
-        })
-        break
-      case 'app':
-        result = result.sort((a, b) => {
-          const compareResult = a.app.localeCompare(b.app)
-          return sense ? -compareResult : compareResult
-        })
-        break
-    }
 
     if (filter) {
       result = result.filter(
@@ -99,7 +72,7 @@ export class PolicyService {
     const { subject, object, action, app } = policie
     const roles = await this.roleRepository.findAll({ select: ['id', 'name'] })
     if (!roles.find((role) => role.id === subject)) {
-      throw new NotFoundException('No se encontro el rol')
+      throw new RpcException(new NotFoundException('No se encontro el rol'))
     }
     await this.authZManagerService.addPolicy(
       subject,
@@ -117,7 +90,7 @@ export class PolicyService {
       select: ['id', 'name'],
     })
     if (!roles.find((role) => role.id === subject)) {
-      throw new NotFoundException('No se encontro el rol')
+      throw new RpcException(new NotFoundException('No se encontro el rol'))
     }
     await this.deletePolicie(policie)
     await this.authZManagerService.addPolicy(

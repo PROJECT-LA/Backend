@@ -5,12 +5,12 @@ export class Levels1718395760597 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const levels = [
       {
-        grade: 1,
+        grade: 5,
         name: 'COBIT-5',
         description: 'COBIT 1 description',
       },
       {
-        grade: 2,
+        grade: 6,
         name: 'COBIT-6',
         description: 'COBIT 2 description',
       },
