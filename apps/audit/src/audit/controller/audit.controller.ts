@@ -2,13 +2,16 @@ import { Controller, Inject } from '@nestjs/common'
 import {
   AuditMessages,
   BaseController,
-  FilterControlDto,
   ParamIdDto,
   SharedService,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { AuditService } from '../service'
-import { CreateAuditDto, UpdateAuditDto } from '@app/common/dto/audit/audit'
+import {
+  CreateAuditDto,
+  FilterAuditDto,
+  UpdateAuditDto,
+} from '@app/common/dto/audit/audit'
 
 @Controller('audits')
 export class AuditController extends BaseController {
@@ -24,7 +27,7 @@ export class AuditController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { filter }: { filter: FilterControlDto },
+    { filter }: { filter: FilterAuditDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
     const result = await this.auditService.list(filter)
