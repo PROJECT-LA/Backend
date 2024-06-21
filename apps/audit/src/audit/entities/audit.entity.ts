@@ -10,7 +10,7 @@ import {
 } from 'typeorm'
 import { IAudit } from '../interface/iAudit-entity'
 import { Template } from '../../template/entities'
-import { Personal } from '../../personal/entities'
+import { UserAudit } from '../../user-audits/entities'
 import { Level } from '../../level/entities'
 
 @Entity('audits')
@@ -38,8 +38,8 @@ export class Audit extends BaseEntity implements IAudit {
   @Column({ nullable: false })
   idClient: string
 
-  @OneToMany(() => Personal, (personal) => personal.audit)
-  personal: Personal[]
+  @OneToMany(() => UserAudit, (personal) => personal.audit)
+  personal: UserAudit[]
 
   @Column({ nullable: false })
   idLevel: string

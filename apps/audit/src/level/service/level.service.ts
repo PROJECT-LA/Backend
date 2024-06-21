@@ -2,12 +2,17 @@ import {
   ConflictException,
   Inject,
   Injectable,
-  PreconditionFailedException,
+  NotFoundException,
 } from '@nestjs/common'
-import { FilterTemplateDto, STATUS } from '@app/common'
+import { STATUS } from '@app/common'
 import { ILevelRepository } from '../interfaces'
-import { CreateLevelDto, UpdateLevelDto } from '@app/common/dto/audit/level'
+import {
+  CreateLevelDto,
+  FilterLevelDto,
+  UpdateLevelDto,
+} from '@app/common/dto/audit/level'
 import { RpcException } from '@nestjs/microservices'
+import { Like } from 'typeorm'
 
 @Injectable()
 export class LevelService {
@@ -18,7 +23,8 @@ export class LevelService {
 
   async getLevelById(id: string) {
     const level = await this.levelRepository.findOneById(id)
-    if (!level) throw new PreconditionFailedException('Level no encontrado')
+    if (!level)
+      throw new RpcException(new NotFoundException('Nivel no encontrado'))
     return level
   }
 
@@ -40,7 +46,15 @@ export class LevelService {
     return await this.levelRepository.delete(id)
   }
 
-  async list(paginationQueryDto: FilterTemplateDto) {
+  async list(paginationQueryDto: FilterLevelDto) {
+    const { skip, limit, filter } = paginationQueryDto
+    const options = {
+      ...(filter && {
+        where: { name: Like(`%${filter}%`), description: Like(`%${filter}%`) },
+      }),
+      skip,
+      take: limit,
+    }
     return await this.levelRepository.list(paginationQueryDto)
   }
 

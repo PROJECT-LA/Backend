@@ -38,3 +38,9 @@ export const AuditMessages = {
   CHANGE_STATUS_AUDIT: 'change-status-audit',
   PING: 'ping-audit',
 }
+export const UserAuditMessages = {
+  GET_USERS_AUDIT: 'get-user-audits',
+  CREATE_USER_AUDIT: 'create-user-audit',
+  REMOVE_USER_AUDIT: 'remove-user-audit',
+  CHANGE_STATUS_AUDIT: 'change-status-user-audit',
+}

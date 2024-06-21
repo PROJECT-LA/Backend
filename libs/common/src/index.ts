@@ -14,7 +14,7 @@ export * from './filters'
 export * from './dto'
 
 // interfaces
-export * from './interfaces'
+export * from './interfaces/base'
 
 //lib
 export * from './lib'

@@ -75,7 +75,6 @@ export class AuthenticationService {
     const expiresIn = this.configService.get('RFT_EXPIRES')
     const now = new Date()
     const exp = new Date(now.getTime() + parseInt(expiresIn))
-    console.log('exp', exp)
     const refreshToken = this.tokenRepository.create({
       id: TextService.generateNanoId(),
       grantId: user.id,

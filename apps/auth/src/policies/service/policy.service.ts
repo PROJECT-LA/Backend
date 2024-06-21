@@ -45,7 +45,6 @@ export class PolicyService {
     if (filter) {
       result = result.filter(
         (r) =>
-          //r.subject.toLowerCase().includes(filter.toLowerCase()) ||
           r.object.toLowerCase().includes(filter.toLowerCase()) ||
           r.action.toLowerCase().includes(filter.toLowerCase()) ||
           r.app.toLowerCase().includes(filter.toLowerCase()) ||

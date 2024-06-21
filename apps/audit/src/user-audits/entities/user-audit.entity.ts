@@ -10,9 +10,9 @@ import {
 import { Audit } from '../../audit/entities'
 import { IPersonal } from '../interface'
 
-@Entity('personal')
+@Entity('user-audit')
 @Check(UtilService.buildStatusCheck(STATUS))
-export class Personal extends BaseEntity implements IPersonal {
+export class UserAudit extends BaseEntity implements IPersonal {
   @Column({ name: 'id_audit' })
   idAudit: string
 
@@ -23,7 +23,7 @@ export class Personal extends BaseEntity implements IPersonal {
   @Column({ type: 'bigint', nullable: false })
   idUser: string
 
-  constructor(data?: Partial<Personal>) {
+  constructor(data?: Partial<UserAudit>) {
     super(data)
   }
 

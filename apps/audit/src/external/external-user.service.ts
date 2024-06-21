@@ -5,20 +5,20 @@ import {
   ParamIdDto,
   UserMessages,
 } from '@app/common'
-import { ClientProxy } from '@nestjs/microservices'
+import { ClientProxy, RpcException } from '@nestjs/microservices'
 import { catchError, lastValueFrom, of, timeout } from 'rxjs'
 
 @Injectable()
 export class ExternalUserService {
   constructor(
     @Inject(AUTH_SERVICE)
-    private readonly fileService: ClientProxy,
+    private readonly authService: ClientProxy,
   ) {}
 
   async isServiceAvaliable(): Promise<boolean> {
     try {
       const result = await lastValueFrom(
-        this.fileService.send({ cmd: AuthMessages.PING }, {}).pipe(
+        this.authService.send({ cmd: AuthMessages.PING }, {}).pipe(
           timeout(500),
           catchError((error) => {
             console.log(error)
@@ -40,11 +40,12 @@ export class ExternalUserService {
     const param = new ParamIdDto()
     param.id = id
     const res = await this.isServiceAvaliable()
-    if (res) {
-      const result = await lastValueFrom(
-        this.fileService.send({ cmd: UserMessages.GET_USER }, { param }),
-      )
-      return result
+    if (!res) {
+      throw new RpcException(new Error('Servicio no disponible'))
     }
+    const result = await lastValueFrom(
+      this.authService.send({ cmd: UserMessages.GET_USER }, { param }),
+    )
+    return result
   }
 }

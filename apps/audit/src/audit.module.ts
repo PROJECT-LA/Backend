@@ -29,6 +29,10 @@ import { AuditService } from './audit/service'
 import { AuditRepository } from './audit/repository'
 import { ExternalUserService } from './external/external-user.service'
 import { HealthCheckAuditController } from './external/health-check.controller'
+import { UserAuditRepository } from './user-audits/repository'
+import { UserAuditService } from './user-audits/service/user-audit.service'
+import { UserAudit } from './user-audits/entities'
+import { UserAuditController } from './user-audits/controller'
 
 @Module({
   imports: [
@@ -44,6 +48,7 @@ import { HealthCheckAuditController } from './external/health-check.controller'
       Level,
       Control,
       Audit,
+      UserAudit,
     ]),
     SharedModule.registerRmq(AUTH_SERVICE, process.env.RABBITMQ_AUTH_QUEUE),
   ],
@@ -55,6 +60,7 @@ import { HealthCheckAuditController } from './external/health-check.controller'
     ControlController,
     AuditController,
     HealthCheckAuditController,
+    UserAuditController,
   ],
   providers: [
     {
@@ -85,6 +91,10 @@ import { HealthCheckAuditController } from './external/health-check.controller'
       provide: 'IAuditRepository',
       useClass: AuditRepository,
     },
+    {
+      provide: 'IUserAuditRepository',
+      useClass: UserAuditRepository,
+    },
     ParameterService,
     TemplateService,
     ControlGroupService,
@@ -92,6 +102,7 @@ import { HealthCheckAuditController } from './external/health-check.controller'
     ControlService,
     AuditService,
     ExternalUserService,
+    UserAuditService,
   ],
 })
 export class AuditModule {}

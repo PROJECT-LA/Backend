@@ -14,7 +14,7 @@ import {
 import { IRoleRepository } from '../interface/iRole-repository'
 import { PolicyService } from '../../policies/service'
 import { RpcException } from '@nestjs/microservices'
-import { Equal, Like } from 'typeorm'
+import { Like } from 'typeorm'
 
 @Injectable()
 export class RoleService {
@@ -63,13 +63,12 @@ export class RoleService {
 
   async list(paginationQueryDto: FilterRoleDto) {
     const { skip, limit, filter } = paginationQueryDto
-    console.log(skip)
     const options = {
       ...(filter && {
         where: { name: Like(`%${filter}%`), description: Like(`%${filter}%`) },
       }),
       skip,
-      take: 1,
+      take: limit,
     }
     return await this.roleRepository.getPaginateItems(options)
   }

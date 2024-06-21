@@ -29,7 +29,7 @@ import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Levels')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, CasbinGuard)
+//@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('levels')
 export class ApiGatewayLevelController {
   constructor(

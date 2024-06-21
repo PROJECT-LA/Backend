@@ -26,7 +26,7 @@ import { catchError, throwError } from 'rxjs'
 @ApiTags('Roles')
 @ApiBearerAuth()
 @Controller('roles')
-@UseGuards(JwtAuthGuard, CasbinGuard)
+//@UseGuards(JwtAuthGuard, CasbinGuard)
 export class ApiGatewayRoleController {
   constructor(
     @Inject(AUTH_SERVICE) private readonly authService: ClientProxy,

@@ -23,8 +23,9 @@ import {
 import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
-import { JwtAuthGuard } from '../../guards/auth.guard'
+
 import { catchError, throwError } from 'rxjs'
+import { JwtAuthGuard } from '../../guards'
 
 @ApiTags('Auth')
 @Controller('auth')

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common'
-import { MicroserviceAuditModule } from './audit-gateway/audit.module'
-import { MicroservicesAuthModule } from './auth-gateway/auth.module'
+import { MicroserviceAuditModule } from './audit/audit.module'
+import { MicroservicesAuthModule } from './auth/auth.module'
 import { GlobalModule } from './global/global.module'
 
 @Module({

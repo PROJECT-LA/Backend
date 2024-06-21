@@ -8,7 +8,7 @@ import {
   UpdateResult,
 } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
-import { BaseInterfaceRepository } from '../interfaces/repository.interface'
+import { BaseInterfaceRepository } from '../interfaces/base/repository.interface'
 import { InternalServerErrorException } from '@nestjs/common'
 import { RpcException } from '@nestjs/microservices'
 

@@ -4,6 +4,7 @@ import {
   LevelMessages,
   ParamIdDto,
   SharedService,
+  validatePayload,
 } from '@app/common'
 import { LevelService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
@@ -13,7 +14,7 @@ import {
   UpdateLevelDto,
 } from '@app/common/dto/audit/level'
 
-@Controller('templates')
+@Controller('levels')
 export class LevelController extends BaseController {
   constructor(
     private levelService: LevelService,
@@ -27,9 +28,10 @@ export class LevelController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { filter }: { filter: FilterLevelDto },
+    payload: { filter: FilterLevelDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
+    const filter = await validatePayload(FilterLevelDto, payload.filter)
     const result = await this.levelService.list(filter)
     return this.successListRows(result)
   }

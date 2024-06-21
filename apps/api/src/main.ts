@@ -21,7 +21,6 @@ async function bootstrap() {
   if (configService.get('NODE_ENV') !== 'production') {
     createSwagger(app)
   }
-
   await app.listen(configService.get('PORT'))
 }
 

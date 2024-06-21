@@ -7,6 +7,7 @@ import {
   ParamIdDto,
   SharedService,
   RoleMessages,
+  validatePayload,
 } from '@app/common'
 import { RoleService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
@@ -33,10 +34,10 @@ export class RoleController extends BaseController {
   @MessagePattern({ cmd: RoleMessages.GET_ROLES })
   async findAll(
     @Ctx() context: RmqContext,
-    @Payload() { filter }: { filter: FilterRoleDto },
+    @Payload() payload: { filter: FilterRoleDto },
   ) {
-    console.log(filter)
     this.sharedService.acknowledgeMessage(context)
+    const filter = await validatePayload(FilterRoleDto, payload.filter)
     const result = await this.roleService.list(filter)
     return this.successListRows(result)
   }

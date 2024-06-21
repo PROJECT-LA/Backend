@@ -10,6 +10,7 @@ import {
   SharedService,
   UserMessages,
   PassportUser,
+  validatePayload,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { UserService } from '../service'
@@ -26,9 +27,10 @@ export class UserController extends BaseController {
   @MessagePattern({ cmd: UserMessages.GET_USERS })
   async getUsers(
     @Ctx() context: RmqContext,
-    @Payload() { filter }: { filter: FilterUserDto },
+    @Payload() payload: { filter: FilterUserDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
+    const filter = await validatePayload(FilterUserDto, payload.filter)
     const result = await this.usersService.list(filter)
     return this.successListRows(result)
   }
