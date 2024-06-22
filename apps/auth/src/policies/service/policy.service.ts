@@ -103,6 +103,7 @@ export class PolicyService {
 
   async deletePolicie(policie: CreatePolicyDto) {
     const { subject, object, action, app, status } = policie
+    await this.getPolicie(policie)
     await this.authZManagerService.removePolicy(
       subject,
       object,
@@ -132,6 +133,7 @@ export class PolicyService {
     }
   }
 
+  //Metodo que cambia el estado de los permisos de un rol
   async changeRoleState(idRole: string, status: string) {
     const policies = await this.authZManagerService.getFilteredPolicy(0, idRole)
     if (!policies || policies.length < 0) {
@@ -198,6 +200,7 @@ export class PolicyService {
     )
   }
 
+  //Metodo que obtiene las politicas de un rol para el frontend
   async getPoliciesByRouteFrontend(idRole: string) {
     const policies = await this.authZManagerService.getFilteredPolicy(0, idRole)
     const result = policies.map((item) => ({

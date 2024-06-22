@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { DataSourceConfig } from '../db/orm-config-source'
 import { User } from './users/entities'
 import { Role } from './roles/entities'
-import { RefreshToken } from './authentication/entities'
 import { ModuleEntity } from './modules/entities'
 import { CasbinModule } from './policies/config'
 import { FILE_SERVICE, SharedModule, SharedService } from '@app/common'
@@ -15,7 +14,6 @@ import { RoleController } from './roles/controller'
 import { UserController } from './users/controller'
 import { ModuleController } from './modules/controller'
 import { UserRepository } from './users/repository'
-import { RefreshTokenRepository } from './authentication/repository'
 import { RoleRepository } from './roles/repository'
 import { ModuleRepository } from './modules/repository'
 import { UserService } from './users/service'
@@ -31,14 +29,14 @@ import { ExternalFileService } from './external/external-file.service'
 @Module({
   imports: [
     TypeOrmModule.forRoot(DataSourceConfig),
-    TypeOrmModule.forFeature([User, Role, RefreshToken, ModuleEntity]),
+    TypeOrmModule.forFeature([User, Role, ModuleEntity]),
     ScheduleModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow('JWT_SECRET'),
-        signOptions: { expiresIn: configService.getOrThrow('JWT_EXPIRES') },
+        signOptions: { expiresIn: configService.getOrThrow('JWT_EXPIRES_IN') },
       }),
     }),
     ConfigModule.forRoot({
@@ -66,10 +64,6 @@ import { ExternalFileService } from './external/external-file.service'
     {
       provide: 'SharedServiceInterface',
       useClass: SharedService,
-    },
-    {
-      provide: 'IRefreshTokenRepository',
-      useClass: RefreshTokenRepository,
     },
     {
       provide: 'IModuleRepository',

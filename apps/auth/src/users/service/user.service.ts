@@ -101,7 +101,6 @@ export class UserService {
   }
 
   async delete(idUser: string, currentUser: PassportUser) {
-    console.log(currentUser)
     await this.getUserProfile(idUser)
     if (currentUser.id === idUser) {
       throw new RpcException(

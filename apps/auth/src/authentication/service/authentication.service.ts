@@ -7,9 +7,8 @@ import {
   TextService,
   AuthDto,
   UserPayload,
+  RefreshTokenPayload,
 } from '@app/common'
-import { Cron, CronExpression } from '@nestjs/schedule'
-import { TokenRepositoryInterface } from '../interface'
 import { IModuleRepository } from '../../modules/interfaces'
 import { User } from '../../users/entities'
 import { RpcException } from '@nestjs/microservices'
@@ -25,15 +24,13 @@ export class AuthenticationService {
     private readonly jwtService: JwtService,
     @Inject('IUserRepository')
     private readonly usersRepository: IUserRepository,
-    @Inject('IRefreshTokenRepository')
-    private readonly tokenRepository: TokenRepositoryInterface,
     @Inject('IModuleRepository')
     private readonly moduleRepository: IModuleRepository,
     @Inject(AUTHZ_ENFORCER) private enforcer: Enforcer,
     private readonly externalFileService: ExternalFileService,
   ) {}
 
-  async validateCredentials(authDto: AuthDto) {
+  async verifyCredentials(authDto: AuthDto) {
     const { password, username } = authDto
     const user = await this.usersRepository.validateCredentials(username)
     if (!user) {
@@ -64,7 +61,7 @@ export class AuthenticationService {
       roleName: role.name,
     }
 
-    const token = this.jwtService.sign(tokenPayload)
+    const token = await this.jwtService.signAsync(tokenPayload)
     return {
       tokenPayload,
       token,
@@ -72,17 +69,18 @@ export class AuthenticationService {
   }
 
   private async __createRefreshToken(token: string, user: PassportUser) {
-    const expiresIn = this.configService.get('RFT_EXPIRES')
-    const now = new Date()
-    const exp = new Date(now.getTime() + parseInt(expiresIn))
-    const refreshToken = this.tokenRepository.create({
-      id: TextService.generateNanoId(),
-      grantId: user.id,
+    const refreshTokenPayload: RefreshTokenPayload = {
       token,
-      exp,
-      iat: now,
-    })
-    return this.tokenRepository.save(refreshToken)
+      userId: user.id,
+    }
+    const signedRefreshToken = await this.jwtService.signAsync(
+      refreshTokenPayload,
+      {
+        secret: this.configService.get('RFT_SECRET'),
+        expiresIn: this.configService.get('RFT_EXPIRES_IN'),
+      },
+    )
+    return signedRefreshToken
   }
 
   /*******************************************   */
@@ -91,25 +89,30 @@ export class AuthenticationService {
     const refreshToken = await this.__createRefreshToken(token, user)
     return {
       token,
-      refreshToken: refreshToken.id,
+      refreshToken,
       tokenPayload,
     }
   }
+
   async login(user: PassportUser) {
     const { refreshToken, token, tokenPayload } = await this.signIn(user)
     const info = await this.createUserInfo(tokenPayload, token)
     return { info, token, refreshToken }
   }
 
-  async changeRole(user: PassportUser, idRole: string, idRefreshToken: string) {
-    const userRole: PassportUser = {
-      ...user,
-      idRole: idRole,
-    }
-    await this.tokenRepository.findOneById(idRefreshToken)
+  async changeRole(
+    clientToken: string,
+    idRole: string,
+    clientRefreshToken: string,
+  ) {
+    const verifyRft = await this.verifyRefreshToken(clientRefreshToken)
+    if (verifyRft.token !== clientToken)
+      throw new RpcException(new UnauthorizedException('Sesion Expirada'))
 
-    await this.deleteToken(idRefreshToken)
-    const { token, refreshToken, tokenPayload } = await this.signIn(userRole)
+    const user = await this.verifyToken(clientToken)
+    user.idRole = idRole
+
+    const { token, refreshToken, tokenPayload } = await this.signIn(user)
     const info = await this.createUserInfo(tokenPayload, token)
     return {
       info,
@@ -146,35 +149,23 @@ export class AuthenticationService {
     return info
   }
 
-  async renovateToken(oldToken: string, idRefreshToken: string) {
-    await this.jwtService.verifyAsync(oldToken, { ignoreExpiration: true })
-    const user = this.jwtService.decode(oldToken) as PassportUser
-
-    const ExistingRefreshToken = await this.tokenRepository.findOneByCondition({
-      where: { id: idRefreshToken },
-    })
-    if (!ExistingRefreshToken) {
+  async renovateToken(clientToken: string, clientRefreshToken: string) {
+    const user = await this.verifyTokenExpired(clientToken)
+    const verifyRft = await this.verifyRefreshToken(clientRefreshToken)
+    if (verifyRft.token !== clientToken)
       throw new RpcException(new UnauthorizedException('Sesion Expirada'))
-    }
 
-    if (ExistingRefreshToken.token !== oldToken) {
-      throw new RpcException(new UnauthorizedException('Sesion Expirada'))
-    }
     const { refreshToken, token } = await this.signIn(user)
-    await this.deleteToken(idRefreshToken)
     return {
       token,
       refreshToken,
     }
   }
 
-  async deleteToken(id: string) {
-    return await this.tokenRepository.delete(id)
-  }
-
-  async validateToken(jwt: string) {
+  //validacion de tokens
+  async verifyToken(jwt: string) {
     try {
-      const user = await this.jwtService.verifyAsync(jwt, {
+      const user: PassportUser = await this.jwtService.verifyAsync(jwt, {
         ignoreExpiration: false,
         secret: this.configService.get('JWT_SECRET'),
       })
@@ -186,10 +177,40 @@ export class AuthenticationService {
     }
   }
 
-  async validateRole(idRole: string, rosource: string, action: string) {
+  async verifyTokenExpired(jwt: string) {
+    try {
+      const user: PassportUser = await this.jwtService.verifyAsync(jwt, {
+        ignoreExpiration: true,
+        secret: this.configService.get('JWT_SECRET'),
+      })
+      return user
+    } catch (e) {
+      throw new RpcException(
+        new UnauthorizedException('Token de Sesión Invalido'),
+      )
+    }
+  }
+
+  async verifyRefreshToken(rwt: string) {
+    try {
+      const refreshToken: RefreshTokenPayload =
+        await this.jwtService.verifyAsync(rwt, {
+          ignoreExpiration: false,
+          secret: this.configService.get('RWT_SECRET'),
+        })
+      return refreshToken
+    } catch (e) {
+      throw new RpcException(
+        new UnauthorizedException('Token de Renovacion Sesión Invalido'),
+      )
+    }
+  }
+
+  async verifyPermisions(idRole: string, rosource: string, action: string) {
     return await this.enforcer.enforce(idRole, rosource, action)
   }
 
+  //Para cambio de rol
   private __getCurrentRole(
     roles: RolePassport[],
     idRol: string | null | undefined,
@@ -207,11 +228,5 @@ export class AuthenticationService {
       throw new RpcException(new UnauthorizedException('Rol no permitido'))
     }
     return role
-  }
-
-  @Cron(CronExpression.EVERY_5_SECONDS)
-  async deleteTokenExpireds() {
-    console.log('renovar')
-    return await this.tokenRepository.removeExpiredTokens()
   }
 }

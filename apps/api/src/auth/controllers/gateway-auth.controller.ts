@@ -7,16 +7,13 @@ import {
   Req,
   Res,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger'
 import {
   RefreshTokenCookieService,
-  PassportUser,
   JwtCookieService,
   AUTH_SERVICE,
   AuthDto,
-  CurrentUser,
   ChangeRoleDto,
   AuthMessages,
 } from '@app/common'
@@ -24,8 +21,7 @@ import { ConfigService } from '@nestjs/config'
 import { Request, Response } from 'express'
 import { ClientProxy, RpcException } from '@nestjs/microservices'
 
-import { catchError, throwError } from 'rxjs'
-import { JwtAuthGuard } from '../../guards'
+import { catchError, lastValueFrom, throwError } from 'rxjs'
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -39,17 +35,15 @@ export class ApiGatewayAuthController {
   @ApiBody({ description: 'Autenticación de usuarios', type: AuthDto })
   @Post('login')
   async login(@Res() res: Response, @Body() authDto: AuthDto) {
-    const result = await this.authService
-      .send({ cmd: AuthMessages.LOGIN }, { authDto })
-      .pipe(
-        catchError((error) =>
-          throwError(() => new RpcException(error.response)),
+    const { refreshToken, token, info } = await lastValueFrom(
+      this.authService
+        .send({ cmd: AuthMessages.LOGIN }, { authDto })
+        .pipe(
+          catchError((error) =>
+            throwError(() => new RpcException(error.response)),
+          ),
         ),
-      )
-      .toPromise()
-
-    const { refreshToken, token, info } = result
-
+    )
     return res
       .cookie(
         this.configService.getOrThrow('RFT_COOKIE'),
@@ -72,43 +66,34 @@ export class ApiGatewayAuthController {
   @ApiOperation({ summary: 'API para logout' })
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response) {
-    const id = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
-    if (id === undefined) return res.sendStatus(401)
-    await this.authService
-      .send({ cmd: AuthMessages.LOGOUT }, { id })
-      .pipe(
-        catchError((error) =>
-          throwError(() => new RpcException(error.response)),
-        ),
-      )
-      .toPromise()
-    return res.clearCookie('token').clearCookie('rft').sendStatus(200)
+    const token = req.cookies[this.configService.getOrThrow('JWT_COOKIE')]
+    const rft = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
+    return res.clearCookie(token).clearCookie(rft).sendStatus(200)
   }
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Patch('change-rol')
   async changeRol(
     @Req() req: Request,
     @Res() res: Response,
-    @CurrentUser() user: PassportUser,
     @Body() roleDto: ChangeRoleDto,
   ) {
-    const idRefreshToken =
-      req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
-    if (idRefreshToken === undefined) return res.sendStatus(401)
-    const result = await this.authService
-      .send(
-        { cmd: AuthMessages.CHANGE_ROLE },
-        { user, roleDto, idRefreshToken },
-      )
-      .pipe(
-        catchError((error) =>
-          throwError(() => new RpcException(error.response)),
+    const clientToken = req.cookies[this.configService.getOrThrow('JWT_COOKIE')]
+    const clientRft = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
+    if (!clientRft || !clientToken)
+      throw new UnauthorizedException('Sesion Expirada')
+    const { info, refreshToken, token } = await lastValueFrom(
+      this.authService
+        .send(
+          { cmd: AuthMessages.CHANGE_ROLE },
+          { clientToken, roleDto, clientRft },
+        )
+        .pipe(
+          catchError((error) =>
+            throwError(() => new RpcException(error.response)),
+          ),
         ),
-      )
-      .toPromise()
-    const { info, refreshToken, token } = result
+    )
     return res
       .cookie(
         this.configService.getOrThrow('JWT_COOKIE'),
@@ -134,15 +119,15 @@ export class ApiGatewayAuthController {
     const clientRft = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
     if (!clientToken || !clientRft)
       throw new UnauthorizedException('Tokens Expirados')
-    const result = await this.authService
-      .send({ cmd: AuthMessages.REFRESH_TOKEN }, { clientToken, clientRft })
-      .pipe(
-        catchError((error) =>
-          throwError(() => new RpcException(error.response)),
+    const { token, refreshToken } = await lastValueFrom(
+      this.authService
+        .send({ cmd: AuthMessages.REFRESH_TOKEN }, { clientToken, clientRft })
+        .pipe(
+          catchError((error) =>
+            throwError(() => new RpcException(error.response)),
+          ),
         ),
-      )
-      .toPromise()
-    const { token, refreshToken } = result
+    )
     return res
       .cookie(
         this.configService.getOrThrow('JWT_COOKIE'),

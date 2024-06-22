@@ -29,6 +29,10 @@ export interface UserPayload {
   sidebarData: SectionPayload[]
 }
 
+export interface RefreshTokenPayload {
+  userId: string
+  token: string
+}
 export interface SectionPayload {
   id: string
   status: string

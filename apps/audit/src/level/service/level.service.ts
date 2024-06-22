@@ -55,7 +55,7 @@ export class LevelService {
       skip,
       take: limit,
     }
-    return await this.levelRepository.list(paginationQueryDto)
+    return await this.levelRepository.getPaginateItems(options)
   }
 
   async changeTemplateState(idTemplate: string) {

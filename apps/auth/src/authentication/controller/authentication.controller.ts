@@ -3,7 +3,6 @@ import { AuthenticationService } from '../service'
 import {
   ChangeRoleDto,
   AuthDto,
-  PassportUser,
   BaseController,
   SharedService,
   AuthMessages,
@@ -20,28 +19,13 @@ export class AuthenticationController extends BaseController {
     super()
   }
 
-  @MessagePattern({ cmd: AuthMessages.LOGOUT })
-  async logout(@Ctx() context: RmqContext, @Payload() { id }: { id: string }) {
-    this.sharedService.acknowledgeMessage(context)
-    await this.authenticationService.deleteToken(id)
-  }
-
-  @MessagePattern({ cmd: AuthMessages.CHANGE_ROLE })
-  async changeRol(
+  @MessagePattern({ cmd: AuthMessages.LOGIN })
+  async Login(
     @Ctx() context: RmqContext,
-    @Payload()
-    {
-      user,
-      roleDto,
-      idRefreshToken,
-    }: { user: PassportUser; roleDto: ChangeRoleDto; idRefreshToken: string },
+    @Payload() { authDto }: { authDto: AuthDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    return await this.authenticationService.changeRole(
-      user,
-      roleDto.idRole,
-      idRefreshToken,
-    )
+    return await this.authenticationService.verifyCredentials(authDto)
   }
 
   @MessagePattern({ cmd: AuthMessages.REFRESH_TOKEN })
@@ -57,22 +41,22 @@ export class AuthenticationController extends BaseController {
     )
   }
 
-  @MessagePattern({ cmd: AuthMessages.VERIFY_TOKEN })
-  async validateToken(
+  @MessagePattern({ cmd: AuthMessages.CHANGE_ROLE })
+  async changeRol(
     @Ctx() context: RmqContext,
-    @Payload() { jwt }: { jwt: string },
+    @Payload()
+    {
+      clientToken,
+      roleDto,
+      clientRft,
+    }: { clientToken: string; roleDto: ChangeRoleDto; clientRft: string },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    return await this.authenticationService.validateToken(jwt)
-  }
-
-  @MessagePattern({ cmd: AuthMessages.LOGIN })
-  async Login(
-    @Ctx() context: RmqContext,
-    @Payload() { authDto }: { authDto: AuthDto },
-  ) {
-    this.sharedService.acknowledgeMessage(context)
-    return await this.authenticationService.validateCredentials(authDto)
+    return await this.authenticationService.changeRole(
+      clientToken,
+      roleDto.idRole,
+      clientRft,
+    )
   }
 
   @MessagePattern({ cmd: AuthMessages.VERIFY_CASBIN })
@@ -86,10 +70,19 @@ export class AuthenticationController extends BaseController {
     }: { idRole: string; resource: string; action: string },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    return await this.authenticationService.validateRole(
+    return await this.authenticationService.verifyPermisions(
       idRole,
       resource,
       action,
     )
+  }
+
+  @MessagePattern({ cmd: AuthMessages.VERIFY_TOKEN })
+  async validateToken(
+    @Ctx() context: RmqContext,
+    @Payload() { jwt }: { jwt: string },
+  ) {
+    this.sharedService.acknowledgeMessage(context)
+    return await this.authenticationService.verifyToken(jwt)
   }
 }
