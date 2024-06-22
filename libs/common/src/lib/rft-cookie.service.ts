@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config'
 
 export class RefreshTokenCookieService {
   static makeConfig(configService: ConfigService): CookieOptions {
-    const expiresIn = configService.getOrThrow('RFT_EXPIRES')
+    const expiresIn = configService.getOrThrow('RFT_EXPIRES_IN')
     const ttl = parseInt(expiresIn, 10)
     const expirationDate = new Date(Date.now() + ttl)
 
