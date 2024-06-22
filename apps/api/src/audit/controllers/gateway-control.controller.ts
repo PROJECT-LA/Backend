@@ -57,9 +57,9 @@ export class ApiGatewayControlController {
     required: true,
   })
   @Post()
-  async create(@Body() createControlDto: CreateControlDto) {
+  async create(@Body() controlDto: CreateControlDto) {
     const result = this.auditService
-      .send({ cmd: ControlMessages.CREATE_CONTROL }, { createControlDto })
+      .send({ cmd: ControlMessages.CREATE_CONTROL }, { controlDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -79,13 +79,10 @@ export class ApiGatewayControlController {
   @Patch(':id')
   async update(
     @Param() param: ParamIdDto,
-    @Body() updateControlDto: UpdateControlDto,
+    @Body() controlDto: UpdateControlDto,
   ) {
     const result = this.auditService
-      .send(
-        { cmd: ControlMessages.UPDATE_CONTROL },
-        { param, updateControlDto },
-      )
+      .send({ cmd: ControlMessages.UPDATE_CONTROL }, { param, controlDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

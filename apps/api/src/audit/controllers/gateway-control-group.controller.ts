@@ -84,12 +84,12 @@ export class ApiGatewayControlGroupController {
   @Patch(':id')
   async update(
     @Param() param: ParamIdDto,
-    @Body() updateControlGroupDto: UpdateControlGroupDto,
+    @Body() controlGroupDTo: UpdateControlGroupDto,
   ) {
     const result = this.auditService
       .send(
         { cmd: ControlGroupMessages.UPDATE_CONTROL_GROUP },
-        { param, updateControlGroupDto },
+        { param, controlGroupDTo },
       )
       .pipe(
         catchError((error) =>

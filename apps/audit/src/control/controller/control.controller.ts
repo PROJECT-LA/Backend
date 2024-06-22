@@ -35,10 +35,10 @@ export class ControlController extends BaseController {
   @MessagePattern({ cmd: ControlMessages.CREATE_CONTROL })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { createControlDto }: { createControlDto: CreateControlDto },
+    @Payload() { controlDto }: { controlDto: CreateControlDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.create(createControlDto)
+    const result = await this.controlService.create(controlDto)
     return this.successCreate(result)
   }
 
@@ -46,13 +46,10 @@ export class ControlController extends BaseController {
   async update(
     @Ctx() context: RmqContext,
     @Payload()
-    {
-      param,
-      updateControlDto,
-    }: { param: ParamIdDto; updateControlDto: UpdateControlDto },
+    { param, controlDto }: { param: ParamIdDto; controlDto: UpdateControlDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.controlService.update(param.id, updateControlDto)
+    const result = await this.controlService.update(param.id, controlDto)
     return this.successUpdate(result)
   }
 

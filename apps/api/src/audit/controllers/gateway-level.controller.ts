@@ -29,7 +29,7 @@ import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Levels')
 @ApiBearerAuth()
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('levels')
 export class ApiGatewayLevelController {
   constructor(
@@ -39,7 +39,10 @@ export class ApiGatewayLevelController {
   @ApiOperation({ summary: 'API para obtener el listado de niveles' })
   @Get()
   async list(@Query() filter: FilterLevelDto) {
-    const result = this.auditService.send({ cmd: 'get-levels' }, { filter })
+    const result = this.auditService.send(
+      { cmd: LevelMessages.GET_LEVELS },
+      { filter },
+    )
     return result
   }
 
@@ -49,9 +52,9 @@ export class ApiGatewayLevelController {
     required: true,
   })
   @Post()
-  async create(@Body() createLevelDto: CreateLevelDto) {
+  async create(@Body() levelDto: CreateLevelDto) {
     const result = this.auditService
-      .send({ cmd: LevelMessages.CREATE_LEVEL }, { createLevelDto })
+      .send({ cmd: LevelMessages.CREATE_LEVEL }, { levelDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -85,7 +88,7 @@ export class ApiGatewayLevelController {
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch('/:id/change-status')
+  @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService
       .send({ cmd: LevelMessages.CHANGE_STATUS_LEVEL }, { param })

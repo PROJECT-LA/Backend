@@ -4,6 +4,7 @@ import {
   FindOneOptions,
   UpdateResult,
   DeleteResult,
+  EntityManager,
 } from 'typeorm'
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity'
 
@@ -24,4 +25,7 @@ export interface BaseInterfaceRepository<T> {
     entityLike: QueryDeepPartialEntity<T>,
   ): Promise<UpdateResult>
   delete(id: string): Promise<DeleteResult>
+  transactional<R>(
+    operation: (manager: EntityManager) => Promise<R>,
+  ): Promise<R>
 }

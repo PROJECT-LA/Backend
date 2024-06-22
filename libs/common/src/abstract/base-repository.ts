@@ -1,6 +1,7 @@
 import {
   DeepPartial,
   DeleteResult,
+  EntityManager,
   FindManyOptions,
   FindOneOptions,
   FindOptionsWhere,
@@ -118,5 +119,14 @@ export abstract class BaseRepository<T extends HasId>
     } catch (error) {
       throw new RpcException(new InternalServerErrorException(error))
     }
+  }
+  public async transactional<R>(
+    operation: (manager: EntityManager) => Promise<R>,
+  ): Promise<R> {
+    return this.entity.manager.transaction(
+      async (transactionalEntityManager) => {
+        return operation(transactionalEntityManager)
+      },
+    )
   }
 }

@@ -1,1 +1,1 @@
-export { TemplateRepository } from './template.repository'
+export * from './template.repository'

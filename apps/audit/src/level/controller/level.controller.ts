@@ -39,10 +39,10 @@ export class LevelController extends BaseController {
   @MessagePattern({ cmd: LevelMessages.CREATE_LEVEL })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { createLevelDto }: { createLevelDto: CreateLevelDto },
+    @Payload() { levelDto }: { levelDto: CreateLevelDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.create(createLevelDto)
+    const result = await this.levelService.create(levelDto)
     return this.successCreate(result)
   }
 
@@ -63,13 +63,13 @@ export class LevelController extends BaseController {
     @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.levelService.changeTemplateState(param.id)
+    const result = await this.levelService.changeLevelState(param.id)
     return this.successUpdate(result)
   }
 
   @MessagePattern({ cmd: LevelMessages.REMOVE_LEVEL })
   @Delete(':id')
-  async delete(
+  async remove(
     @Ctx() context: RmqContext,
     @Payload() { param }: { param: ParamIdDto },
   ) {

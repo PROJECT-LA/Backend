@@ -1,1 +1,1 @@
-export { TemplateController } from './template.controller'
+export * from './template.controller'

@@ -6,6 +6,7 @@ import {
   UpdateTemplateDto,
 } from '@app/common'
 import { ITemplateRepository } from '../interface'
+import { Like } from 'typeorm'
 
 @Injectable()
 export class TemplateService {
@@ -37,7 +38,15 @@ export class TemplateService {
   }
 
   async list(paginationQueryDto: FilterTemplateDto) {
-    return await this.templateRepository.list(paginationQueryDto)
+    const { skip, limit, filter } = paginationQueryDto
+    const options = {
+      ...(filter && {
+        where: { name: Like(`%${filter}%`), version: Like(`%${filter}%`) },
+      }),
+      skip,
+      take: limit,
+    }
+    return await this.templateRepository.getPaginateItems(options)
   }
 
   async changeTemplateState(idTemplate: string) {

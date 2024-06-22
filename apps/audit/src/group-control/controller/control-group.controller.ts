@@ -48,13 +48,13 @@ export class ControlGroupController extends BaseController {
     @Payload()
     {
       param,
-      updateControlGroupDto,
-    }: { param: ParamIdDto; updateControlGroupDto: UpdateControlGroupDto },
+      controlGroupDto,
+    }: { param: ParamIdDto; controlGroupDto: UpdateControlGroupDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
     const result = await this.controlGroupService.update(
       param.id,
-      updateControlGroupDto,
+      controlGroupDto,
     )
     return this.successUpdate(result)
   }

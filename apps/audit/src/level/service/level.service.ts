@@ -58,7 +58,7 @@ export class LevelService {
     return await this.levelRepository.getPaginateItems(options)
   }
 
-  async changeTemplateState(idTemplate: string) {
+  async changeLevelState(idTemplate: string) {
     const level = await this.levelRepository.findOneById(idTemplate)
     const newStatus =
       level.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE

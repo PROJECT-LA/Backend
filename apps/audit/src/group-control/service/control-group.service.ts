@@ -5,14 +5,20 @@ import {
   STATUS,
   UpdateControlGroupDto,
 } from '@app/common'
-import { ControlGroupRepositoryInterface } from '../interface'
+import { IControlGroupRepository } from '../interface'
 import { RpcException } from '@nestjs/microservices'
+import { ITemplateRepository } from '../../template/interface'
+import { Equal, Like } from 'typeorm'
+import { Control } from '../../control/entities'
+import { ControlGroup } from '../entities'
 
 @Injectable()
 export class ControlGroupService {
   constructor(
     @Inject('IControlGroupRepository')
-    private controlRepository: ControlGroupRepositoryInterface,
+    private controlRepository: IControlGroupRepository,
+    @Inject('ITemplateRepository')
+    private templateRepository: ITemplateRepository,
   ) {}
 
   async getControlById(id: string) {
@@ -24,14 +30,36 @@ export class ControlGroupService {
     return control
   }
 
-  async list(filterDto: FilterControlGroupDto) {
-    return await this.controlRepository.list(filterDto)
+  async list(paginationQueryDto: FilterControlGroupDto) {
+    const { skip, limit, filter, idTemplate } = paginationQueryDto
+    const options = {
+      ...(filter && {
+        where: [
+          {
+            objective: Like(`%${filter}%`),
+            group: Like(`%${filter}%`),
+            groupDescription: Like(`%${filter}%`),
+            objectiveDescription: Like(`%${filter}%`),
+          },
+          { idTemplate: Equal(idTemplate) },
+        ],
+      }),
+      relations: ['controls'],
+      skip,
+      take: limit,
+    }
+    return await this.controlRepository.getPaginateItems(options)
   }
 
   async create(controlDto: CreateControlGroupDto) {
-    const newModule = this.controlRepository.create(controlDto)
-    console.log(newModule)
-    return await this.controlRepository.save(newModule)
+    const template = await this.templateRepository.findOneById(
+      controlDto.idTemplate,
+    )
+    if (!template)
+      throw new RpcException(new NotFoundException('Plantilla no encontrada'))
+
+    const newControlGroup = this.controlRepository.create(controlDto)
+    return await this.controlRepository.save(newControlGroup)
   }
 
   async update(id: string, controlDto: UpdateControlGroupDto) {
@@ -41,7 +69,10 @@ export class ControlGroupService {
 
   async delete(id: string) {
     await this.getControlById(id)
-    return await this.controlRepository.delete(id)
+    await this.controlRepository.transactional(async (manager) => {
+      await manager.delete(Control, { idControlGroup: id })
+      await manager.delete(ControlGroup, { id: id })
+    })
   }
 
   async changeStatus(id: string) {

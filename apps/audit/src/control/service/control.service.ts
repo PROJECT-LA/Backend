@@ -6,12 +6,17 @@ import {
   UpdateControlDto,
 } from '@app/common'
 import { IControlRepository } from '../interface'
+import { Equal, Like } from 'typeorm'
+import { IControlGroupRepository } from '../../group-control/interface'
+import { RpcException } from '@nestjs/microservices'
 
 @Injectable()
 export class ControlService {
   constructor(
     @Inject('IControlRepository')
     private controlRepository: IControlRepository,
+    @Inject('IControlGroupRepository')
+    private controlGroupRepository: IControlGroupRepository,
   ) {}
 
   async getControlById(id: string) {
@@ -22,12 +27,35 @@ export class ControlService {
     return control
   }
 
-  async list(filterDto: FilterControlDto) {
-    return await this.controlRepository.list(filterDto)
+  async list(paginationQueryDto: FilterControlDto) {
+    const { skip, limit, filter, idControlGroup } = paginationQueryDto
+    const options = {
+      ...(filter && {
+        where: [
+          {
+            name: Like(`%${filter}%`),
+            description: Like(`%${filter}%`),
+          },
+          { idControlGroup: Equal(idControlGroup) },
+        ],
+      }),
+      skip,
+      take: limit,
+    }
+    return await this.controlRepository.getPaginateItems(options)
   }
 
   async create(controlDto: CreateControlDto) {
     const newModule = this.controlRepository.create(controlDto)
+    const controlGroup = await this.controlGroupRepository.findOneById(
+      controlDto.idControlGroup,
+    )
+    if (!controlGroup) {
+      throw new RpcException(
+        new NotFoundException('Grupo de control no encontrado'),
+      )
+    }
+
     return await this.controlRepository.save(newModule)
   }
 

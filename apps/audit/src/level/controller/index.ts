@@ -1,1 +1,1 @@
-export { LevelController } from './level.controller'
+export * from './level.controller'

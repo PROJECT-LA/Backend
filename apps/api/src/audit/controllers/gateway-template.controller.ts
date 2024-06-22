@@ -58,9 +58,9 @@ export class ApiGatewayTemplateController {
     required: true,
   })
   @Post()
-  async create(@Body() createTemplateDto: CreateTemplateDto) {
+  async create(@Body() templateDto: CreateTemplateDto) {
     const result = this.auditService
-      .send({ cmd: TemplateMessages.CREATE_TEMPLATE }, { createTemplateDto })
+      .send({ cmd: TemplateMessages.CREATE_TEMPLATE }, { templateDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -80,10 +80,10 @@ export class ApiGatewayTemplateController {
   @Patch(':id')
   async update(
     @Param() param: ParamIdDto,
-    @Body() updateTemplateDto: UpdateTemplateDto,
+    @Body() templateDto: UpdateTemplateDto,
   ) {
     const result = this.auditService
-      .send({ cmd: LevelMessages.UPDATE_LEVEL }, { param, updateTemplateDto })
+      .send({ cmd: LevelMessages.UPDATE_LEVEL }, { param, templateDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

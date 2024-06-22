@@ -1,1 +1,1 @@
-export { Template } from './template.entity'
+export * from './template.entity'

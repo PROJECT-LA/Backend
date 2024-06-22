@@ -35,10 +35,10 @@ export class TemplateController extends BaseController {
   @MessagePattern({ cmd: TemplateMessages.CREATE_TEMPLATE })
   async create(
     @Ctx() context: RmqContext,
-    @Payload() { createTemplateDto }: { createTemplateDto: CreateTemplateDto },
+    @Payload() { templateDto }: { templateDto: CreateTemplateDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.create(createTemplateDto)
+    const result = await this.templateService.create(templateDto)
     return this.successCreate(result)
   }
 
@@ -48,14 +48,11 @@ export class TemplateController extends BaseController {
     @Payload()
     {
       param,
-      updateTemplateDto,
-    }: { param: ParamIdDto; updateTemplateDto: UpdateTemplateDto },
+      templateDto,
+    }: { param: ParamIdDto; templateDto: UpdateTemplateDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.templateService.update(
-      param.id,
-      updateTemplateDto,
-    )
+    const result = await this.templateService.update(param.id, templateDto)
     return this.successUpdate(result)
   }
 
