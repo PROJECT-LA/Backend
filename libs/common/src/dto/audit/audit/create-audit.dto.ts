@@ -24,15 +24,19 @@ export class CreateAuditDto {
   @IsNotEmpty()
   idClient: string
 
-  @ApiProperty({ example: 3 })
-  @IsNotEmpty()
-  acceptanceLevel: number
-
   @ApiProperty({ example: '1' })
   @IsNotEmpty()
   idTemplate: string
 
+  @ApiProperty({ example: '1' })
+  @IsNotEmpty()
+  idLevel: string
+
   @IsNotEmpty()
   @ApiProperty({ example: ['1'] })
   groupControls: Array<string>
+
+  @IsNotEmpty()
+  @ApiProperty({ example: ['1', '2'] })
+  auditors: Array<string>
 }
