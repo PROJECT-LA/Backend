@@ -12,7 +12,6 @@ export class Audits1718395779900 implements MigrationInterface {
         finalDate: '2024/05/01',
         idClient: '1',
         idLevel: '1',
-        acceptanceLevel: 3,
         idTemplate: '1',
       },
     ]
@@ -25,7 +24,6 @@ export class Audits1718395779900 implements MigrationInterface {
         finalDate: new Date(control.finalDate),
         idClient: control.idClient,
         idLevel: control.idLevel,
-        acceptanceLevel: control.acceptanceLevel,
         idTemplate: control.idTemplate,
       })
     })

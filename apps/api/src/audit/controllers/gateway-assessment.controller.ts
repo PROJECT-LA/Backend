@@ -1,11 +1,12 @@
 import {
   AUDIT_SERVICE,
-  CreateLevelDto,
-  FilterLevelDto,
-  LevelMessages,
+  AssessmentMessages,
+  CreateAssessmentDto,
+  FilterAssessmentDto,
   ParamIdDto,
-  UpdateLevelDto,
+  UpdateAssessmentDTo,
 } from '@app/common'
+
 import {
   Body,
   Controller,
@@ -29,34 +30,34 @@ import {
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
 import { catchError, throwError } from 'rxjs'
 
-@ApiTags('Levels')
+@ApiTags('Assessment')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, CasbinGuard)
-@Controller('levels')
-export class ApiGatewayLevelController {
+//@UseGuards(JwtAuthGuard, CasbinGuard)
+@Controller('assessment')
+export class ApiGatewayAssessmentController {
   constructor(
     @Inject(AUDIT_SERVICE) private readonly auditService: ClientProxy,
   ) {}
 
-  @ApiOperation({ summary: 'API para obtener el listado de niveles' })
+  @ApiOperation({ summary: 'API para obtener el listado evaluaciones' })
   @Get()
-  async list(@Query() filter: FilterLevelDto) {
+  async list(@Query() filter: FilterAssessmentDto) {
     const result = this.auditService.send(
-      { cmd: LevelMessages.GET_LEVELS },
+      { cmd: AssessmentMessages.GET_ASSESSMENTS },
       { filter },
     )
     return result
   }
 
-  @ApiOperation({ summary: 'API para crear niveles' })
+  @ApiOperation({ summary: 'API para crear evaluaciones' })
   @ApiBody({
-    type: CreateLevelDto,
+    type: CreateAssessmentDto,
     required: true,
   })
   @Post()
-  async create(@Body() levelDto: CreateLevelDto) {
+  async create(@Body() assessmentDto: CreateAssessmentDto) {
     const result = this.auditService
-      .send({ cmd: LevelMessages.CREATE_LEVEL }, { levelDto })
+      .send({ cmd: AssessmentMessages.CREATE_ASSESSMENT }, { assessmentDto })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -65,18 +66,24 @@ export class ApiGatewayLevelController {
     return result
   }
 
-  @ApiOperation({ summary: 'API para actualizar niveles' })
+  @ApiOperation({ summary: 'API para actualizar evaluaciones' })
   @ApiProperty({
     type: ParamIdDto,
   })
   @ApiBody({
-    type: UpdateLevelDto,
+    type: UpdateAssessmentDTo,
     required: true,
   })
   @Patch(':id')
-  async update(@Param() param: ParamIdDto, @Body() levelDto: UpdateLevelDto) {
+  async update(
+    @Param() param: ParamIdDto,
+    @Body() assessmentDto: UpdateAssessmentDTo,
+  ) {
     const result = this.auditService
-      .send({ cmd: LevelMessages.UPDATE_LEVEL }, { param, levelDto })
+      .send(
+        { cmd: AssessmentMessages.UPDATE_ASSESSMENT },
+        { param, assessmentDto },
+      )
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -93,7 +100,7 @@ export class ApiGatewayLevelController {
   @Patch(':id/change-status')
   async changeStatus(@Param() param: ParamIdDto) {
     const result = this.auditService
-      .send({ cmd: LevelMessages.CHANGE_STATUS_LEVEL }, { param })
+      .send({ cmd: AssessmentMessages.CHANGE_STATUS_ASSESSMENT }, { param })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),
@@ -109,7 +116,7 @@ export class ApiGatewayLevelController {
   @Delete(':id')
   async delete(@Param() param: ParamIdDto) {
     const result = this.auditService.send(
-      { cmd: LevelMessages.REMOVE_LEVEL },
+      { cmd: AssessmentMessages.REMOVE_ASSESSMENT },
       { param },
     )
     return result

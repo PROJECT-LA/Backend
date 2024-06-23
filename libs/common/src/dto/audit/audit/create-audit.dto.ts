@@ -24,10 +24,6 @@ export class CreateAuditDto {
   @IsNotEmpty()
   idClient: string
 
-  @ApiProperty({ example: '1' })
-  @IsNotEmpty()
-  idLevel: string
-
   @ApiProperty({ example: 3 })
   @IsNotEmpty()
   acceptanceLevel: number
@@ -35,4 +31,8 @@ export class CreateAuditDto {
   @ApiProperty({ example: '1' })
   @IsNotEmpty()
   idTemplate: string
+
+  @IsNotEmpty()
+  @ApiProperty({ example: ['1'] })
+  groupControls: Array<string>
 }

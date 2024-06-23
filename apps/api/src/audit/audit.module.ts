@@ -6,6 +6,7 @@ import { ApiGatewayControlGroupController } from './controllers/gateway-control-
 import { ApiGatewayControlController } from './controllers/gateway-control.controller'
 import { ApiGatewayAuditController } from './controllers/gateway-audit.controller'
 import { ApiGatewayUserAuditController } from './controllers/gateway-user-audit.controller'
+import { ApiGatewayAssessmentController } from './controllers/gateway-assessment.controller'
 
 @Module({
   controllers: [
@@ -16,6 +17,7 @@ import { ApiGatewayUserAuditController } from './controllers/gateway-user-audit.
     ApiGatewayControlController,
     ApiGatewayAuditController,
     ApiGatewayUserAuditController,
+    ApiGatewayAssessmentController,
   ],
 })
 export class MicroserviceAuditModule {}

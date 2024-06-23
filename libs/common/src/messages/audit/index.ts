@@ -38,9 +38,18 @@ export const AuditMessages = {
   CHANGE_STATUS_AUDIT: 'change-status-audit',
   PING: 'ping-audit',
 }
+
 export const UserAuditMessages = {
   GET_USERS_AUDIT: 'get-user-audits',
   CREATE_USER_AUDIT: 'create-user-audit',
   REMOVE_USER_AUDIT: 'remove-user-audit',
   CHANGE_STATUS_AUDIT: 'change-status-user-audit',
+}
+
+export const AssessmentMessages = {
+  GET_ASSESSMENTS: 'get-assessments',
+  CREATE_ASSESSMENT: 'create-assessments',
+  REMOVE_ASSESSMENT: 'remove-assessments',
+  UPDATE_ASSESSMENT: 'update-assessments',
+  CHANGE_STATUS_ASSESSMENT: 'change-status-assessments',
 }

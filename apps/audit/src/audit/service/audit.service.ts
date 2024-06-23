@@ -8,6 +8,7 @@ import {
 import { IAuditRepository } from '../interface'
 import { ILevelRepository } from '../../level/interfaces'
 import { RpcException } from '@nestjs/microservices'
+import { Equal, Like } from 'typeorm'
 
 @Injectable()
 export class AuditService {
@@ -29,11 +30,26 @@ export class AuditService {
   }
 
   async list(filterDto: FilterAuditDto) {
-    return await this.auditRepository.list(filterDto)
+    const { skip, limit, filter, idClient } = filterDto
+    const options = {
+      ...(filter && {
+        where: [
+          {
+            objective: Like(`%${filter}%`),
+            description: Like(`%${filter}%`),
+          },
+          {
+            idClient: Equal(idClient),
+          },
+        ],
+      }),
+      skip,
+      take: limit,
+    }
+    return await this.auditRepository.getPaginateItems(options)
   }
 
   async create(auditDto: CreateAuditDto) {
-    console.log(auditDto)
     const newAudit = this.auditRepository.create(auditDto)
     console.log(newAudit)
     await this.Validate(newAudit.idClient, newAudit.idLevel)

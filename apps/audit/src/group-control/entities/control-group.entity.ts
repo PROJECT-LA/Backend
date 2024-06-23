@@ -11,6 +11,7 @@ import {
 import { IControlGroup } from '../interface'
 import { Template } from '../../template/entities'
 import { Control } from '../../control/entities'
+import { Assessment } from '../../assessment/entity'
 
 @Entity('control_groups')
 @Check(UtilService.buildStatusCheck(STATUS))
@@ -42,6 +43,9 @@ export class ControlGroup extends BaseEntity implements IControlGroup {
 
   @OneToMany(() => Control, (control) => control.controlGroup)
   controls: Control[]
+
+  @OneToMany(() => Assessment, (assessment) => assessment.controlGroup)
+  assessment: Assessment[]
 
   constructor(data?: Partial<ControlGroup>) {
     super(data)
