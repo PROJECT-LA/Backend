@@ -51,7 +51,6 @@ export class AuditService {
 
   async create(auditDto: CreateAuditDto) {
     const newAudit = this.auditRepository.create(auditDto)
-    console.log(newAudit)
     await this.Validate(newAudit.idClient, newAudit.idLevel)
     return await this.auditRepository.save(newAudit)
   }
