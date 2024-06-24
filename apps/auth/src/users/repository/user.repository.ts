@@ -31,7 +31,7 @@ export class UserRepository
   }
 
   async list(filterDto: FilterUserDto): Promise<[User[], number]> {
-    const { limit, order, sense, skip, filter } = filterDto
+    const { limit, order, sense, skip, filter, idRole } = filterDto
     const query = this.user
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.roles', 'roles')
@@ -82,6 +82,11 @@ export class UserRepository
           })
         }),
       )
+    }
+    if (idRole) {
+      if (idRole) {
+        query.andWhere('roles.id = :idRole', { idRole })
+      }
     }
     query.take(limit).skip(skip)
 

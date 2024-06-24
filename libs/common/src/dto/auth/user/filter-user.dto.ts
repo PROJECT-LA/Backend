@@ -1,7 +1,8 @@
-import { Transform } from 'class-transformer'
 import { PaginationQueryDto } from '../../base'
+import { IsOptional, IsString } from 'class-validator'
 
 export class FilterUserDto extends PaginationQueryDto {
-  @Transform(({ value }) => (value ? value.split(',') : null))
-  readonly rol?: Array<string>
+  @IsOptional()
+  @IsString()
+  readonly idRole?: string
 }
