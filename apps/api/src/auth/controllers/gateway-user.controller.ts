@@ -191,7 +191,7 @@ export class ApiGatewayUserController {
   @ApiProperty({
     type: ParamIdDto,
   })
-  @Patch('/:id/change-status')
+  @Patch(':id/change-status')
   async activar(@CurrentUser() user: PassportUser, @Param() param: ParamIdDto) {
     const result = this.authService
       .send({ cmd: UserMessages.CHANGE_STATUS_USER }, { param, user })

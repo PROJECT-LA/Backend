@@ -66,9 +66,14 @@ export class ApiGatewayAuthController {
   @ApiOperation({ summary: 'API para logout' })
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response) {
-    const token = req.cookies[this.configService.getOrThrow('JWT_COOKIE')]
-    const rft = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
-    return res.clearCookie(token).clearCookie(rft).sendStatus(200)
+    const jwtCookieName = this.configService.getOrThrow('JWT_COOKIE')
+    const rftCookieName = this.configService.getOrThrow('RFT_COOKIE')
+
+    return res.clearCookie(jwtCookieName).clearCookie(rftCookieName).send({
+      status: 200,
+      finalizado: true,
+      mensaje: 'Sesion Cerrada',
+    })
   }
 
   @ApiBearerAuth()
@@ -78,8 +83,10 @@ export class ApiGatewayAuthController {
     @Res() res: Response,
     @Body() roleDto: ChangeRoleDto,
   ) {
+    console.log('roleDto', roleDto)
     const clientToken = req.cookies[this.configService.getOrThrow('JWT_COOKIE')]
     const clientRft = req.cookies[this.configService.getOrThrow('RFT_COOKIE')]
+    console.log('client', clientToken, clientRft)
     if (!clientRft || !clientToken)
       throw new UnauthorizedException('Sesion Expirada')
     const { info, refreshToken, token } = await lastValueFrom(
