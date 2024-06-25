@@ -5,7 +5,7 @@ export enum STATUS {
 
 export enum AUDIT_STATUS {
   CREATE = 'CREADO',
-  IN_CURSE = 'EN CURSO',
+  IN_CURSE = 'EN_CURSO',
   FINISHED = 'FINALIZADO',
   SUSPENDED = 'SUSPENDIDO',
 }
