@@ -26,6 +26,7 @@ import {
   FilterAuditDto,
   UpdateAuditDto,
 } from '@app/common/dto/audit/audit'
+import { AuditStatusDto } from '@app/common/dto/audit/audit/status.dto'
 
 @ApiBearerAuth()
 @ApiTags('Audits')
@@ -96,9 +97,12 @@ export class ApiGatewayAuditController {
     type: ParamIdDto,
   })
   @Patch(':id/change-status')
-  async changeStatus(@Param() param: ParamIdDto) {
+  async changeStatus(
+    @Param() param: ParamIdDto,
+    @Body() auditStatus: AuditStatusDto,
+  ) {
     const result = this.auditService
-      .send({ cmd: AuditMessages.CHANGE_STATUS_AUDIT }, { param })
+      .send({ cmd: AuditMessages.CHANGE_STATUS_AUDIT }, { param, auditStatus })
       .pipe(
         catchError((error) =>
           throwError(() => new RpcException(error.response)),

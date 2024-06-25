@@ -1,4 +1,4 @@
-import { BaseEntity, STATUS, UtilService } from '@app/common'
+import { AUDIT_STATUS, BaseEntity, UtilService } from '@app/common'
 import {
   Entity,
   Column,
@@ -15,7 +15,7 @@ import { Level } from '../../level/entities'
 import { Assessment } from '../../assessment/entity'
 
 @Entity('audits')
-@Check(UtilService.buildStatusCheck(STATUS))
+@Check(UtilService.buildStatusCheck(AUDIT_STATUS))
 export class Audit extends BaseEntity implements IAudit {
   @Column({ length: 200, type: 'varchar' })
   objective: string
@@ -58,6 +58,6 @@ export class Audit extends BaseEntity implements IAudit {
 
   @BeforeInsert()
   insertarEstado() {
-    this.status = this.status || STATUS.ACTIVE
+    this.status = this.status || AUDIT_STATUS.CREATE
   }
 }

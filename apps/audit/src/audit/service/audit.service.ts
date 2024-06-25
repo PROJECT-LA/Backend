@@ -1,10 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
-import {
-  CreateAuditDto,
-  FilterAuditDto,
-  STATUS,
-  UpdateAuditDto,
-} from '@app/common'
+import { CreateAuditDto, FilterAuditDto, UpdateAuditDto } from '@app/common'
 import { IAuditRepository } from '../interface'
 import { ILevelRepository } from '../../level/interfaces'
 import { RpcException } from '@nestjs/microservices'
@@ -68,10 +63,9 @@ export class AuditService {
     return await this.auditRepository.delete(id)
   }
 
-  async changeStatus(id: string) {
+  async changeStatus(id: string, status: string) {
     const audit = await this.getAuditById(id)
-    audit.status =
-      audit.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
+    audit.status = status
     return await this.auditRepository.update(id, audit)
   }
 

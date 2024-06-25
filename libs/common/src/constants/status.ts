@@ -2,3 +2,10 @@ export enum STATUS {
   ACTIVE = 'ACTIVO',
   INACTIVE = 'INACTIVO',
 }
+
+export enum AUDIT_STATUS {
+  CREATE = 'CREADO',
+  IN_CURSE = 'EN CURSO',
+  FINISHED = 'FINALIZADO',
+  SUSPENDED = 'SUSPENDIDO',
+}

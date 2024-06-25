@@ -12,6 +12,7 @@ import {
   FilterAuditDto,
   UpdateAuditDto,
 } from '@app/common/dto/audit/audit'
+import { AuditStatusDto } from '@app/common/dto/audit/audit/status.dto'
 
 @Controller('audits')
 export class AuditController extends BaseController {
@@ -61,10 +62,14 @@ export class AuditController extends BaseController {
   @MessagePattern({ cmd: AuditMessages.CHANGE_STATUS_AUDIT })
   async changeStatus(
     @Ctx() context: RmqContext,
-    @Payload() { param }: { param: ParamIdDto },
+    @Payload()
+    { param, auditStatus }: { param: ParamIdDto; auditStatus: AuditStatusDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.auditService.changeStatus(param.id)
+    const result = await this.auditService.changeStatus(
+      param.id,
+      auditStatus.status,
+    )
     return this.successUpdate(result)
   }
 
