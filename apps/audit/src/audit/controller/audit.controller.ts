@@ -8,11 +8,11 @@ import {
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { AuditService } from '../service'
 import {
+  AuditStatusDto,
   CreateAuditDto,
   FilterAuditDto,
   UpdateAuditDto,
 } from '@app/common/dto/audit/audit'
-import { AuditStatusDto } from '@app/common/dto/audit/audit/status.dto'
 
 @Controller('audits')
 export class AuditController extends BaseController {

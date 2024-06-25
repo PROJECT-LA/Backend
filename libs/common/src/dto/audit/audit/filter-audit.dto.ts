@@ -1,12 +1,14 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { IsOptional, IsString } from '../../../validation'
+import { ApiProperty } from '@nestjs/swagger'
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from '../../../validation'
 import { PaginationQueryDto } from '../../base'
+import { AUDIT_STATUS } from '@app/common/constants'
 
 export class FilterAuditDto extends PaginationQueryDto {
-  @ApiPropertyOptional()
-  @IsOptional()
+  @ApiProperty({ name: 'status', example: AUDIT_STATUS.CREATE })
   @IsString()
-  readonly status?: string
+  @IsNotEmpty()
+  @IsEnum(AUDIT_STATUS)
+  readonly status: string
 
   @ApiProperty({ example: '1' })
   @IsString()

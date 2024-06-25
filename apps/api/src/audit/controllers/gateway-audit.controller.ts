@@ -22,15 +22,15 @@ import {
 import { CasbinGuard, JwtAuthGuard } from '../../guards'
 import { catchError, throwError } from 'rxjs'
 import {
+  AuditStatusDto,
   CreateAuditDto,
   FilterAuditDto,
   UpdateAuditDto,
 } from '@app/common/dto/audit/audit'
-import { AuditStatusDto } from '@app/common/dto/audit/audit/status.dto'
 
 @ApiBearerAuth()
 @ApiTags('Audits')
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('audits')
 export class ApiGatewayAuditController {
   constructor(
