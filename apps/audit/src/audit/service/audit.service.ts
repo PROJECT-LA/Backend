@@ -8,7 +8,7 @@ import {
 import { IAuditRepository } from '../interface'
 import { ILevelRepository } from '../../level/interfaces'
 import { RpcException } from '@nestjs/microservices'
-import { Equal, Like } from 'typeorm'
+import { Equal, FindManyOptions, Like } from 'typeorm'
 
 @Injectable()
 export class AuditService {
@@ -31,7 +31,7 @@ export class AuditService {
 
   async list(filterDto: FilterAuditDto) {
     const { skip, limit, filter, idClient } = filterDto
-    const options = {
+    const options: FindManyOptions = {
       ...(filter && {
         where: [
           {
@@ -43,6 +43,7 @@ export class AuditService {
           },
         ],
       }),
+      relations: ['assessment', 'level', 'personal', 'template'],
       skip,
       take: limit,
     }
