@@ -42,6 +42,7 @@ export class ApiGatewayAuditController {
   })
   @Get()
   async list(@Query() filter: FilterAuditDto) {
+    console.log(filter)
     const result = this.auditService
       .send({ cmd: AuditMessages.GET_AUDIT }, { filter })
       .pipe(

@@ -8,7 +8,7 @@ import {
 import { IControlGroupRepository } from '../interface'
 import { RpcException } from '@nestjs/microservices'
 import { ITemplateRepository } from '../../template/interface'
-import { Equal, Like } from 'typeorm'
+import { Equal, FindManyOptions, Like } from 'typeorm'
 import { Control } from '../../control/entities'
 import { ControlGroup } from '../entities'
 
@@ -32,19 +32,20 @@ export class ControlGroupService {
 
   async list(paginationQueryDto: FilterControlGroupDto) {
     const { skip, limit, filter, idTemplate } = paginationQueryDto
-    const options = {
-      ...(filter && {
-        where: [
-          {
-            objective: Like(`%${filter}%`),
-            group: Like(`%${filter}%`),
-            groupDescription: Like(`%${filter}%`),
-            objectiveDescription: Like(`%${filter}%`),
-          },
-          { idTemplate: Equal(idTemplate) },
-        ],
-      }),
-      relations: ['controls'],
+    const options: FindManyOptions<ControlGroup> = {
+      where: [
+        {
+          idTemplate: Equal(idTemplate),
+          objective: Like(`%${filter}%`),
+        },
+        {
+          idTemplate: Equal(idTemplate),
+          group: Like(`%${filter}%`),
+        },
+      ],
+      relations: {
+        controls: true,
+      },
       skip,
       take: limit,
     }

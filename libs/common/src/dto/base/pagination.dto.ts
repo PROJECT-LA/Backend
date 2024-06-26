@@ -1,13 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Expose, Type } from 'class-transformer'
-import {
-  IsInt,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Max,
-  Min,
-} from '../../validation'
+import { IsInt, IsOptional, IsString, Max, Min } from '../../validation'
 import { Order } from '../../constants/order'
 
 const LIMIT_MIN = 10
@@ -44,10 +37,9 @@ export class PaginationQueryDto {
   readonly page: number = PAGE_MIN
 
   @ApiPropertyOptional()
-  @IsNotEmpty()
   @IsOptional()
   @IsString()
-  readonly filter?: string
+  readonly filter?: string = ''
 
   @ApiPropertyOptional()
   @Expose({ name: 'order' })

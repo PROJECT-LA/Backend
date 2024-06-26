@@ -7,6 +7,7 @@ import {
   ParamIdDto,
   SharedService,
   UpdateControlGroupDto,
+  validatePayload,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { ControlGroupService } from '../service'
@@ -25,9 +26,10 @@ export class ControlGroupController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { filter }: { filter: FilterControlGroupDto },
+    payload: { filter: FilterControlGroupDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
+    const filter = await validatePayload(FilterControlGroupDto, payload.filter)
     const result = await this.controlGroupService.list(filter)
     return this.successListRows(result)
   }

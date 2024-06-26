@@ -26,24 +26,43 @@ export class AuditService {
   }
 
   async list(filterDto: FilterAuditDto) {
-    const { skip, limit, filter, idClient, status } = filterDto
-    const options: FindManyOptions = {
-      ...(filter && {
-        where: [
-          {
-            objective: Like(`%${filter}%`),
-            description: Like(`%${filter}%`),
-          },
-          {
-            idClient: Equal(idClient),
-            status: Equal(status),
-          },
-        ],
-      }),
-      relations: ['assessment', 'level', 'personal', 'template'],
+    const { skip, limit, filter, idClient, status: auditStatus } = filterDto
+    const options: FindManyOptions<Audit> = {
+      where: [
+        {
+          idClient: Equal(idClient),
+          status: Equal(auditStatus),
+          objective: Like(`%${filter}%`),
+        },
+        {
+          idClient: Equal(idClient),
+          status: Equal(auditStatus),
+          description: Like(`%${filter}%`),
+        },
+      ],
+      relations: {
+        assessment: true,
+        level: true,
+        personal: true,
+        template: true,
+      },
+      select: {
+        level: {
+          id: true,
+          name: true,
+        },
+        assessment: {
+          id: true,
+        },
+        template: {
+          id: true,
+          name: true,
+        },
+      },
       skip,
       take: limit,
     }
+
     return await this.auditRepository.getPaginateItems(options)
   }
 

@@ -4,6 +4,7 @@ import {
   BaseController,
   ParamIdDto,
   SharedService,
+  validatePayload,
 } from '@app/common'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
 import { AuditService } from '../service'
@@ -28,9 +29,10 @@ export class AuditController extends BaseController {
   async list(
     @Ctx() context: RmqContext,
     @Payload()
-    { filter }: { filter: FilterAuditDto },
+    payload: { filter: FilterAuditDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
+    const filter = await validatePayload(FilterAuditDto, payload.filter)
     const result = await this.auditService.list(filter)
     return this.successListRows(result)
   }
