@@ -19,10 +19,11 @@ import {
   PassportUser,
 } from '@app/common'
 import { IUserRepository } from '../interface'
-import { In } from 'typeorm'
+import { Equal, FindManyOptions, In, Like } from 'typeorm'
 import { IRoleRepository } from '../../roles/interface'
 import { RpcException } from '@nestjs/microservices'
 import { ExternalFileService } from '../../external/external-file.service'
+import { User } from '../entities'
 
 @Injectable()
 export class UserService {
@@ -35,11 +36,70 @@ export class UserService {
   ) {}
 
   async list(paginationQueryDto: FilterUserDto) {
-    return await this.usersRepository.list(paginationQueryDto)
+    const { filter, skip, limit } = paginationQueryDto
+    const options: FindManyOptions<User> = {
+      where: [
+        {
+          names: Like(`%${filter}%`),
+        },
+        {
+          lastNames: Like(`%${filter}%`),
+        },
+        {
+          ci: Like(`%${filter}%`),
+        },
+      ],
+      relations: { roles: true },
+      select: {
+        id: true,
+        names: true,
+        lastNames: true,
+        username: true,
+        phone: true,
+        ci: true,
+        email: true,
+        address: true,
+        status: true,
+        roles: {
+          id: true,
+          name: true,
+        },
+      },
+      skip,
+      take: limit,
+      order: {
+        lastNames: 'ASC',
+      },
+    }
+
+    return await this.usersRepository.getPaginateItems(options)
   }
 
   async getUsersByRole(idRole: string) {
-    return await this.usersRepository.getUsersByRole(idRole)
+    const options: FindManyOptions<User> = {
+      where: {
+        status: Equal(STATUS.ACTIVE),
+        roles: {
+          id: Equal(idRole),
+        },
+      },
+      relations: { roles: true },
+      select: {
+        id: true,
+        names: true,
+        lastNames: true,
+        ci: true,
+        roles: {
+          id: true,
+          name: true,
+        },
+      },
+      order: {
+        lastNames: 'ASC',
+      },
+    }
+
+    return await this.usersRepository.findManyByConditions(options)
   }
 
   async create(createUserDto: CreateUserDto) {

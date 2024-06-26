@@ -8,6 +8,7 @@ import {
   AuthDto,
   UserPayload,
   RefreshTokenPayload,
+  STATUS,
 } from '@app/common'
 import { IModuleRepository } from '../../modules/interfaces'
 import { User } from '../../users/entities'
@@ -15,7 +16,7 @@ import { RpcException } from '@nestjs/microservices'
 import { IUserRepository } from '../../users/interface'
 import { Enforcer } from 'casbin'
 import { AUTHZ_ENFORCER } from 'nest-authz'
-import { ExternalFileService } from '../../external/external-file.service'
+import { Equal, Not } from 'typeorm'
 
 @Injectable()
 export class AuthenticationService {
@@ -27,12 +28,26 @@ export class AuthenticationService {
     @Inject('IModuleRepository')
     private readonly moduleRepository: IModuleRepository,
     @Inject(AUTHZ_ENFORCER) private enforcer: Enforcer,
-    private readonly externalFileService: ExternalFileService,
   ) {}
 
   async verifyCredentials(authDto: AuthDto) {
     const { password, username } = authDto
-    const user = await this.usersRepository.validateCredentials(username)
+    const user = await this.usersRepository.findOneByCondition({
+      where: {
+        username,
+        status: STATUS.ACTIVE,
+        roles: { status: STATUS.ACTIVE },
+      },
+      relations: { roles: true },
+      select: {
+        id: true,
+        password: true,
+        roles: {
+          name: true,
+          id: true,
+        },
+      },
+    })
     if (!user) {
       throw new RpcException(new UnauthorizedException('No existe el usuario'))
     }
@@ -123,9 +138,41 @@ export class AuthenticationService {
 
   async createUserInfo(user: PassportUser, token: string) {
     const data = await this.usersRepository.preload(new User({ id: user.id }))
-    const sidebarData = await this.moduleRepository.getSidebarByRole(
-      user.idRole,
-    )
+    const sidebar = await this.moduleRepository.findManyByConditions({
+      where: {
+        module: {
+          idRole: user.idRole,
+          module: Not(null),
+          status: Equal(STATUS.ACTIVE),
+          subModule: {
+            status: Equal(STATUS.ACTIVE),
+          },
+        },
+      },
+      select: {
+        module: {
+          id: true,
+          title: true,
+          description: true,
+          status: true,
+          order: true,
+          idRole: true,
+          subModule: {
+            id: true,
+            title: true,
+            url: true,
+            order: true,
+            icon: true,
+            status: true,
+            idRole: true,
+            description: true,
+          },
+        },
+      },
+      relations: { subModule: true },
+      order: { order: 'ASC', subModule: { order: 'ASC' } },
+    })
+
     const info: UserPayload = {
       id: user.id,
       roles: user.roles,
@@ -139,12 +186,8 @@ export class AuthenticationService {
         phone: data.phone,
         ci: data.ci,
       },
-      token: token,
-      sidebarData,
-    }
-    if (data.image) {
-      const result = this.externalFileService.getImage(data.image)
-      info.userData.image = result
+      token,
+      sidebarData: sidebar,
     }
     return info
   }

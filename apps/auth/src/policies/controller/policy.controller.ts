@@ -8,6 +8,7 @@ import {
   RouteDto,
   ParamIdDto,
   PolicyMessages,
+  validatePayload,
 } from '@app/common'
 import { PolicyService } from '../service'
 import { Ctx, MessagePattern, Payload, RmqContext } from '@nestjs/microservices'
@@ -48,9 +49,10 @@ export class PolicyController extends BaseController {
   @MessagePattern({ cmd: PolicyMessages.GET_POLICIES })
   async getPolicies(
     @Ctx() context: RmqContext,
-    @Payload() { filter }: { filter: FilterPoliciesDto },
+    @Payload() payload: { filter: FilterPoliciesDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
+    const filter = await validatePayload(FilterPoliciesDto, payload.filter)
     const result = await this.policyService.findAll(filter)
     return this.successListRows(result)
   }

@@ -27,7 +27,7 @@ export class ModuleEntity extends BaseEntity implements IModule {
     comment: 'Ruta para acceder al módulo',
     nullable: true,
   })
-  description?: string
+  description: string
 
   @Column({
     length: 50,
@@ -49,7 +49,7 @@ export class ModuleEntity extends BaseEntity implements IModule {
     comment: 'Ruta para acceder al módulo',
     nullable: true,
   })
-  url?: string | null
+  url: string | null
 
   @Column({
     type: 'bigint',
@@ -67,7 +67,7 @@ export class ModuleEntity extends BaseEntity implements IModule {
     nullable: true,
     comment: 'Clave foránea del módulo padre',
   })
-  idModule?: string | null
+  idModule: string | null
 
   @OneToMany(() => ModuleEntity, (module) => module.module, { cascade: true })
   subModule: ModuleEntity[]
