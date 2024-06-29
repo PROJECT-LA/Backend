@@ -3,7 +3,7 @@ import { STATUS, TextService } from '@app/common'
 import { User } from '../../src/users/entities'
 import { Role } from '../../src/roles/entities'
 
-export class Users1713742322774 implements MigrationInterface {
+export class Users1713732322773 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const DEFAULT_PASSWORD = '123'
     const pass = await TextService.encrypt(DEFAULT_PASSWORD)
@@ -19,7 +19,7 @@ export class Users1713742322774 implements MigrationInterface {
         phone: '71981339',
         status: STATUS.ACTIVE,
         roles: ['1', '2', '3'],
-        ci: '123456',
+        ci: '123356',
       },
       {
         names: 'GERENTE',
@@ -31,8 +31,8 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['2', '3', '4'],
-        ci: '4231212',
+        roles: ['2', '3', '3'],
+        ci: '3231212',
       },
       {
         names: 'AUDIT-1',
@@ -44,7 +44,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '9886123',
       },
       {
@@ -57,7 +57,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '8612312',
       },
       {
@@ -74,16 +74,16 @@ export class Users1713742322774 implements MigrationInterface {
         ci: '9886123',
       },
       {
-        names: 'AUDIT-4',
-        lastNames: 'AUDIT-4',
-        email: 'audit4@gmail.com',
+        names: 'AUDIT-3',
+        lastNames: 'AUDIT-3',
+        email: 'audit3@gmail.com',
         password: pass,
-        username: 'AUDIT-4',
+        username: 'AUDIT-3',
         createdAt: new Date(),
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '7813623',
       },
       {
@@ -96,8 +96,8 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
-        ci: '1243623',
+        roles: ['3'],
+        ci: '1233623',
       },
       {
         names: 'AUDIT-6',
@@ -109,7 +109,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '5813613',
       },
       {
@@ -122,8 +122,8 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
-        ci: '7812411',
+        roles: ['3'],
+        ci: '7812311',
       },
       {
         names: 'AUDIT-8',
@@ -135,8 +135,8 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
-        ci: '62421234',
+        roles: ['3'],
+        ci: '62321233',
       },
       {
         names: 'AUDIT-9',
@@ -148,8 +148,8 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
-        ci: '7823433',
+        roles: ['3'],
+        ci: '7823333',
       },
       {
         names: 'AUDIT-10',
@@ -161,7 +161,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '9083623',
       },
       {
@@ -174,7 +174,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '9870891',
       },
       {
@@ -187,7 +187,7 @@ export class Users1713742322774 implements MigrationInterface {
         updatedAt: new Date(),
         phone: '63201339',
         status: STATUS.ACTIVE,
-        roles: ['4'],
+        roles: ['3'],
         ci: '9886712',
       },
     ]

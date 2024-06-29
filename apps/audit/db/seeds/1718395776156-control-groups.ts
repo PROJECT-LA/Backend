@@ -8,11 +8,11 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         objective: 'AYUDAR CON CONTROL DE ACCESOS',
         description:
           'CONTROL QUE PERMITE EL ACCESO A LOS RECURSOS DE INFORMACIÓN Y APLICACIONES DE ACUERDO A LOS PRIVILEGIOS ASIGNADOS',
-        code: 'C-12',
+        code: 'C-11',
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE PERMITE EL ACCESO A LOS RECURSOS DE INFORMACIÓN Y APLICACIONES DE ACUERDO A LOS PRIVILEGIOS ASIGNADOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-511',
         idTemplate: '1',
       },
 
@@ -24,7 +24,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE PERMITE EL ACCESO A LOS RECURSOS DE INFORMACIÓN Y APLICACIONES DE ACUERDO A LOS PRIVILEGIOS ASIGNADOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-512',
         idTemplate: '1',
       },
       {
@@ -35,7 +35,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE RESTRINGE EL ACCESO A LOS SISTEMAS Y DATOS A USUARIOS AUTORIZADOS ÚNICAMENTE',
-        groupCode: 'CA-123',
+        groupCode: 'CA-513',
         idTemplate: '1',
       },
       {
@@ -46,7 +46,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE MANTIENE UN REGISTRO DE TODOS LOS INTENTOS DE ACCESO EXITOSOS Y FALLIDOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-514',
         idTemplate: '1',
       },
       {
@@ -57,7 +57,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE MONITOREA Y REGISTRA LA ACTIVIDAD DE LOS USUARIOS EN LOS SISTEMAS PARA DETECTAR ACTIVIDADES INUSUALES O NO AUTORIZADAS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-515',
         idTemplate: '1',
       },
       {
@@ -68,7 +68,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE VERIFICA LA IDENTIDAD DE LOS USUARIOS ANTES DE PERMITIR EL ACCESO A LOS RECURSOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-516',
         idTemplate: '1',
       },
       {
@@ -79,7 +79,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE ASEGURA QUE LOS PRIVILEGIOS DE ACCESO SE OTORGUEN Y REVOQUEN SEGÚN SEA NECESARIO',
-        groupCode: 'CA-123',
+        groupCode: 'CA-517',
         idTemplate: '1',
       },
       {
@@ -90,7 +90,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE REQUIERE MÚLTIPLES FORMAS DE VERIFICACIÓN PARA AUTENTICAR A LOS USUARIOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-518',
         idTemplate: '1',
       },
       {
@@ -101,7 +101,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE ASEGURA QUE LAS CONTRASEÑAS SEAN ALMACENADAS Y TRANSMITIDAS DE MANERA SEGURA',
-        groupCode: 'CA-123',
+        groupCode: 'CA-519',
         idTemplate: '1',
       },
       {
@@ -112,7 +112,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE REVISA Y REVOCAR ACCESOS QUE NO HAN SIDO UTILIZADOS DURANTE UN PERIODO DE TIEMPO ESPECÍFICO',
-        groupCode: 'CA-123',
+        groupCode: 'CA-520',
         idTemplate: '1',
       },
       {
@@ -123,7 +123,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE REALIZA AUDITORÍAS REGULARES DE LOS PERMISOS DE ACCESO PARA ASEGURAR QUE SON APROPIADOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-521',
         idTemplate: '1',
       },
       {
@@ -134,7 +134,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE LIMITA EL ACCESO A DATOS SENSIBLES SOLO A PERSONAL AUTORIZADO',
-        groupCode: 'CA-123',
+        groupCode: 'CA-522',
         idTemplate: '1',
       },
       {
@@ -145,7 +145,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE ASEGURA QUE SOLO DISPOSITIVOS AUTORIZADOS PUEDAN CONECTARSE A LA RED',
-        groupCode: 'CA-123',
+        groupCode: 'CA-523',
         idTemplate: '1',
       },
       {
@@ -156,7 +156,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE DEFINE Y APLICA POLÍTICAS DE SEGURIDAD PARA EL ACCESO A SISTEMAS Y DATOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-524',
         idTemplate: '1',
       },
       {
@@ -167,7 +167,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE CONFIGURA Y GESTIONA DIFERENTES NIVELES DE ACCESO BASADOS EN ROLES Y RESPONSABILIDADES',
-        groupCode: 'CA-123',
+        groupCode: 'CA-525',
         idTemplate: '1',
       },
       {
@@ -178,7 +178,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE IMPLEMENTA MEDIDAS DE SEGURIDAD PARA PROTEGER LOS SISTEMAS CONTRA ACCESOS NO AUTORIZADOS DESDE EL EXTERIOR',
-        groupCode: 'CA-123',
+        groupCode: 'CA-526',
         idTemplate: '1',
       },
       {
@@ -189,7 +189,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE REALIZA REVISIONES PERIÓDICAS PARA ASEGURAR QUE LOS ACCESOS OTORGADOS SIGUEN SIENDO NECESARIOS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-527',
         idTemplate: '1',
       },
       {
@@ -200,7 +200,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE IMPLEMENTA MECANISMOS PARA BLOQUEAR ACCESOS AUTOMÁTICOS Y NO AUTORIZADOS A SISTEMAS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-528',
         idTemplate: '1',
       },
       {
@@ -211,7 +211,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE IMPLEMENTA MEDIDAS DE SEGURIDAD PARA PROTEGER EL ACCESO REMOTO A LOS SISTEMAS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-529',
         idTemplate: '1',
       },
       {
@@ -222,7 +222,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE MONITOREA Y DETECTA ACTIVIDADES INUSUALES O NO AUTORIZADAS EN LOS SISTEMAS',
-        groupCode: 'CA-123',
+        groupCode: 'CA-530',
         idTemplate: '1',
       },
       {
@@ -233,7 +233,7 @@ export class ControlGroups1718395776156 implements MigrationInterface {
         group: 'CONTROLES DE ACCESOS',
         groupDescription:
           'CONTROL QUE RESTRINGE EL ACCESO FÍSICO A LAS INSTALACIONES Y EQUIPOS SENSIBLES',
-        groupCode: 'CA-123',
+        groupCode: 'CA-531',
         idTemplate: '1',
       },
     ]

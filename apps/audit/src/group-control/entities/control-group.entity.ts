@@ -8,21 +8,20 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm'
-import { IControlGroup } from '../interface'
 import { Template } from '../../template/entities'
 import { Control } from '../../control/entities'
 import { Assessment } from '../../assessment/entity'
 
 @Entity('control_groups')
 @Check(UtilService.buildStatusCheck(STATUS))
-export class ControlGroup extends BaseEntity implements IControlGroup {
+export class ControlGroup extends BaseEntity {
   @Column({ length: 200, type: 'varchar' })
   objective: string
 
   @Column({ length: 200, type: 'varchar' })
   objectiveDescription: string
 
-  @Column({ length: 10, type: 'varchar' })
+  @Column({ length: 7, type: 'varchar' })
   objectiveCode: string
 
   @Column({ length: 200, type: 'varchar' })
@@ -31,7 +30,7 @@ export class ControlGroup extends BaseEntity implements IControlGroup {
   @Column({ length: 200, type: 'varchar' })
   groupDescription: string
 
-  @Column({ length: 10, type: 'varchar' })
+  @Column({ length: 7, type: 'varchar' })
   groupCode: string
 
   @Column({ name: 'id_template' })

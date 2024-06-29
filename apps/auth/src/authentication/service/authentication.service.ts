@@ -10,13 +10,13 @@ import {
   RefreshTokenPayload,
   STATUS,
 } from '@app/common'
-import { IModuleRepository } from '../../modules/interfaces'
 import { User } from '../../users/entities'
 import { RpcException } from '@nestjs/microservices'
 import { IUserRepository } from '../../users/interface'
 import { Enforcer } from 'casbin'
 import { AUTHZ_ENFORCER } from 'nest-authz'
 import { Equal, Not } from 'typeorm'
+import { IModuleRepository } from '../../modules/interface'
 
 @Injectable()
 export class AuthenticationService {

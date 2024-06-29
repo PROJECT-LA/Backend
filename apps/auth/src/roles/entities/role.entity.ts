@@ -6,14 +6,13 @@ import {
   ManyToMany,
   OneToMany,
 } from 'typeorm'
-import { IRol } from '../interface'
 import { BaseEntity, STATUS, UtilService } from '@app/common'
 import { User } from '../../users/entities'
 import { ModuleEntity } from '../../modules/entities'
 
 @Check(UtilService.buildStatusCheck(STATUS))
 @Entity({ name: 'roles' })
-export class Role extends BaseEntity implements IRol {
+export class Role extends BaseEntity {
   @Column({ unique: true, nullable: false })
   name: string
   @Column()

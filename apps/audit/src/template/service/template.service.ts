@@ -40,9 +40,7 @@ export class TemplateService {
   async list(paginationQueryDto: FilterTemplateDto) {
     const { skip, limit, filter } = paginationQueryDto
     const options = {
-      ...(filter && {
-        where: { name: Like(`%${filter}%`), version: Like(`%${filter}%`) },
-      }),
+      where: [{ name: Like(`%${filter}%`) }, { version: Like(`%${filter}%`) }],
       skip,
       take: limit,
     }

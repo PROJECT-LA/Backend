@@ -8,11 +8,10 @@ import {
   JoinColumn,
 } from 'typeorm'
 import { Audit } from '../../audit/entities'
-import { IPersonal } from '../interface'
 
 @Entity('user-audit')
 @Check(UtilService.buildStatusCheck(STATUS))
-export class UserAudit extends BaseEntity implements IPersonal {
+export class UserAudit extends BaseEntity {
   @Column({ name: 'id_audit' })
   idAudit: string
 

@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { RmqContext, RmqOptions, Transport } from '@nestjs/microservices'
-
-import { SharedServiceInterface } from '../interfaces/base/shared-service.interface'
+import { SharedServiceInterface } from '../interfaces'
 
 @Injectable()
 export class SharedService implements SharedServiceInterface {

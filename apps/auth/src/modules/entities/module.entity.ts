@@ -8,12 +8,11 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm'
-import { IModule } from '../interfaces'
 import { Role } from '../../roles/entities'
 
 @Check(UtilService.buildStatusCheck(STATUS))
 @Entity({ name: 'modules' })
-export class ModuleEntity extends BaseEntity implements IModule {
+export class ModuleEntity extends BaseEntity {
   @Column({
     length: 50,
     type: 'varchar',

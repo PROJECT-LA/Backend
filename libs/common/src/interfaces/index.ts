@@ -1,3 +1,3 @@
-export * from './base'
-export * from './audit'
-export * from './auth'
+export * from './shared-payload.interface'
+export * from './repository.interface'
+export * from './shared-service.interface'

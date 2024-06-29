@@ -3,7 +3,7 @@ import { Expose, Type } from 'class-transformer'
 import { IsInt, IsOptional, IsString, Max, Min } from '../../validation'
 import { Order } from '../../constants/order'
 
-const LIMIT_MIN = 10
+const LIMIT_MIN = 5
 const LIMIT_MAX = 50
 const PAGE_MIN = 1
 

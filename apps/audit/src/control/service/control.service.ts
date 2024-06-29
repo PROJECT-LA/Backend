@@ -6,9 +6,10 @@ import {
   UpdateControlDto,
 } from '@app/common'
 import { IControlRepository } from '../interface'
-import { Equal, Like } from 'typeorm'
+import { Equal, FindManyOptions, Like } from 'typeorm'
 import { IControlGroupRepository } from '../../group-control/interface'
 import { RpcException } from '@nestjs/microservices'
+import { Control } from '../entities'
 
 @Injectable()
 export class ControlService {
@@ -29,16 +30,17 @@ export class ControlService {
 
   async list(paginationQueryDto: FilterControlDto) {
     const { skip, limit, filter, idControlGroup } = paginationQueryDto
-    const options = {
-      ...(filter && {
-        where: [
-          {
-            name: Like(`%${filter}%`),
-            description: Like(`%${filter}%`),
-          },
-          { idControlGroup: Equal(idControlGroup) },
-        ],
-      }),
+    const options: FindManyOptions<Control> = {
+      where: [
+        {
+          idControlGroup: Equal(idControlGroup),
+          name: Like(`%${filter}%`),
+        },
+        {
+          idControlGroup: Equal(idControlGroup),
+          description: Like(`%${filter}%`),
+        },
+      ],
       skip,
       take: limit,
     }

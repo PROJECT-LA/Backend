@@ -1,5 +1,4 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common'
-import { IModuleRepository } from '../interfaces'
 import {
   CreateModuleDto,
   NewOrderDto,
@@ -9,6 +8,7 @@ import {
 import { ModuleEntity } from '../entities'
 import { RpcException } from '@nestjs/microservices'
 import { Equal, Not } from 'typeorm'
+import { IModuleRepository } from '../interface'
 
 @Injectable()
 export class ModuleService {
