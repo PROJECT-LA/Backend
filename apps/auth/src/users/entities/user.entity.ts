@@ -3,30 +3,27 @@ import { BaseEntity, STATUS } from '@app/common'
 import { Role } from '../../roles/entities'
 
 /**
- * Entidad de Usuario.
- *
- * Representa un usuario en el sistema, extendiendo las propiedades básicas de BaseEntity.
+ * @Entity Decorador que marca la clase como una entidad de base de datos con el nombre 'users'.
+ * @description Representa un usuario en el sistema, extendiendo las propiedades básicas de BaseEntity.
  * Incluye información personal y de contacto, así como las credenciales de acceso y roles asociados.
  *
- * @Entity Decorador que marca la clase como una entidad de base de datos con el nombre 'users'.
- *
- * Campos:
- * - names: Nombres del usuario.
- * - lastNames: Apellidos del usuario.
- * - email: Correo electrónico del usuario, debe ser único.
- * - password: Contraseña del usuario.
- * - phone: Teléfono del usuario, es opcional.
- * - ci: Carnet de identidad del usuario.
- * - image: Imagen de perfil del usuario, es opcional.
- * - address: Dirección del usuario, es opcional.
- * - username: Nombre de usuario, debe ser único.
- * - roles: Roles asociados al usuario, relación muchos a muchos.
+ * @property {string} names - Nombres del usuario. No puede ser nulo.
+ * @property {string} lastNames - Apellidos del usuario. No puede ser nulo.
+ * @property {string} email - Correo electrónico del usuario, debe ser único. No puede ser nulo.
+ * @property {string} password - Contraseña del usuario. No puede ser nulo.
+ * @property {string} phone - Teléfono del usuario, es opcional.
+ * @property {string} ci - Carnet de identidad del usuario. No puede ser nulo.
+ * @property {string} image - Imagen de perfil del usuario, es opcional.
+ * @property {string} address - Dirección del usuario, es opcional. Almacenado como texto.
+ * @property {string} username - Nombre de usuario, debe ser único. No puede ser nulo.
+ * @property {Role[]} roles - Roles asociados al usuario, relación muchos a muchos.
  *
  * @BeforeInsert Decorador que define un método a ejecutarse antes de insertar la entidad en la base de datos.
  * Este método establece el estado del usuario como ACTIVO si no se ha proporcionado uno.
  *
  * @param {Partial<User>} data - Objeto parcial de User para inicializar la entidad con valores predeterminados.
  */
+
 @Entity({ name: 'users' })
 export class User extends BaseEntity {
   @Column({ nullable: false })
@@ -44,11 +41,11 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   phone: string
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, unique: true })
   ci: string
 
   @Column({ nullable: true })
-  image?: string
+  image: string
 
   @Column({ type: 'text', nullable: true })
   address: string

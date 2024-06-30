@@ -18,6 +18,5 @@ export class CreatePolicyDto {
   @IsNotEmpty()
   app: string
 
-  @ApiProperty({ example: 'ACTIVO' })
   status?: string
 }

@@ -79,7 +79,7 @@ export class RoleService {
       role.status === STATUS.ACTIVE ? STATUS.INACTIVE : STATUS.ACTIVE
     try {
       await this.roleRepository.update(idRole, { status: newStatus })
-      await this.policyService.changeRoleState(idRole, newStatus)
+      await this.policyService.changePoliciesByRoleState(idRole, newStatus)
     } catch (error) {
       throw new RpcException(Error(Messages.EXCEPTION_UPDATE_ERROR))
     }

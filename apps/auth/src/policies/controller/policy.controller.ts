@@ -96,7 +96,7 @@ export class PolicyController extends BaseController {
     @Payload() { param }: { param: ParamIdDto },
   ) {
     this.sharedService.acknowledgeMessage(context)
-    const result = await this.policyService.getPoliciesByRouteFrontend(param.id)
+    const result = await this.policyService.getPoliciesByRoleFrontend(param.id)
     return this.successList(result)
   }
 }
