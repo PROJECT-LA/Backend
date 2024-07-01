@@ -28,7 +28,7 @@ import { catchError, throwError } from 'rxjs'
 
 @ApiBearerAuth()
 @ApiTags('Policies')
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('policies')
 export class ApiGatewayPolicyController {
   constructor(

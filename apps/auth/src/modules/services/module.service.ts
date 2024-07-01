@@ -7,7 +7,7 @@ import {
 } from '@app/common'
 import { ModuleEntity } from '../entities'
 import { RpcException } from '@nestjs/microservices'
-import { Equal, IsNull, Like, Not, UpdateResult } from 'typeorm'
+import { Equal, IsNull, UpdateResult } from 'typeorm'
 import { IModuleRepository } from '../interface'
 
 @Injectable()
