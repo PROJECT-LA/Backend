@@ -7,7 +7,7 @@ import {
 } from '@app/common'
 import { ModuleEntity } from '../entities'
 import { RpcException } from '@nestjs/microservices'
-import { Equal, Not } from 'typeorm'
+import { Equal, IsNull, Like, Not, UpdateResult } from 'typeorm'
 import { IModuleRepository } from '../interface'
 
 @Injectable()
@@ -17,10 +17,25 @@ export class ModuleService {
     private readonly moduleRepository: IModuleRepository,
   ) {}
 
-  async getModuleById(id: string) {
+  /**
+   * Obtiene un módulo por su ID, incluyendo sus submódulos relacionados.
+   *
+   * @description
+   * Este método asincrónico busca un módulo específico por su ID en la base de datos. Además,
+   * incluye en la búsqueda los submódulos relacionados al módulo principal gracias a la opción
+   * `relations`. Si el módulo no se encuentra, se lanza una excepción indicando que el módulo
+   * no fue encontrado.
+   *
+   * @param {string} id - El ID del módulo que se desea obtener.
+   * @returns {Promise<Module>} Una promesa que resuelve con el módulo encontrado, incluyendo sus submódulos.
+   * @throws {RpcException} - Lanza una excepción si el módulo con el ID especificado no existe.
+   */
+  async getModuleById(id: string): Promise<ModuleEntity> {
     const module = await this.moduleRepository.findOneByCondition({
       where: { id },
-      relations: ['subModule'],
+      relations: {
+        subModule: true,
+      },
     })
     if (!module) {
       throw new RpcException(new NotFoundException('Modulo no encontrado'))
@@ -28,7 +43,35 @@ export class ModuleService {
     return module
   }
 
-  async create(moduleDto: CreateModuleDto) {
+  /**
+   * Crea un nuevo módulo basado en los datos proporcionados en `moduleDto`.
+   *
+   * @description
+   * Este método asume que `moduleDto` es una instancia de `CreateModuleDto`, la cual contiene
+   * los datos necesarios para crear un nuevo módulo. El proceso de creación varía dependiendo
+   * de si `moduleDto` incluye un `idModule` o no.
+   *
+   * Si `moduleDto` incluye un `idModule`, el método realiza los siguientes pasos:
+   * 1. Crea un nuevo módulo (`newModule`) con los datos de `moduleDto`.
+   * 2. Crea un objeto `module` solo con el `id` especificado en `idModule`.
+   * 3. Obtiene el orden actual de los módulos dentro de la sección especificada por `idModule`
+   *    mediante `getModulesOrderBySection`.
+   * 4. Establece el orden de `newModule` al siguiente número después del último orden encontrado.
+   * 5. Asigna el objeto `module` creado a `newModule.module`.
+   *
+   * Si `moduleDto` no incluye un `idModule` pero sí un `idRole`, el método:
+   * 1. Crea un nuevo módulo (`newModule`) con los datos de `moduleDto`.
+   * 2. Obtiene el orden actual de las secciones asociadas al rol especificado por `idRole`
+   *    mediante `getSectionOrderByRole`.
+   * 3. Establece el orden de `newModule` al siguiente número después del último orden encontrado.
+   *
+   * Finalmente, guarda el `newModule` en la base de datos mediante `moduleRepository.save` y devuelve
+   * el módulo guardado.
+   *
+   * @param {CreateModuleDto} moduleDto - Objeto que contiene los datos necesarios para crear un nuevo módulo.
+   * @returns {Promise<ModuleEntity>} Una promesa que resuelve al módulo recién creado y guardado.
+   */
+  async create(moduleDto: CreateModuleDto): Promise<ModuleEntity> {
     const newModule = this.moduleRepository.create(moduleDto)
     if (moduleDto.idModule) {
       const module = this.moduleRepository.create({
@@ -44,14 +87,32 @@ export class ModuleService {
     return await this.moduleRepository.save(newModule)
   }
 
-  async update(id: string, moduleDto: UpdateModuleDto) {
+  /**
+   * Actualiza un módulo existente identificado por `id` con los datos proporcionados en `moduleDto`.
+   *
+   * @description
+   * Este método primero verifica la existencia del módulo mediante `getModuleById(id)`. Si el módulo
+   * existe, procede a actualizarlo con los datos proporcionados en `moduleDto`, que es una instancia
+   * de `UpdateModuleDto`. `UpdateModuleDto` contiene los campos que pueden ser actualizados en el módulo.
+   *
+   * La actualización se realiza a través de `moduleRepository.update`, pasando el `id` del módulo y
+   * `moduleDto` como argumentos. Este método devuelve el resultado de la operación de actualización.
+   *
+   * @param {string} id - El identificador único del módulo a actualizar.
+   * @param {UpdateModuleDto} moduleDto - Objeto que contiene los datos actualizados para el módulo.
+   * @returns {Promise<UpdateResult>} Una promesa que resuelve al resultado de la operación de actualización.
+   */
+  async update(id: string, moduleDto: UpdateModuleDto): Promise<UpdateResult> {
     await this.getModuleById(id)
     return await this.moduleRepository.update(id, moduleDto)
   }
 
   async delete(id: string) {
     await this.getModuleById(id)
-    return await this.moduleRepository.delete(id)
+    return await this.moduleRepository.transactional(async (manager) => {
+      await manager.delete(ModuleEntity, { idModule: id })
+      await manager.delete(ModuleEntity, id)
+    })
   }
 
   async changeStatus(id: string) {
@@ -98,12 +159,10 @@ export class ModuleService {
   }
 
   async getModulesByRole(id: string) {
-    return await this.moduleRepository.findManyByConditions({
+    const res = await this.moduleRepository.findManyByConditions({
       where: {
-        module: {
-          idRole: id,
-          module: Not(null),
-        },
+        idRole: id,
+        idModule: IsNull(),
       },
       select: {
         module: {
@@ -127,6 +186,8 @@ export class ModuleService {
       relations: { subModule: true },
       order: { order: 'ASC', subModule: { order: 'ASC' } },
     })
+    console.log(res)
+    return res
   }
 
   async getSectionOrderByRole(id: string) {

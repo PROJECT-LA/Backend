@@ -268,36 +268,6 @@ export class UserService {
     return await this.usersRepository.update(id, updateUser)
   }
 
-  async updateImageProfile(id: string, image: Express.Multer.File) {
-    const user = await this.getUserProfile(id)
-    const isServiceAvaliable =
-      await this.externalFileService.isServiceAvaliable()
-    if (!isServiceAvaliable) {
-      throw new RpcException(
-        new PreconditionFailedException(
-          'Servicio de almacenamiento no disponible',
-        ),
-      )
-    }
-    const updateUser = this.usersRepository.create({ image: '' })
-    try {
-      if (user.image) {
-        // await this.externalFileService.deleteImage(user.image)
-      }
-      const nameFile = await this.externalFileService.writteImage(
-        image,
-        user.id,
-      )
-      updateUser.image = nameFile
-    } catch (error) {
-      throw new RpcException(
-        new PreconditionFailedException('Error al guardar la imagen'),
-      )
-    }
-
-    return await this.usersRepository.update(id, updateUser)
-  }
-
   /**
    * Actualiza la contraseña de un usuario.
    *
@@ -552,5 +522,35 @@ export class UserService {
       where: { ci },
       select: { id: true, ci: true },
     })
+  }
+
+  async updateImageProfile(id: string, image: Express.Multer.File) {
+    const user = await this.getUserProfile(id)
+    const isServiceAvaliable =
+      await this.externalFileService.isServiceAvaliable()
+    if (!isServiceAvaliable) {
+      throw new RpcException(
+        new PreconditionFailedException(
+          'Servicio de almacenamiento no disponible',
+        ),
+      )
+    }
+    const updateUser = this.usersRepository.create({ image: '' })
+    try {
+      if (user.image) {
+        // await this.externalFileService.deleteImage(user.image)
+      }
+      const nameFile = await this.externalFileService.writteImage(
+        image,
+        user.id,
+      )
+      updateUser.image = nameFile
+    } catch (error) {
+      throw new RpcException(
+        new PreconditionFailedException('Error al guardar la imagen'),
+      )
+    }
+
+    return await this.usersRepository.update(id, updateUser)
   }
 }

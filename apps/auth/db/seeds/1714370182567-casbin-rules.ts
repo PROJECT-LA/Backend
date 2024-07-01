@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from 'typeorm'
-import { RoleEnum } from '../../src/policies/constants'
-import { CasbinRule } from '../../src/policies/entitites/casbin.entity'
+import { RoleEnum } from '@app/common'
+import { CasbinRule } from 'apps/auth/src/policies/entitites'
 
 export class CasbinRules1714370182567 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {

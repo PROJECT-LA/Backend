@@ -5,16 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { IUserRepository } from '../interface'
 import { BaseRepository } from '@app/common'
 
-/**
- * @Injectable() marca la clase como un proveedor de servicios que puede ser inyectado,
- * permitiendo que UserRepository sea gestionado por el sistema de inyección de dependencias de NestJS.
- */
 @Injectable()
-/**
- * UserRepository extiende BaseRepository para proporcionar operaciones específicas de repositorio
- * para la entidad User. Implementa la interfaz IUserRepository para asegurar que cumple con
- * los contratos definidos para operaciones relacionadas con los usuarios.
- */
 export class UserRepository
   extends BaseRepository<User>
   implements IUserRepository

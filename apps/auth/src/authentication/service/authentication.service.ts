@@ -15,7 +15,7 @@ import { RpcException } from '@nestjs/microservices'
 import { IUserRepository } from '../../users/interface'
 import { Enforcer } from 'casbin'
 import { AUTHZ_ENFORCER } from 'nest-authz'
-import { Equal, Not } from 'typeorm'
+import { Equal, IsNull } from 'typeorm'
 import { IModuleRepository } from '../../modules/interface'
 
 @Injectable()
@@ -140,13 +140,11 @@ export class AuthenticationService {
     const data = await this.usersRepository.preload(new User({ id: user.id }))
     const sidebar = await this.moduleRepository.findManyByConditions({
       where: {
-        module: {
-          idRole: user.idRole,
-          module: Not(null),
+        idRole: user.idRole,
+        module: IsNull(),
+        status: Equal(STATUS.ACTIVE),
+        subModule: {
           status: Equal(STATUS.ACTIVE),
-          subModule: {
-            status: Equal(STATUS.ACTIVE),
-          },
         },
       },
       select: {

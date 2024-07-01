@@ -120,7 +120,7 @@ export class PolicyService {
     const role = await this.roleRepository.findOneById(subject)
     if (!role) {
       throw new RpcException(
-        new NotFoundException('No se encontro el rol especificado'),
+        new NotFoundException('El rol especificado no se encontro'),
       )
     }
 

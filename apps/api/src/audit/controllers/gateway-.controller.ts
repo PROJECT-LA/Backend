@@ -32,7 +32,7 @@ import { catchError, throwError } from 'rxjs'
 
 @ApiTags('Assessment')
 @ApiBearerAuth()
-//@UseGuards(JwtAuthGuard, CasbinGuard)
+@UseGuards(JwtAuthGuard, CasbinGuard)
 @Controller('assessment')
 export class ApiGatewayAssessmentController {
   constructor(

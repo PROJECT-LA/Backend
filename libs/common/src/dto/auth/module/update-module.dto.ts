@@ -1,9 +1,4 @@
-import {
-  IsNotEmpty,
-  IsNumberString,
-  IsOptional,
-  IsString,
-} from '../../../validation'
+import { IsNotEmpty, IsOptional, IsString } from '../../../validation'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class UpdateModuleDto {
@@ -21,14 +16,6 @@ export class UpdateModuleDto {
   @IsOptional()
   @IsString()
   icon?: string
-
-  @IsOptional()
-  @IsNumberString()
-  idModule?: string
-
-  @IsOptional()
-  @IsString()
-  status?: string
 
   @ApiProperty({ example: 'Somewhere Description' })
   @IsString()
